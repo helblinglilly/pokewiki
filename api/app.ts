@@ -36,8 +36,9 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.get("/", (req, res, next) => {
-	Controller.getIndex(req, res);
+app.get("/api", (req, res, next) => {
+	res.sendStatus(200);
+	// Controller.getIndex(req, res);
 });
 
 app.listen(port, "0.0.0.0", () => {

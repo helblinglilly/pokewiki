@@ -8,7 +8,7 @@
 		"dev": "ts-node .",
 		"build": "(rm -fr ./dist || true) && npx tsc && npm run postbuild",
 		"postbuild": "cp -R ./views ./dist/ && cp -R ./public ./dist/",
-		"start": "node ./dist/index.js"
+		"start": "node /api/app.js"
 	},
 	"author": "",
 	"license": "ISC",

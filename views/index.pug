@@ -4,8 +4,14 @@ block append body
     .container.is-max-desktop.pl-6.pr-6
         nav.breadcrumb(aria-label="breadcrumbs")
             ul
-                li.is-active
-                    a(href="/") Home
+                if results
+                    li
+                        a(href="/") Search
+                    li.is-active
+                        a #{searchTerm}
+                else 
+                    li.is-active
+                        a(href="/") Home
 
         form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
             input.input(type="text" name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")

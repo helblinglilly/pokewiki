@@ -11,7 +11,7 @@ block append body
                         a #{searchTerm}
                 else 
                     li.is-active
-                        a(href="/") Home
+                        a(href="/") Search
 
         form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
             input.input(type="text" name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")

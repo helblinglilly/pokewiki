@@ -41,6 +41,10 @@ app.get("/", (req, res, next) => {
 	// Controller.getIndex(req, res);
 });
 
+app.get("/*", (req, res, next) => {
+	res.send(req.url);
+});
+
 app.listen(port, "0.0.0.0", () => {
 	log.info(`Listening on http://127.0.0.1:${port}`);
 });

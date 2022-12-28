@@ -2,7 +2,7 @@
 	"name": "pokemon",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.ts",
+	"main": "api/app.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "ts-node .",
@@ -14,6 +14,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"axios": "^1.2.1",
+		"cookie-parser": "^1.4.6",
 		"express": "^4.18.2",
 		"loglevel": "^1.8.1",
 		"loglevel-plugin-prefix": "^0.8.4",

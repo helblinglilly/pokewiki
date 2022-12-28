@@ -3,17 +3,19 @@ doctype html
 head
   block head
   meta(name='viewport' content='width=device-width, initial-scale=1')
-  link(rel='icon' type='image/png' href='/static/favicon.ico')
+  link(rel='icon' type='image/png' href='https://www.helbling.uk/favicon.ico')
   link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css')
   script(href='https://use.fontawesome.com/releases/v5.3.1/js/all.js')
+  script(src='/static/js/cookies.js')
   style.
     @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+  title Pokéwiki
 
 body
   nav.navbar(role='navigation', aria-label='main navigation')
     .navbar-brand(href='/')
       a.navbar-item(href='/')
-        img(src='https://www.helbling.uk/favicon.ico')
+        img(src='/static/pokemon.png')
       a.navbar-item(href='/')  Pokémon
 
   block body

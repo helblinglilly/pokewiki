@@ -2,13 +2,13 @@
 	"name": "pokemon",
 	"version": "1.0.0",
 	"description": "",
-	"main": "api/app.ts",
+	"main": "./api/app.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "ts-node .",
 		"build": "(rm -fr ./dist || true) && npx tsc && npm run postbuild",
 		"postbuild": "cp -R ./views ./dist/ && cp -R ./public ./dist/",
-		"start": "node /api/app.js"
+		"start": "node ./dist/api/app.js"
 	},
 	"author": "",
 	"license": "ISC",

@@ -37,12 +37,8 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res, next) => {
-	res.sendStatus(200);
-	// Controller.getIndex(req, res);
-});
-
-app.get("/*", (req, res, next) => {
-	res.send(req.url);
+	// res.sendStatus(200);
+	Controller.getIndex(req, res);
 });
 
 app.listen(port, "0.0.0.0", () => {

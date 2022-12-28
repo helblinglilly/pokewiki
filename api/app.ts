@@ -1,6 +1,6 @@
 import express from "express";
 import log from "loglevel";
-import Controller from "./controller";
+import Controller from "../controller";
 import prefix from "loglevel-plugin-prefix";
 
 prefix.reg(log);
@@ -25,8 +25,8 @@ if (process.env.NODE_ENV !== "production") {
 const app = express();
 
 app.set("view engine", "pug");
-app.use("/static", express.static(`${__dirname}/public`));
-app.set("views", `${__dirname}/views`);
+app.use("/static", express.static(`${__dirname}/../public`));
+app.set("views", `${__dirname}/../views`);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

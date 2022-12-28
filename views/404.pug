@@ -1,0 +1,15 @@
+extend  ./header.pug
+
+block append body
+    .container.is-max-desktop.pl-6.pr-6
+        nav.breadcrumb(aria-label="breadcrumbs")
+            ul
+                li.is-active
+                    a(href="/") 
+
+        form(action="/search", method="get", id="search", onsubmit="addHistory();") 
+            input.input(type="text" name="search" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
+            input(type="submit" hidden)
+
+        p I think you're lost
+        p 404

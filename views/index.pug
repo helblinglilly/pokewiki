@@ -7,6 +7,12 @@ block append body
                 li.is-active
                     a(href="/") Home
 
-        form(action="/search", method="get", id="search", onsubmit="addHistory();") 
-            input.input(type="text" name="search" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
+        form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
+            input.input(type="text" name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
             input(type="submit" hidden)
+        
+        if results
+            p.title.is-3 Results for #{searchTerm}
+            
+            each resultType in results
+                p #{JSON.stringify(resultType)}

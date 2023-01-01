@@ -14,7 +14,12 @@ block append body
                         a(href="/") Search
 
         form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
-            input.input(type="text" name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
+            .field.has-addons
+                .control.is-expanded
+                    input.input(type="text" name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
+                .control
+                    button.button.is-static Filters
+            
             input(type="submit" hidden)
         
         if results

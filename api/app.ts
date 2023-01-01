@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== "production") {
 	host = "http://127.0.0.1";
 }
 // Settings for when app is deployed in non-production environment
-if (process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") {
+if (process.env.PUBLIC_VERCEL_ENV !== "production") {
 	log.setDefaultLevel("DEBUG");
 }
 

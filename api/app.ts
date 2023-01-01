@@ -8,8 +8,8 @@ export let host = "https://pokemon.helbling.uk";
 if (process.env.NODE_ENV !== "production") {
 	port = 3000;
 	host = "http://127.0.0.1";
-	log.setDefaultLevel("DEBUG");
 }
+log.setDefaultLevel("DEBUG");
 
 const app = express();
 

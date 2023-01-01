@@ -48,6 +48,10 @@ class Model {
 			);
 		}
 
+		log.debug(
+			`Retrieved ${entries.length} amount of entries for ${location}`
+		);
+
 		if (searchTerm === undefined || entries.length === 0) return entries;
 
 		const searchRegex = new RegExp(
@@ -80,6 +84,8 @@ class Model {
 				`Failed to fetch ${host}:${port}/static/pokedata/pokemon.json with error ${error}`
 			);
 		}
+
+		log.debug(`Retrieved ${pokemon.length} amount Pokemon`);
 
 		if (searchTerm === undefined || pokemon.length === 0) return pokemon;
 

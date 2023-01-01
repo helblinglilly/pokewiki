@@ -75,6 +75,7 @@ class Model {
 					move.attack_type_sprite =
 						"https://i.stack.imgur.com/LWKMo.png";
 
+				log.debug(move);
 				entry = move;
 			} else if (location === "types.json") {
 				entry.link = `/type/${entry.id}`;

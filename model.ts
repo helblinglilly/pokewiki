@@ -146,14 +146,36 @@ class Model {
 	};
 
 	static getSearchResults = async (
-		searchTerm: string
+		searchTerm: string,
+		pokemon: boolean,
+		items: boolean,
+		moves: boolean,
+		abilities: boolean
 	): Promise<Collection> => {
-		return Promise.all([
-			this.getGeneric("abilities.json", searchTerm),
-			this.getGeneric("items.json", searchTerm),
-			this.getGeneric("moves.json", searchTerm),
-			this.getPokemon(searchTerm),
-		]).then((values) => {
+		const promises: any[] = [];
+
+		promises.push(
+			abilities
+				? this.getGeneric("abilities.json", searchTerm)
+				: new Promise<[]>((resolve) => resolve([]))
+		);
+		promises.push(
+			items
+				? this.getGeneric("items.json", searchTerm)
+				: new Promise<[]>((resolve) => resolve([]))
+		);
+		promises.push(
+			moves
+				? this.getGeneric("moves.json", searchTerm)
+				: new Promise<[]>((resolve) => resolve([]))
+		);
+		promises.push(
+			pokemon
+				? this.getPokemon(searchTerm)
+				: new Promise<[]>((resolve) => resolve([]))
+		);
+
+		return Promise.all(promises).then((values) => {
 			return {
 				Abilities: values[0],
 				Items: values[1],

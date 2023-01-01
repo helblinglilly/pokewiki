@@ -4,7 +4,6 @@ import Model from "./model";
 
 class Controller {
 	static getIndex = (req: ex.Request, res: ex.Response) => {
-		// console.log("Cookies:", req.cookies);
 		res.render("./index");
 	};
 
@@ -14,7 +13,18 @@ class Controller {
 			return;
 		}
 
-		const searchResults = await Model.getSearchResults(req.query.term);
+		const showPokemon = req.query.pokemon === "true";
+		const showItems = req.query.items === "true";
+		const showMoves = req.query.moves === "moves";
+		const showAbilities = req.query.abilities === "true";
+
+		const searchResults = await Model.getSearchResults(
+			req.query.term,
+			showPokemon,
+			showItems,
+			showMoves,
+			showAbilities
+		);
 		const options = {
 			results: searchResults,
 			searchTerm: req.query.term,

@@ -40,7 +40,9 @@ class Model {
 	): Promise<GenericEntry[]> => {
 		let entries: GenericEntry[] = [];
 		try {
-			const result = await axios.get(`${host}:${port}${location}`);
+			const result = await axios.get(`${host}:${port}${location}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
 			entries = result.data;
 		} catch (error) {
 			log.error(
@@ -76,7 +78,10 @@ class Model {
 		let pokemon: PokemonName[] = [];
 		try {
 			const result = await axios.get(
-				`${host}:${port}/static/pokedata/pokemon.json`
+				`${host}:${port}/static/pokedata/pokemon.json`,
+				{
+					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				}
 			);
 			pokemon = result.data;
 		} catch (error) {

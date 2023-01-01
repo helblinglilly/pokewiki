@@ -82,7 +82,10 @@ block append body
                                 figure.container(style="display: flex; align-items: center;")
                                     img.is-48x48(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`, alt='Pokemon Icon').mr-1
                                     p.mr-3 ##{pokemon.id}
-                                    a.card-text(href=`${pokemon.link}`) #{pokemon.german} - #{pokemon.english}
+                                    if pokemon.german === pokemon.english
+                                        a.card-text #{pokemon.german}
+                                    else
+                                        a.card-text #{pokemon.german} - #{pokemon.english}
             if results.Items.length !== 0
                 p.title.is-4 Items
                 div.container#ItemResults
@@ -91,7 +94,10 @@ block append body
                             .card-content
                                 figure.container(style="display: flex; align-items: center;")
                                     img.is-48x48(src=`${item.sprite}`, style="height: 30px; width: 30px;" alt='Item Icon', onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png'").mr-1
-                                    a.card-text(href=`${item.link}`) #{item.german} - #{item.english}
+                                    if item.german === item.english
+                                        a.card-text #{item.german}
+                                    else
+                                        a.card-text #{item.german} - #{item.english}
             
             if results.Moves.length !== 0
                 p.title.is-4 Moves
@@ -103,7 +109,10 @@ block append body
                                     .container(style="display: inline-grid").mr-3
                                         img.icon(src=`${move.attack_type_sprite}`, style="width: 50px; height: 20px;" alt='Move type Icon').pb-1
                                         img.icon(src=`${move.type_sprite}`, alt='Type Icon', style="width: 50px; height: 20px;")
-                                    a.card-text(href=`${move.link}`) #{move.german} - #{move.english}
+                                    if move.german === move.english
+                                        a.card-text #{move.german}
+                                    else
+                                        a.card-text #{move.german} - #{move.english}
 
             if results.Abilities.length !== 0
                 p.title.is-4 Abilities
@@ -111,4 +120,7 @@ block append body
                     each ability in results.Abilities
                         .card(onclick=`location.href='${ability.link}'`).mb-3
                             .card-content
-                                a.card-text(href=`${ability.link}`) #{ability.german} - #{ability.english}
+                                if ability.german === ability.english
+                                    a.card-text #{ability.german}
+                                else
+                                    a.card-text #{ability.german} - #{ability.english}

@@ -2,7 +2,7 @@ import express from "express";
 import Controller from "../controller";
 import log from "../log";
 
-export let port = 80;
+export let port = 443;
 export let host = "https://pokemon.helbling.uk";
 
 if (process.env.NODE_ENV !== "production") {

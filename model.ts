@@ -9,40 +9,46 @@ interface GenericEntry {
 	english: string;
 	english_id: string;
 	id: number;
+	link: string;
+	sprite: string;
 }
 
 interface Moves extends GenericEntry {
 	attack_type: "physical" | "special" | "status";
-}
-
-interface Types extends GenericEntry {
-	sprite: string;
+	attack_type_sprite: string;
+	type: string;
+	type_sprite: string;
 }
 
 interface PokemonName {
 	german: string;
 	english: string;
 	id: number;
+	link: string;
+	sprite: string;
 }
 
 interface Collection {
 	Abilities?: GenericEntry[];
 	Items?: GenericEntry[];
 	Moves?: Moves[];
-	Types?: Types[];
+	Types?: GenericEntry[];
 	Pokemon?: PokemonName[];
 }
 
 class Model {
 	static getGeneric = async (
-		location: string,
+		location: "abilities.json" | "types.json" | "moves.json" | "items.json",
 		searchTerm?: string
 	): Promise<GenericEntry[]> => {
 		let entries: GenericEntry[] = [];
 		try {
-			const result = await axios.get(`${host}:${port}${location}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
+			const result = await axios.get(
+				`${host}:${port}/static/pokedata/${location}`,
+				{
+					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				}
+			);
 			entries = result.data;
 		} catch (error) {
 			log.error(
@@ -50,9 +56,31 @@ class Model {
 			);
 		}
 
-		log.debug(
-			`Retrieved ${entries.length} amount of entries for ${location}`
-		);
+		entries = entries.map((entry) => {
+			if (location === "abilities.json") {
+				entry.link = `/ability/${entry.id}`;
+			} else if (location === "items.json") {
+				entry.link = `/item/${entry.id}`;
+				entry.sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${entry.english_id}.png`;
+			} else if (location === "moves.json") {
+				const move = entry as Moves;
+				move.link = `/move/${entry.id}`;
+				if (move.attack_type === "physical")
+					move.attack_type_sprite =
+						"https://i.stack.imgur.com/UATOp.png";
+				else if (move.attack_type === "special")
+					move.attack_type_sprite =
+						"https://i.stack.imgur.com/dS0qQ.png";
+				else if (move.attack_type === "status")
+					move.attack_type_sprite =
+						"https://i.stack.imgur.com/LWKMo.png";
+
+				entry = move;
+			} else if (location === "types.json") {
+				entry.link = `/type/${entry.id}`;
+			}
+			return entry;
+		});
 
 		if (searchTerm === undefined || entries.length === 0) return entries;
 
@@ -90,7 +118,10 @@ class Model {
 			);
 		}
 
-		log.debug(`Retrieved ${pokemon.length} amount Pokemon`);
+		pokemon = pokemon.map((mon) => {
+			mon.link = `/pokemon/${mon.id}`;
+			return mon;
+		});
 
 		if (searchTerm === undefined || pokemon.length === 0) return pokemon;
 
@@ -117,18 +148,16 @@ class Model {
 		searchTerm: string
 	): Promise<Collection> => {
 		return Promise.all([
-			this.getGeneric("/static/pokedata/abilities.json", searchTerm),
-			this.getGeneric("/static/pokedata/items.json", searchTerm),
-			this.getGeneric("/static/pokedata/moves.json", searchTerm),
-			this.getGeneric("/static/pokedata/types.json", searchTerm),
+			this.getGeneric("abilities.json", searchTerm),
+			this.getGeneric("items.json", searchTerm),
+			this.getGeneric("moves.json", searchTerm),
 			this.getPokemon(searchTerm),
 		]).then((values) => {
 			return {
 				Abilities: values[0],
 				Items: values[1],
 				Moves: values[2] as Moves[],
-				Types: values[3] as Types[],
-				Pokemon: values[4] as PokemonName[],
+				Pokemon: values[3] as PokemonName[],
 			};
 		});
 	};

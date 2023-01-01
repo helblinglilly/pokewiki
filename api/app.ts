@@ -5,11 +5,15 @@ import log from "../log";
 export let port = 443;
 export let host = "https://pokemon.helbling.uk";
 
+// Settings for when app is not deployed
 if (process.env.NODE_ENV !== "production") {
 	port = 3000;
 	host = "http://127.0.0.1";
 }
-log.setDefaultLevel("DEBUG");
+// Settings for when app is deployed in non-production environment
+if (process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") {
+	log.setDefaultLevel("DEBUG");
+}
 
 const app = express();
 

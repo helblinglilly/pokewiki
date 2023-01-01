@@ -85,6 +85,7 @@ class Model {
 			);
 		}
 
+		console.log(`Retrieved ${pokemon.length} amount Pokemon`);
 		log.debug(`Retrieved ${pokemon.length} amount Pokemon`);
 
 		if (searchTerm === undefined || pokemon.length === 0) return pokemon;

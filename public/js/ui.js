@@ -26,14 +26,28 @@ const populateSearchFilters = () => {
 	const params = new URL(document.location).searchParams;
 
 	document.getElementById("searchBar").value = params.get("term");
-	if (!params.get("pokemon"))
-		document.getElementById("showPokemon").removeAttribute("checked");
-	if (!params.get("items"))
-		document.getElementById("showItems").removeAttribute("checked");
-	if (!params.get("moves"))
-		document.getElementById("showMoves").removeAttribute("checked");
-	if (!params.get("abilities"))
-		document.getElementById("showAbilities").removeAttribute("checked");
+
+	const typeSelections = [];
+	typeSelections.push(params.get("pokemon"));
+	typeSelections.push(params.get("items"));
+	typeSelections.push(params.get("moves"));
+	typeSelections.push(params.get("abilities"));
+
+	// Only de-select entries if they're not ALL (un)selected
+	if (!typeSelections.every((item) => item === typeSelections[0])) {
+		if (!params.get("pokemon")) {
+			document.getElementById("showPokemon").removeAttribute("checked");
+		}
+		if (!params.get("items")) {
+			document.getElementById("showItems").removeAttribute("checked");
+		}
+		if (!params.get("moves")) {
+			document.getElementById("showMoves").removeAttribute("checked");
+		}
+		if (!params.get("abilities")) {
+			document.getElementById("showAbilities").removeAttribute("checked");
+		}
+	}
 
 	if (params.get("game")) {
 		const select = document.getElementById("gameSelector");

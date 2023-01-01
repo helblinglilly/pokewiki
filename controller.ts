@@ -13,10 +13,17 @@ class Controller {
 			return;
 		}
 
-		const showPokemon = req.query.pokemon === "true";
-		const showItems = req.query.items === "true";
-		const showMoves = req.query.moves === "moves";
-		const showAbilities = req.query.abilities === "true";
+		let showPokemon = req.query.pokemon === "true";
+		let showItems = req.query.items === "true";
+		let showMoves = req.query.moves === "true";
+		let showAbilities = req.query.abilities === "true";
+
+		if (!showPokemon && !showItems && !showMoves && !showAbilities) {
+			showPokemon = true;
+			showItems = true;
+			showMoves = true;
+			showAbilities = true;
+		}
 
 		const searchResults = await Model.getSearchResults(
 			req.query.term,

@@ -1,4 +1,5 @@
 import * as ex from "express";
+import log from "./log";
 import Model from "./model";
 
 class Controller {
@@ -14,7 +15,6 @@ class Controller {
 		}
 
 		const searchResults = await Model.getSearchResults(req.query.term);
-
 		const options = {
 			results: searchResults,
 			searchTerm: req.query.term,

@@ -97,28 +97,9 @@ interface APIResponseAbility {
 		name: string;
 	}[];
 	id: string;
-	effect_changes: {
-		effect: string;
-		language: {
-			name: string;
-		};
-		version_group: {
-			name: string;
-		};
-	}[];
 	effect_entries: {
-		effect: string;
 		short_effect: string;
 		language: {
-			name: string;
-		};
-	}[];
-	flavor_text_entries: {
-		flavor_text: string;
-		language: {
-			name: string;
-		};
-		version_group: {
 			name: string;
 		};
 	}[];

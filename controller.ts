@@ -39,6 +39,20 @@ class Controller {
 
 		res.render("./index", { ...options });
 	};
+
+	static getPokemon = async (req: ex.Request, res: ex.Response) => {
+		const id = req.url.split("/")[2].split("?")[0];
+
+		let game = "";
+		if (typeof req.query.game === "string") {
+			game = req.query.game;
+		}
+
+		const details = await Model.getPokemonDetail(id, game);
+		console.log(details);
+		const options = { ...details };
+		res.render("./pokemon", { ...options });
+	};
 }
 
 export default Controller;

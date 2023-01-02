@@ -37,6 +37,10 @@ app.get("/search", (req, res, next) => {
 	Controller.getSearch(req, res);
 });
 
+app.get("/pokemon/*", (req, res, next) => {
+	Controller.getPokemon(req, res);
+});
+
 app.all("/*", (req, res) => {
 	res.render("404");
 });

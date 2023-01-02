@@ -36,6 +36,68 @@ interface Collection {
 	Pokemon?: PokemonName[];
 }
 
+interface PokemonDetails extends PokemonName {
+	backSprite: string;
+	shinySprite: string;
+	shinyBackSprite: string;
+	captureRate: number;
+	growthRate: string;
+	evolution?: {
+		means: string;
+		requirements: string;
+		target: PokemonDetails;
+	};
+	pokedex?: {
+		game: string;
+		entry: string;
+	}[];
+	ability: {
+		german: string;
+		english: string;
+		link: string;
+	};
+	moveset: {
+		german: string;
+		english: string;
+		link: string;
+		attack_type: "physical" | "special" | "status";
+		attack_type_sprite: string;
+		type: string;
+		type_sprite: string;
+		learning_method: string;
+	}[];
+}
+
+interface APIResponseSpecies {
+	evolution_chain: {
+		url: string;
+	};
+	capture_rate: number;
+	growth_rate: {
+		name: string;
+	};
+	names: {
+		language: {
+			name: string;
+			url: string;
+		};
+		name: string;
+	}[];
+	flavor_text_entries: {
+		flavor_text: string;
+		language: {
+			name: string;
+		};
+		version: {
+			name: string;
+		};
+	}[];
+}
+
+interface APIResponseEvolution {
+	id: number;
+}
+
 class Model {
 	static getGeneric = async (
 		location: "abilities.json" | "types.json" | "moves.json" | "items.json",
@@ -103,7 +165,9 @@ class Model {
 		return filtered;
 	};
 
-	static getPokemon = async (searchTerm?: string): Promise<PokemonName[]> => {
+	static getPokemonOverview = async (
+		searchTerm?: string
+	): Promise<PokemonName[]> => {
 		let pokemon: PokemonName[] = [];
 		try {
 			const result = await axios.get(
@@ -145,6 +209,85 @@ class Model {
 		return filtered;
 	};
 
+	static getPokemonDetail = async (
+		id: string,
+		game?: string
+	): Promise<PokemonDetails | void> => {
+		let speciesData: APIResponseSpecies;
+		let evolutionData: APIResponseEvolution;
+		try {
+			const speciesResponse = await axios.get(
+				`https://pokeapi.co/api/v2/pokemon-species/${id}`,
+				{
+					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				}
+			);
+			speciesData = speciesResponse.data;
+			const evolutionResponse = await axios.get(
+				speciesData.evolution_chain.url,
+				{
+					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				}
+			);
+			evolutionData = evolutionResponse.data;
+		} catch (err) {
+			log.error(`Failed to get details for Pokemon ${id}`);
+			return;
+		}
+
+		const german = speciesData.names.find(
+			(name) => name.language.name === "de"
+		)?.name;
+
+		const english = speciesData.names.find(
+			(name) => name.language.name === "en"
+		)?.name;
+
+		const pokedexEntries: { game: string; entry: string }[] = [];
+
+		if (game) {
+			const game1 = game.split("-")[0];
+			const game2 = game.split("-")[1];
+
+			speciesData.flavor_text_entries.forEach((entry) => {
+				if (
+					(game1 === entry.version.name ||
+						(game2 !== undefined &&
+							entry.version.name === game2)) &&
+					entry.language.name === "en"
+				) {
+					pokedexEntries.push({
+						game: entry.version.name,
+						entry: entry.flavor_text,
+					});
+				}
+			});
+		}
+
+		return {
+			german: german ? german : "",
+			english: english ? english : "",
+			id: parseInt(id),
+			link: `/pokemon/${id}`,
+			sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+			backSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`,
+			shinySprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
+			shinyBackSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png`,
+			pokedex: pokedexEntries,
+			// evolution:
+			ability: {
+				german: "",
+				english: "",
+				link: "",
+			},
+			captureRate: speciesData.capture_rate,
+			growthRate:
+				speciesData.growth_rate.name[0].toUpperCase() +
+				speciesData.growth_rate.name.substring(1),
+			moveset: [],
+		};
+	};
+
 	static getSearchResults = async (
 		searchTerm: string,
 		pokemon: boolean,
@@ -171,7 +314,7 @@ class Model {
 		);
 		promises.push(
 			pokemon
-				? this.getPokemon(searchTerm)
+				? this.getPokemonOverview(searchTerm)
 				: new Promise<[]>((resolve) => resolve([]))
 		);
 

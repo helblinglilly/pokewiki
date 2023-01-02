@@ -1,0 +1,119 @@
+extend  ./header.pug
+
+block append body
+    .container.is-max-desktop.pl-6.pr-6
+        nav.breadcrumb(aria-label="breadcrumbs")
+            ul
+                li
+                    a(href="/") Pokemon
+                li.is-active
+                    a #{id}
+
+        form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
+            .field.has-addons
+                .control.is-expanded
+                    input.input(type="text", id="searchBar", name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
+                .control(onclick="openFilter();")
+                    button.button.is-static(data-target="filters")#filterButton Filters
+            
+            input(type="submit" hidden)#searchSubmit
+
+            .modal#filterModal(hidden)
+                .modal-background(onclick="closeFilter();")
+                .modal-card
+                    .modal-card-body
+                        .box
+                            p.title.is-5 Types of results
+                            .columns
+                                .column
+                                    input(type='checkbox', id='showPokemon', name="pokemon", value="true", checked).mr-2
+                                    label(for="showPokemon").pr-4 Pokémon
+                                .column
+                                    input(type='checkbox', id='showItems', name="items", value="true", checked).mr-2
+                                    label(for="showItems").pr-4 Items
+                                .column
+                                    input(type='checkbox', id='showMoves', name="moves", value="true", checked).mr-2
+                                    label(for="showMoves").pr-4 Moves
+                                .column
+                                    input(type='checkbox', id='showAbilities', name="abilities" value="true", checked).mr-2
+                                    label(for="showAbilities").pr-4 Abilities
+                        .box
+                            p.title.is-5 Filter by game
+                            .select(form="search", name="game")
+                                select(form="search", name="game", id="gameSelector")
+                                    option(value="all") Any
+                                    option(value="legends-arceus") Legends Areceus
+                                    option(value="brilliant-diamond-and-shining-pearl") Brilliant Diamond / Shining Perl
+                                    option(value="sword-shield") Sword / Shield
+                                    option(value="lets-go-pikachu-lets-go-eevee") Let's Go Pikachu / Eevee 
+                                    option(value="ultra-sun-ultra-moon") Ultra Sun / Ultra Moon
+                                    option(value="sun-moon") Sun / Moon
+                                    option(value="omega-ruby-alpha-sapphire") Omega Ruby / Alpha Sapphire
+                                    option(value="x-y") X / Y
+                                    option(value="black-2-white-2") Black 2 / White 2
+                                    option(value="black-white") Black / White
+                                    option(value="heartgold-soulsilver") Heart Gold / Sould Silver
+                                    option(value="platinum") Platinum
+                                    option(value="diamond-perl") Diamond / Perl
+                                    option(value="firered-leafgreen") Firered / Leafgreen
+                                    option(value="emerald") Emerald
+                                    option(value="ruby-sapphire") Ruby / Sapphire
+                                    option(value="crystal") Crystal
+                                    option(value="gold-silver") Gold / Silver
+                                    option(value="yellow") Yellow
+                                    option(value="red-blue") Red / Blue
+                    footer.modal-card-foot
+                        button.button(onclick="document.forms['search'].submit()").is-info Search
+                        button.button(onclick="closeFilter();") Cancel
+        
+        .columns
+            .column
+                .card
+                    .card-header-title
+                        .columns(style="width: 100%")
+                            .column
+                                if german === english
+                                    p #{german}
+                                else
+                                    p #{german} - #{english}
+                    .card-content
+                        .columns.mb-0.is-mobile
+                            .column
+                                img(src=`${sprite}` style="height: auto; width: 100%")#sprite-front
+                            .column
+                                img(src=`${backSprite}` style="height: auto; width: 100%")#sprite-back
+            .column
+                .card
+                    .card-header-title
+                        p Evolution Chain
+                    .card-content
+                        p Hello
+        .columns
+            .column
+                .card
+                    .card-header-title
+                        p Moveset
+            .column
+                .card
+                    .card-header-title
+                        p Pokédex Entry
+                    if pokedex.length > 0
+                        .card-content
+                            each entry in pokedex
+                                p.is-capitalized.has-text-weight-bold #{entry.game}
+                                p.pb-2 #{entry.entry}
+        
+        .columns
+            
+            .column
+                .card
+                    .card-header-title
+                        p Statistics
+                    .card-content
+                        p.title.is-6 Catch Rate: #{captureRate}
+                        progress.progress.is-medium(max=255, value=`${captureRate}`) #{captureRate}%
+                        p This is the base capture rate of this Pokémon - it should be used as an approximation for how difficult it is to catch. A higher catch rate means a Pokémon is easier to catch.
+                        br
+                        p.title.is-6.mb-2 Growth Rate: #{growthRate}
+                        p How quickly this Pokémon is able to level-up
+

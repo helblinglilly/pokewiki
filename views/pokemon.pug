@@ -1,137 +1,210 @@
 extend  ./header.pug
 
 block append body
-    .container.is-max-desktop.pl-6.pr-6
-        nav.breadcrumb(aria-label="breadcrumbs")
-            ul
-                li
-                    a(href="/") Pokemon
-                li.is-active
-                    a #{id}
-
-        form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
-            .field.has-addons
-                .control.is-expanded
-                    input.input(type="text", id="searchBar", name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
-                .control(onclick="openFilter();")
-                    button.button.is-static(data-target="filters")#filterButton Filters
-            
-            input(type="submit" hidden)#searchSubmit
-
-            .modal#filterModal(hidden)
-                .modal-background(onclick="closeFilter();")
-                .modal-card
-                    .modal-card-body
-                        .box
-                            p.title.is-5 Types of results
-                            .columns
-                                .column
-                                    input(type='checkbox', id='showPokemon', name="pokemon", value="true", checked).mr-2
-                                    label(for="showPokemon").pr-4 Pokémon
-                                .column
-                                    input(type='checkbox', id='showItems', name="items", value="true", checked).mr-2
-                                    label(for="showItems").pr-4 Items
-                                .column
-                                    input(type='checkbox', id='showMoves', name="moves", value="true", checked).mr-2
-                                    label(for="showMoves").pr-4 Moves
-                                .column
-                                    input(type='checkbox', id='showAbilities', name="abilities" value="true", checked).mr-2
-                                    label(for="showAbilities").pr-4 Abilities
-                        .box
-                            p.title.is-5 Filter by game
-                            .select(form="search", name="game")
-                                select(form="search", name="game", id="gameSelector")
-                                    option(value="all") Any
-                                    option(value="legends-arceus") Legends Areceus
-                                    option(value="brilliant-diamond-and-shining-pearl") Brilliant Diamond / Shining Perl
-                                    option(value="sword-shield") Sword / Shield
-                                    option(value="lets-go-pikachu-lets-go-eevee") Let's Go Pikachu / Eevee 
-                                    option(value="ultra-sun-ultra-moon") Ultra Sun / Ultra Moon
-                                    option(value="sun-moon") Sun / Moon
-                                    option(value="omega-ruby-alpha-sapphire") Omega Ruby / Alpha Sapphire
-                                    option(value="x-y") X / Y
-                                    option(value="black-2-white-2") Black 2 / White 2
-                                    option(value="black-white") Black / White
-                                    option(value="heartgold-soulsilver") Heart Gold / Sould Silver
-                                    option(value="platinum") Platinum
-                                    option(value="diamond-perl") Diamond / Perl
-                                    option(value="firered-leafgreen") Firered / Leafgreen
-                                    option(value="emerald") Emerald
-                                    option(value="ruby-sapphire") Ruby / Sapphire
-                                    option(value="crystal") Crystal
-                                    option(value="gold-silver") Gold / Silver
-                                    option(value="yellow") Yellow
-                                    option(value="red-blue") Red / Blue
-                    footer.modal-card-foot
-                        button.button(onclick="document.forms['search'].submit()").is-info Search
-                        button.button(onclick="closeFilter();") Cancel
+    form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
+        .field.has-addons
+            .control.is-expanded
+                input.input(type="text", id="searchBar", name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
+            .control(onclick="openFilter();")
+                button.button.is-static(data-target="filters")#filterButton Filters
         
-        .columns
-            .column
-                .card
-                    .card-header-title.is-justify-content-space-between
-                        if german === english
-                            p #{german}
-                        else
-                            p #{german} - #{english}
-                    
-                        div
-                            each pType in types
-                                img(src=`${pType.sprite}` style="width: 55px; height: 20px;").pl-2
-                    .card-content
-                        .columns.mb-0.is-mobile
+        input(type="submit" hidden)#searchSubmit
+
+        .modal#filterModal(hidden)
+            .modal-background(onclick="closeFilter();")
+            .modal-card
+                .modal-card-body
+                    .box
+                        p.title.is-5 Types of results
+                        .columns
                             .column
-                                img(src=`${sprite}` style="height: auto; width: 100%")#sprite-front
+                                input(type='checkbox', id='showPokemon', name="pokemon", value="true", checked).mr-2
+                                label(for="showPokemon").pr-4 Pokémon
                             .column
-                                img(src=`${backSprite}` style="height: auto; width: 100%")#sprite-back
-            .column
-                .card
-                    .card-header-title
-                        p Evolution chain
-                    .card-content
-                        p Hello
-        .columns
-            .column
-                .card
-                    .card-header-title
-                        p Abilities
-                    .card-content
-                        each ability in abilities
-                            .box(onclick=`location.href='${ability.link}'`)
-                                p.has-text-weight-bold #{ability.name}
-                                if ability.isHidden
-                                    p.is-italic Hidden
-                                p #{ability.effect}
-            .column
-                .card
-                    .card-header-title
-                        p Base stats
-        .columns
-            .column
-                .card
-                    .card-header-title
-                        p Moveset
-            .column
-                .card
-                    .card-header-title
-                        p Pokédex entry
+                                input(type='checkbox', id='showItems', name="items", value="true", checked).mr-2
+                                label(for="showItems").pr-4 Items
+                            .column
+                                input(type='checkbox', id='showMoves', name="moves", value="true", checked).mr-2
+                                label(for="showMoves").pr-4 Moves
+                            .column
+                                input(type='checkbox', id='showAbilities', name="abilities" value="true", checked).mr-2
+                                label(for="showAbilities").pr-4 Abilities
+                    .box
+                        p.title.is-5 Filter by game
+                        .select(form="search", name="game")
+                            select(form="search", name="game", id="gameSelector")
+                                option(value="all") Any
+                                option(value="legends-arceus") Legends Areceus
+                                option(value="brilliant-diamond-and-shining-pearl") Brilliant Diamond / Shining Perl
+                                option(value="sword-shield") Sword / Shield
+                                option(value="lets-go-pikachu-lets-go-eevee") Let's Go Pikachu / Eevee 
+                                option(value="ultra-sun-ultra-moon") Ultra Sun / Ultra Moon
+                                option(value="sun-moon") Sun / Moon
+                                option(value="omega-ruby-alpha-sapphire") Omega Ruby / Alpha Sapphire
+                                option(value="x-y") X / Y
+                                option(value="black-2-white-2") Black 2 / White 2
+                                option(value="black-white") Black / White
+                                option(value="heartgold-soulsilver") Heart Gold / Sould Silver
+                                option(value="platinum") Platinum
+                                option(value="diamond-perl") Diamond / Perl
+                                option(value="firered-leafgreen") Firered / Leafgreen
+                                option(value="emerald") Emerald
+                                option(value="ruby-sapphire") Ruby / Sapphire
+                                option(value="crystal") Crystal
+                                option(value="gold-silver") Gold / Silver
+                                option(value="yellow") Yellow
+                                option(value="red-blue") Red / Blue
+                footer.modal-card-foot
+                    button.button(onclick="document.forms['search'].submit()").is-info Search
+                    button.button(onclick="closeFilter();") Cancel
+    
+    .columns
+        .column
+            .card
+                .card-header-title.is-justify-content-space-between
+                    if german === english
+                        p #{german}
+                    else
+                        p #{german} - #{english}
+                
+                    div
+                        each pType in types
+                            img(src=`${pType.sprite}` style="width: 55px; height: 20px;").pl-2
+                .card-content
+                    .columns.mb-0.is-mobile
+                        .column
+                            img(src=`${sprite}` style="height: auto; width: 100%")#sprite-front
+                        .column
+                            img(src=`${backSprite}` style="height: auto; width: 100%")#sprite-back
+        .column
+            .card
+                .card-header-title
+                    p Evolution chain
+                .card-content
+                    p Hello
+    .columns
+        .column
+            .card
+                .card-header-title
+                    p Abilities
+                .card-content
+                    each ability in abilities
+                        .box(onclick=`location.href='${ability.link}'`)
+                            p.has-text-weight-bold #{ability.name}
+                            if ability.isHidden
+                                p.is-italic Hidden
+                            p #{ability.effect}
+        .column
+            .card
+                .card-header-title
+                    p Base stats
+                .card-content
+                    table.table(style="width: 100%")
+                        thead
+                            tr
+                                th Name
+                                th Stat
+                                th Avg
+                                th Effort
+                        tbody
+                            tr
+                                if baseStats.hp.stat > 68 + 5
+                                    td.has-text-success-dark HP
+                                else if baseStats.hp.stat < 68 - 5
+                                    td.has-text-danger-dark HP
+                                else 
+                                    td HP
+                                th #{baseStats.hp.stat}
+                                th 68
+                                th #{baseStats.hp.effort}
+                            tr
+                                if baseStats.attack.stat > 76 + 5
+                                    td.has-text-success-dark Attack
+                                else if baseStats.attack.stat < 76 - 5
+                                    td.has-text-danger-dark Attack
+                                else 
+                                    td Attack
+                                th #{baseStats.attack.stat}
+                                th 76
+                                th #{baseStats.attack.effort}
+                            tr
+                                if baseStats.defense.stat > 72 + 5
+                                    td.has-text-success-dark Defense
+                                else if baseStats.defense.stat < 72 - 5
+                                    td.has-text-danger-dark Defense
+                                else 
+                                    td Defense
+                                th #{baseStats.defense.stat}
+                                th 72
+                                th #{baseStats.defense.effort}
+                            tr
+                                if baseStats.special_attack.stat > 70 + 5
+                                    td.has-text-success-dark Special Attack
+                                else if baseStats.special_attack.stat < 70 - 5
+                                    td.has-text-danger-dark Special Attack
+                                else 
+                                    td Special Attack
+                                th #{baseStats.special_attack.stat}
+                                th 70
+                                th #{baseStats.special_attack.effort}
+                            tr
+                                if baseStats.special_defense.stat > 70 + 5
+                                    td.has-text-success-dark Special Defense
+                                else if baseStats.special_defense.stat < 70 - 5
+                                    td.has-text-danger-dark Special Defense
+                                else 
+                                    td Special Defense
+                                th #{baseStats.special_defense.stat}
+                                th 70
+                                th #{baseStats.special_defense.effort}
+                            tr
+                                if baseStats.speed.stat > 66 + 5
+                                    td.has-text-success-dark Speed
+                                else if baseStats.speed.stat < 66 - 5
+                                    td.has-text-danger-dark Speed
+                                else 
+                                    td Speed
+                                th #{baseStats.speed.stat}
+                                th 66
+                                th #{baseStats.speed.effort}
+                            tfoot
+                                tr
+                                    th Pkmn Base Stat:
+                                    th #{((baseStats.hp.stat + baseStats.attack.stat + baseStats.defense.stat + baseStats.special_attack.stat + baseStats.special_defense.stat + baseStats.speed.stat) / 6).toFixed(2)}
+                                    th 70.85
+
+
+    .columns
+        .column
+            .card
+                .card-header-title
+                    p Moveset
+        .column
+            .card
+                .card-header-title
+                    p Pokédex entry
+                .card-content.pt-1
+                    .columns
+                        .column
+                            p Weight: #{weight} kg
+                        .column
+                            p Height: #{height}0 cm
                     if pokedex.length > 0
-                        .card-content
-                            each entry in pokedex
-                                p.is-capitalized.has-text-weight-bold #{entry.game}
-                                p.pb-2 #{entry.entry}
+                        each entry in pokedex
+                            p.is-capitalized.has-text-weight-bold #{entry.game}
+                            p.pb-2 #{entry.entry}
+    
+    .columns
         
-        .columns
-            
-            .column
-                .card
-                    .card-header-title
-                        p Statistics
-                    .card-content
-                        p.title.is-6 Catch rate: #{captureRate}
-                        progress.progress.is-medium(max=255, value=`${captureRate}`) #{captureRate}%
-                        p This is the base capture rate of this Pokémon - it should be used as an approximation for how difficult it is to catch. A higher catch rate means a Pokémon is easier to catch.
-                        br
-                        p.title.is-6.mb-2 Growth rate: #{growthRate}
-                        p How quickly this Pokémon is able to level-up
+        .column
+            .card
+                .card-header-title
+                    p Other Info
+                .card-content
+                    p.title.is-6 Catch rate: #{captureRate}
+                    progress.progress.is-medium(max=255, value=`${captureRate}`) #{captureRate}%
+                    p This is the base capture rate of this Pokémon - it should be used as an approximation for how difficult it is to catch. A higher catch rate means a Pokémon is easier to catch.
+                    br
+                    p.title.is-6.mb-2 Growth rate: #{growthRate}
+                    p How quickly this Pokémon is able to level-up
 

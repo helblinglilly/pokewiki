@@ -55,6 +55,8 @@ interface PokemonDetails extends PokemonName {
 		game: string;
 		entry: string;
 	}[];
+	weight: number;
+	height: number;
 	abilities: {
 		name: string;
 		effect: string;
@@ -71,9 +73,19 @@ interface PokemonDetails extends PokemonName {
 		type_sprite: string;
 		learning_method: string;
 	}[];
+	baseStats: {
+		hp: any;
+		attack: any;
+		defense: any;
+		special_attack: any;
+		special_defense: any;
+		speed: any;
+	};
 }
 
 interface APIResponsePokemon {
+	weight: number;
+	height: number;
 	abilities: {
 		ability: {
 			name: string;
@@ -83,6 +95,13 @@ interface APIResponsePokemon {
 	}[];
 	types: {
 		type: {
+			name: string;
+		};
+	}[];
+	stats: {
+		base_stat: number;
+		effort: number;
+		stat: {
 			name: string;
 		};
 	}[];
@@ -341,6 +360,47 @@ class Model {
 			});
 		});
 
+		let stats = {
+			hp: {},
+			attack: {},
+			defense: {},
+			special_attack: {},
+			special_defense: {},
+			speed: {},
+		};
+		pokemonData.stats.forEach((stat) => {
+			if (stat.stat.name === "hp")
+				stats.hp = {
+					stat: stat.base_stat,
+					effort: stat.effort,
+				};
+			else if (stat.stat.name === "attack")
+				stats.attack = {
+					stat: stat.base_stat,
+					effort: stat.effort,
+				};
+			else if (stat.stat.name === "defense")
+				stats.defense = {
+					stat: stat.base_stat,
+					effort: stat.effort,
+				};
+			else if (stat.stat.name === "special-attack")
+				stats.special_attack = {
+					stat: stat.base_stat,
+					effort: stat.effort,
+				};
+			else if (stat.stat.name === "special-defense")
+				stats.special_defense = {
+					stat: stat.base_stat,
+					effort: stat.effort,
+				};
+			else if (stat.stat.name === "speed")
+				stats.speed = {
+					stat: stat.base_stat,
+					effort: stat.effort,
+				};
+		});
+
 		if (game) {
 			const game1 = game.split("-")[0];
 			const game2 = game.split("-")[1];
@@ -371,6 +431,14 @@ class Model {
 			shinyBackSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png`,
 			types: types,
 			pokedex: pokedexEntries,
+			weight: parseFloat(
+				pokemonData.weight.toString().slice(0, -1) +
+					"." +
+					pokemonData.weight
+						.toString()
+						.charAt(pokemonData.weight.toString().length - 1)
+			),
+			height: pokemonData.height,
 			// evolution:
 			abilities: abilities,
 			captureRate: speciesData.capture_rate,
@@ -378,6 +446,7 @@ class Model {
 				speciesData.growth_rate.name[0].toUpperCase() +
 				speciesData.growth_rate.name.substring(1),
 			moveset: [],
+			baseStats: stats,
 		};
 	};
 

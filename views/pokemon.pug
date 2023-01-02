@@ -69,13 +69,15 @@ block append body
         .columns
             .column
                 .card
-                    .card-header-title
-                        .columns(style="width: 100%")
-                            .column
-                                if german === english
-                                    p #{german}
-                                else
-                                    p #{german} - #{english}
+                    .card-header-title.is-justify-content-space-between
+                        if german === english
+                            p #{german}
+                        else
+                            p #{german} - #{english}
+                    
+                        div
+                            each pType in types
+                                img(src=`${pType.sprite}` style="width: 55px; height: 20px;").pl-2
                     .card-content
                         .columns.mb-0.is-mobile
                             .column
@@ -85,9 +87,25 @@ block append body
             .column
                 .card
                     .card-header-title
-                        p Evolution Chain
+                        p Evolution chain
                     .card-content
                         p Hello
+        .columns
+            .column
+                .card
+                    .card-header-title
+                        p Abilities
+                    .card-content
+                        each ability in abilities
+                            .box(onclick=`location.href='${ability.link}'`)
+                                p.has-text-weight-bold #{ability.name}
+                                if ability.isHidden
+                                    p.is-italic Hidden
+                                p #{ability.effect}
+            .column
+                .card
+                    .card-header-title
+                        p Base stats
         .columns
             .column
                 .card
@@ -96,7 +114,7 @@ block append body
             .column
                 .card
                     .card-header-title
-                        p Pokédex Entry
+                        p Pokédex entry
                     if pokedex.length > 0
                         .card-content
                             each entry in pokedex
@@ -110,10 +128,10 @@ block append body
                     .card-header-title
                         p Statistics
                     .card-content
-                        p.title.is-6 Catch Rate: #{captureRate}
+                        p.title.is-6 Catch rate: #{captureRate}
                         progress.progress.is-medium(max=255, value=`${captureRate}`) #{captureRate}%
                         p This is the base capture rate of this Pokémon - it should be used as an approximation for how difficult it is to catch. A higher catch rate means a Pokémon is easier to catch.
                         br
-                        p.title.is-6.mb-2 Growth Rate: #{growthRate}
+                        p.title.is-6.mb-2 Growth rate: #{growthRate}
                         p How quickly this Pokémon is able to level-up
 

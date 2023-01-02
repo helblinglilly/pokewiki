@@ -37,6 +37,10 @@ interface Collection {
 }
 
 interface PokemonDetails extends PokemonName {
+	types: {
+		name: string;
+		sprite: string;
+	}[];
 	backSprite: string;
 	shinySprite: string;
 	shinyBackSprite: string;
@@ -51,11 +55,12 @@ interface PokemonDetails extends PokemonName {
 		game: string;
 		entry: string;
 	}[];
-	ability: {
-		german: string;
-		english: string;
+	abilities: {
+		name: string;
+		effect: string;
+		isHidden: boolean;
 		link: string;
-	};
+	}[];
 	moveset: {
 		german: string;
 		english: string;
@@ -65,6 +70,57 @@ interface PokemonDetails extends PokemonName {
 		type: string;
 		type_sprite: string;
 		learning_method: string;
+	}[];
+}
+
+interface APIResponsePokemon {
+	abilities: {
+		ability: {
+			name: string;
+			url: string;
+		};
+		is_hidden: boolean;
+	}[];
+	types: {
+		type: {
+			name: string;
+		};
+	}[];
+}
+
+interface APIResponseAbility {
+	name: string;
+	names: {
+		language: {
+			name: string;
+		};
+		name: string;
+	}[];
+	id: string;
+	effect_changes: {
+		effect: string;
+		language: {
+			name: string;
+		};
+		version_group: {
+			name: string;
+		};
+	}[];
+	effect_entries: {
+		effect: string;
+		short_effect: string;
+		language: {
+			name: string;
+		};
+	}[];
+	flavor_text_entries: {
+		flavor_text: string;
+		language: {
+			name: string;
+		};
+		version_group: {
+			name: string;
+		};
 	}[];
 }
 
@@ -213,37 +269,96 @@ class Model {
 		id: string,
 		game?: string
 	): Promise<PokemonDetails | void> => {
+		let pokemonData: APIResponsePokemon;
 		let speciesData: APIResponseSpecies;
 		let evolutionData: APIResponseEvolution;
-		try {
-			const speciesResponse = await axios.get(
-				`https://pokeapi.co/api/v2/pokemon-species/${id}`,
-				{
+		let allTypes: { english_id: string; sprite: string }[];
+		let abilitiesData: APIResponseAbility[] = [];
+		const pokedexEntries: { game: string; entry: string }[] = [];
+
+		const results = await Promise.all([
+			axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			}),
+			axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`, {
+				headers: {
+					"Accept-Encoding": "gzip,deflate,compress",
+				},
+			}),
+			axios.get(`${host}:${port}/static/pokedata/types.json`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			}),
+		]);
+
+		pokemonData = results[0].data;
+		speciesData = results[1].data;
+		allTypes = results[2].data;
+
+		const extraPromises = [
+			axios.get(speciesData.evolution_chain.url, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			}),
+		];
+		pokemonData.abilities.forEach((ability) =>
+			extraPromises.push(
+				axios.get(ability.ability.url, {
 					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				})
+			)
+		);
+		const extraResults = await Promise.all(extraPromises);
+		evolutionData = extraResults[0].data;
+
+		extraResults.forEach((entry, i) => {
+			if (i !== 0) abilitiesData.push(entry.data);
+		});
+
+		const abilities = abilitiesData.map((entry) => {
+			let name = entry.name;
+			let isHidden = false;
+			let effect = "";
+			pokemonData.abilities.forEach((ability) => {
+				if (ability.ability.name === entry.name) {
+					isHidden = ability.is_hidden;
 				}
-			);
-			speciesData = speciesResponse.data;
-			const evolutionResponse = await axios.get(
-				speciesData.evolution_chain.url,
-				{
-					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
+			entry.names.forEach((a) => {
+				if (a.language.name === "en") name = a.name;
+			});
+
+			entry.effect_entries.forEach((a) => {
+				if (a.language.name === "en") {
+					effect = a.short_effect;
 				}
-			);
-			evolutionData = evolutionResponse.data;
-		} catch (err) {
-			log.error(`Failed to get details for Pokemon ${id}`);
-			return;
-		}
+			});
+
+			return {
+				name: name,
+				effect: effect,
+				isHidden: isHidden,
+				link: `/ability/${entry.id}`,
+			};
+		});
 
 		const german = speciesData.names.find(
 			(name) => name.language.name === "de"
-		)?.name;
+		);
 
 		const english = speciesData.names.find(
 			(name) => name.language.name === "en"
-		)?.name;
+		);
 
-		const pokedexEntries: { game: string; entry: string }[] = [];
+		const types: { name: string; sprite: string }[] = [];
+		allTypes.forEach((allType) => {
+			pokemonData.types.forEach((pokeType) => {
+				if (allType.english_id === pokeType.type.name) {
+					types.push({
+						name: allType.english_id,
+						sprite: allType.sprite,
+					});
+				}
+			});
+		});
 
 		if (game) {
 			const game1 = game.split("-")[0];
@@ -265,21 +380,18 @@ class Model {
 		}
 
 		return {
-			german: german ? german : "",
-			english: english ? english : "",
+			german: german ? german.name : "",
+			english: english ? english.name : "",
 			id: parseInt(id),
 			link: `/pokemon/${id}`,
 			sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
 			backSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`,
 			shinySprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
 			shinyBackSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png`,
+			types: types,
 			pokedex: pokedexEntries,
 			// evolution:
-			ability: {
-				german: "",
-				english: "",
-				link: "",
-			},
+			abilities: abilities,
 			captureRate: speciesData.capture_rate,
 			growthRate:
 				speciesData.growth_rate.name[0].toUpperCase() +

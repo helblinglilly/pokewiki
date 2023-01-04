@@ -9,7 +9,11 @@ block append body
                 button.button.is-static(data-target="filters")#filterButton Filters
         
         input(type="submit" hidden)#searchSubmit
-
+        style.
+            table#statsTable * {
+                padding-left: 0;
+                padding-right: 0;
+            }
         .modal#filterModal(hidden)
             .modal-background(onclick="closeFilter();")
             .modal-card
@@ -58,6 +62,10 @@ block append body
                     button.button(onclick="document.forms['search'].submit()").is-info Search
                     button.button(onclick="closeFilter();") Cancel
     
+    if selectedGames.length > 0 && moveset.length === 0
+        .notification.is-warning.is-light 
+            p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
+    
     .columns
         .column
             .card
@@ -75,7 +83,12 @@ block append body
                         .column
                             img(src=`${sprite}` style="height: auto; width: 100%")#sprite-front
                         .column
-                            img(src=`${backSprite}` style="height: auto; width: 100%")#sprite-back
+                            if backSprite !== null
+                                img(src=`${backSprite}` style="height: auto; width: 100%")#sprite-back
+                            else
+                                div.has-text-centered
+                                    img(src=`${shinySprite}` style="height: auto; width: 100%")#sprite-back
+                                    p.is-italic Shiny
         .column
             .card
                 .card-header-title(onclick="toggleVisibility(this);")
@@ -99,13 +112,13 @@ block append body
                 .card-header-title(onclick="toggleVisibility(this);")
                     p Base stats
                 .card-content
-                    table.table(style="width: 100%")
+                    table.table(style="width: 100%")#statsTable
                         thead
                             tr
                                 th Name
                                 th Stat
                                 th Avg
-                                th Effort
+                                th EV
                         tbody
                             tr
                                 if baseStats.hp.stat > 68 + 5
@@ -114,9 +127,9 @@ block append body
                                     td.has-text-danger-dark HP
                                 else 
                                     td HP
-                                th #{baseStats.hp.stat}
-                                th 68
-                                th #{baseStats.hp.effort}
+                                td #{baseStats.hp.stat}
+                                td 68
+                                td #{baseStats.hp.effort}
                             tr
                                 if baseStats.attack.stat > 76 + 5
                                     td.has-text-success-dark Attack
@@ -124,9 +137,9 @@ block append body
                                     td.has-text-danger-dark Attack
                                 else 
                                     td Attack
-                                th #{baseStats.attack.stat}
-                                th 76
-                                th #{baseStats.attack.effort}
+                                td #{baseStats.attack.stat}
+                                td 76
+                                td #{baseStats.attack.effort}
                             tr
                                 if baseStats.defense.stat > 72 + 5
                                     td.has-text-success-dark Defense
@@ -134,9 +147,9 @@ block append body
                                     td.has-text-danger-dark Defense
                                 else 
                                     td Defense
-                                th #{baseStats.defense.stat}
-                                th 72
-                                th #{baseStats.defense.effort}
+                                td #{baseStats.defense.stat}
+                                td 72
+                                td #{baseStats.defense.effort}
                             tr
                                 if baseStats.special_attack.stat > 70 + 5
                                     td.has-text-success-dark Special Attack
@@ -144,9 +157,9 @@ block append body
                                     td.has-text-danger-dark Special Attack
                                 else 
                                     td Special Attack
-                                th #{baseStats.special_attack.stat}
-                                th 70
-                                th #{baseStats.special_attack.effort}
+                                td #{baseStats.special_attack.stat}
+                                td 70
+                                td #{baseStats.special_attack.effort}
                             tr
                                 if baseStats.special_defense.stat > 70 + 5
                                     td.has-text-success-dark Special Defense
@@ -154,9 +167,9 @@ block append body
                                     td.has-text-danger-dark Special Defense
                                 else 
                                     td Special Defense
-                                th #{baseStats.special_defense.stat}
-                                th 70
-                                th #{baseStats.special_defense.effort}
+                                td #{baseStats.special_defense.stat}
+                                td 70
+                                td #{baseStats.special_defense.effort}
                             tr
                                 if baseStats.speed.stat > 66 + 5
                                     td.has-text-success-dark Speed
@@ -164,23 +177,49 @@ block append body
                                     td.has-text-danger-dark Speed
                                 else 
                                     td Speed
-                                th #{baseStats.speed.stat}
-                                th 66
-                                th #{baseStats.speed.effort}
+                                td #{baseStats.speed.stat}
+                                td 66
+                                td #{baseStats.speed.effort}
                             tfoot
                                 tr
                                     th Pkmn Base Stat:
-                                    th #{((baseStats.hp.stat + baseStats.attack.stat + baseStats.defense.stat + baseStats.special_attack.stat + baseStats.special_defense.stat + baseStats.speed.stat) / 6).toFixed(2)}
-                                    th 70.85
-
+                                    td #{((baseStats.hp.stat + baseStats.attack.stat + baseStats.defense.stat + baseStats.special_attack.stat + baseStats.special_defense.stat + baseStats.speed.stat) / 6).toFixed(2)}
+                                    td 70.85
 
     .columns
         .column
             .card
                 .card-header-title(onclick="toggleVisibility(this);")
-                    p Moveset
-                if moveset.length > 0
+                    p Other Info
+                .card-content
+                    p.title.is-6 Catch rate: #{captureRate}
+                    progress.progress.is-medium(max=255, value=`${captureRate}`) #{captureRate}%
+                    p This is the base capture rate of this Pokémon - it should be used as an approximation for how difficult it is to catch. A higher catch rate means a Pokémon is easier to catch.
+                    br
+                    p.title.is-6.mb-2 Growth rate: #{growthRate}
+                    p How quickly this Pokémon is able to level-up
+    
+    if moveset.length > 0
+        .columns
+            .column
+                .card
+                    .card-header-title(onclick="toggleVisibility(this);")
+                        p Pokédex entry
                     .card-content.pt-1
+                        .columns
+                            .column
+                                p Weight: #{weight} kg
+                            .column
+                                p Height: #{height}0 cm
+                        if pokedex.length > 0
+                            each entry in pokedex
+                                p.is-capitalized.has-text-weight-bold #{entry.game}
+                                p.pb-2 #{entry.entry}
+            .column
+                .card
+                    .card-header-title(onclick="toggleVisibility(this);")
+                        p Moveset
+                    .card-content.pt-1(hidden)
                         table.table(style="width: 100%").is-striped.is-hoverable
                             thead
                                 tr
@@ -212,32 +251,8 @@ block append body
                                                 p Egg
                                         else
                                             p Lv. #{move.level_learnt}  
-        .column
-            .card
-                .card-header-title(onclick="toggleVisibility(this);")
-                    p Pokédex entry
-                .card-content.pt-1
-                    .columns
-                        .column
-                            p Weight: #{weight} kg
-                        .column
-                            p Height: #{height}0 cm
-                    if pokedex.length > 0
-                        each entry in pokedex
-                            p.is-capitalized.has-text-weight-bold #{entry.game}
-                            p.pb-2 #{entry.entry}
+            
+
+
     
-    .columns
-        
-        .column
-            .card
-                .card-header-title(onclick="toggleVisibility(this);")
-                    p Other Info
-                .card-content
-                    p.title.is-6 Catch rate: #{captureRate}
-                    progress.progress.is-medium(max=255, value=`${captureRate}`) #{captureRate}%
-                    p This is the base capture rate of this Pokémon - it should be used as an approximation for how difficult it is to catch. A higher catch rate means a Pokémon is easier to catch.
-                    br
-                    p.title.is-6.mb-2 Growth rate: #{growthRate}
-                    p How quickly this Pokémon is able to level-up
 

@@ -94,7 +94,15 @@ block append body
                 .card-header-title(onclick="toggleVisibility(this);")
                     p Evolution chain
                 .card-content
-                    p Hello
+                    each evolution in evolutions
+                        .columns.is-vcentered.is-mobile
+                            .column.has-text-centered
+                                img(src=`${evolution.sourceSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.sourceURL}'`)
+                            .column.has-text-centered
+                                if evolution.evolutionMeans === "level-up"
+                                    p Level: #{evolution.evolutionRequirement}
+                            .column.has-text-centered
+                                img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}'`)
     .columns
         .column
             .card
@@ -219,7 +227,7 @@ block append body
                 .card
                     .card-header-title(onclick="toggleVisibility(this);")
                         p Moveset
-                    .card-content.pt-1(hidden)
+                    .card-content.pt-1
                         table.table(style="width: 100%").is-striped.is-hoverable
                             thead
                                 tr

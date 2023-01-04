@@ -41,6 +41,15 @@ export interface MoveDetails {
 	learning_method: string;
 	level_learnt: number;
 }
+
+export interface Evolution {
+	sourceURL: string;
+	sourceSprite: string;
+	evolutionMeans: string;
+	evolutionRequirement: string;
+	targetURL: string;
+	targetSprite: string;
+}
 export interface PokemonDetails extends PokemonName {
 	types: {
 		name: string;
@@ -51,11 +60,7 @@ export interface PokemonDetails extends PokemonName {
 	shinyBackSprite: string;
 	captureRate: number;
 	growthRate: string;
-	evolution?: {
-		means: string;
-		requirements: string;
-		target: PokemonDetails;
-	};
+	evolutions: Evolution[];
 	pokedex?: {
 		game: string;
 		entry: string;

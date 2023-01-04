@@ -12,6 +12,7 @@ import {
 	APIResponseAbility,
 	Collection,
 	MoveDetails,
+	Evolution,
 } from "./types";
 
 const searchLimit = 10;
@@ -316,6 +317,28 @@ class Model {
 			});
 		}
 
+		const evolutions: Evolution[] = [];
+		evolutions.push({
+			sourceURL: "/pokemon/4",
+			sourceSprite:
+				"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
+			evolutionMeans: "level-up",
+			evolutionRequirement: "17",
+			targetURL: "/pokemon/5",
+			targetSprite:
+				"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png",
+		});
+		evolutions.push({
+			sourceURL: "/pokemon/5",
+			sourceSprite:
+				"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png",
+			evolutionMeans: "level-up",
+			evolutionRequirement: "36",
+			targetURL: "/pokemon/6",
+			targetSprite:
+				"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
+		});
+
 		return {
 			german: german ? german.name : "",
 			english: english ? english.name : "",
@@ -336,7 +359,7 @@ class Model {
 						.charAt(pokemonData.weight.toString().length - 1)
 			),
 			height: pokemonData.height,
-			// evolution:
+			evolutions: evolutions,
 			abilities: abilities,
 			captureRate: speciesData.capture_rate,
 			growthRate:

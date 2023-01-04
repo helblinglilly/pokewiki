@@ -1,158 +1,20 @@
 import axios from "axios";
 import log from "./log";
 import { host, port } from "./api/app";
+import {
+	GenericEntry,
+	Moves,
+	PokemonName,
+	PokemonDetails,
+	APIResponsePokemon,
+	APIResponseSpecies,
+	APIResponseEvolution,
+	APIResponseAbility,
+	Collection,
+	MoveDetails,
+} from "./types";
 
 const searchLimit = 10;
-
-interface GenericEntry {
-	german: string;
-	english: string;
-	english_id: string;
-	id: number;
-	link: string;
-	sprite: string;
-}
-
-interface Moves extends GenericEntry {
-	attack_type: "physical" | "special" | "status";
-	attack_type_sprite: string;
-	type: string;
-	type_sprite: string;
-}
-
-interface PokemonName {
-	german: string;
-	english: string;
-	id: number;
-	link: string;
-	sprite: string;
-}
-
-interface Collection {
-	Abilities?: GenericEntry[];
-	Items?: GenericEntry[];
-	Moves?: Moves[];
-	Types?: GenericEntry[];
-	Pokemon?: PokemonName[];
-}
-
-interface PokemonDetails extends PokemonName {
-	types: {
-		name: string;
-		sprite: string;
-	}[];
-	backSprite: string;
-	shinySprite: string;
-	shinyBackSprite: string;
-	captureRate: number;
-	growthRate: string;
-	evolution?: {
-		means: string;
-		requirements: string;
-		target: PokemonDetails;
-	};
-	pokedex?: {
-		game: string;
-		entry: string;
-	}[];
-	weight: number;
-	height: number;
-	abilities: {
-		name: string;
-		effect: string;
-		isHidden: boolean;
-		link: string;
-	}[];
-	moveset: {
-		german: string;
-		english: string;
-		link: string;
-		attack_type: "physical" | "special" | "status";
-		attack_type_sprite: string;
-		type: string;
-		type_sprite: string;
-		learning_method: string;
-	}[];
-	baseStats: {
-		hp: any;
-		attack: any;
-		defense: any;
-		special_attack: any;
-		special_defense: any;
-		speed: any;
-	};
-}
-
-interface APIResponsePokemon {
-	weight: number;
-	height: number;
-	abilities: {
-		ability: {
-			name: string;
-			url: string;
-		};
-		is_hidden: boolean;
-	}[];
-	types: {
-		type: {
-			name: string;
-		};
-	}[];
-	stats: {
-		base_stat: number;
-		effort: number;
-		stat: {
-			name: string;
-		};
-	}[];
-}
-
-interface APIResponseAbility {
-	name: string;
-	names: {
-		language: {
-			name: string;
-		};
-		name: string;
-	}[];
-	id: string;
-	effect_entries: {
-		short_effect: string;
-		language: {
-			name: string;
-		};
-	}[];
-}
-
-interface APIResponseSpecies {
-	evolution_chain: {
-		url: string;
-	};
-	capture_rate: number;
-	growth_rate: {
-		name: string;
-	};
-	names: {
-		language: {
-			name: string;
-			url: string;
-		};
-		name: string;
-	}[];
-	flavor_text_entries: {
-		flavor_text: string;
-		language: {
-			name: string;
-		};
-		version: {
-			name: string;
-		};
-	}[];
-}
-
-interface APIResponseEvolution {
-	id: number;
-}
 
 class Model {
 	static getGeneric = async (
@@ -274,6 +136,7 @@ class Model {
 		let evolutionData: APIResponseEvolution;
 		let allTypes: { english_id: string; sprite: string }[];
 		let abilitiesData: APIResponseAbility[] = [];
+		let allMoves: Moves[] = [];
 		const pokedexEntries: { game: string; entry: string }[] = [];
 
 		const results = await Promise.all([
@@ -288,11 +151,13 @@ class Model {
 			axios.get(`${host}:${port}/static/pokedata/types.json`, {
 				headers: { "Accept-Encoding": "gzip,deflate,compress" },
 			}),
+			this.getGeneric("moves.json"),
 		]);
 
 		pokemonData = results[0].data;
 		speciesData = results[1].data;
 		allTypes = results[2].data;
+		allMoves = results[3] as Moves[];
 
 		const extraPromises = [
 			axios.get(speciesData.evolution_chain.url, {
@@ -313,6 +178,7 @@ class Model {
 			if (i !== 0) abilitiesData.push(entry.data);
 		});
 
+		// Abilities
 		const abilities = abilitiesData.map((entry) => {
 			let name = entry.name;
 			let isHidden = false;
@@ -340,6 +206,7 @@ class Model {
 			};
 		});
 
+		// Names
 		const german = speciesData.names.find(
 			(name) => name.language.name === "de"
 		);
@@ -348,6 +215,7 @@ class Model {
 			(name) => name.language.name === "en"
 		);
 
+		// Pokemon Types
 		const types: { name: string; sprite: string }[] = [];
 		allTypes.forEach((allType) => {
 			pokemonData.types.forEach((pokeType) => {
@@ -360,6 +228,7 @@ class Model {
 			});
 		});
 
+		// Stats
 		let stats = {
 			hp: {},
 			attack: {},
@@ -368,6 +237,7 @@ class Model {
 			special_defense: {},
 			speed: {},
 		};
+
 		pokemonData.stats.forEach((stat) => {
 			if (stat.stat.name === "hp")
 				stats.hp = {
@@ -401,6 +271,8 @@ class Model {
 				};
 		});
 
+		// Game specific sections
+		const moveset: MoveDetails[] = [];
 		if (game) {
 			const game1 = game.split("-")[0];
 			const game2 = game.split("-")[1];
@@ -417,6 +289,27 @@ class Model {
 						entry: entry.flavor_text,
 					});
 				}
+			});
+
+			// Moves
+			pokemonData.moves.forEach((move) => {
+				move.version_group_details.forEach((version) => {
+					if (
+						version.version_group.name.includes(game1) ||
+						(game2 !== undefined &&
+							version.version_group.name.includes(game2))
+					) {
+						const moveDetail = allMoves.find(
+							(a) => a.english_id === move.move.name
+						);
+						if (moveDetail !== undefined)
+							moveset.push({
+								...moveDetail,
+								learning_method: version.move_learn_method.name,
+								level_learnt: version.level_learned_at,
+							});
+					}
+				});
 			});
 		}
 
@@ -445,7 +338,11 @@ class Model {
 			growthRate:
 				speciesData.growth_rate.name[0].toUpperCase() +
 				speciesData.growth_rate.name.substring(1),
-			moveset: [],
+			moveset: moveset
+				.sort((a, b) =>
+					a.learning_method > b.learning_method ? 1 : -1
+				)
+				.sort((a, b) => (a.level_learnt > b.level_learnt ? 1 : -1)),
 			baseStats: stats,
 		};
 	};
@@ -491,4 +388,5 @@ class Model {
 	};
 }
 
+const findMoveDetails = (allMoves: Moves[], moveToFind: MoveDetails) => {};
 export default Model;

@@ -78,25 +78,25 @@ block append body
                             img(src=`${backSprite}` style="height: auto; width: 100%")#sprite-back
         .column
             .card
-                .card-header-title
+                .card-header-title(onclick="toggleVisibility(this);")
                     p Evolution chain
                 .card-content
                     p Hello
     .columns
         .column
             .card
-                .card-header-title
+                .card-header-title(onclick="toggleVisibility(this);")
                     p Abilities
                 .card-content
                     each ability in abilities
-                        .box(onclick=`location.href='${ability.link}'`)
+                        .box(onclick=`location.href='${ability.link}'`, style="cursor: pointer;")
                             p.has-text-weight-bold #{ability.name}
                             if ability.isHidden
                                 p.is-italic Hidden
                             p #{ability.effect}
         .column
             .card
-                .card-header-title
+                .card-header-title(onclick="toggleVisibility(this);")
                     p Base stats
                 .card-content
                     table.table(style="width: 100%")
@@ -177,11 +177,44 @@ block append body
     .columns
         .column
             .card
-                .card-header-title
+                .card-header-title(onclick="toggleVisibility(this);")
                     p Moveset
+                if moveset.length > 0
+                    .card-content.pt-1
+                        table.table(style="width: 100%").is-striped.is-hoverable
+                            thead
+                                tr
+                                    th.pl-0 Type
+                                    th.pl-0 Name
+                                    th.pl-0 Level
+                            tbody(style="width: 100%")
+                            for move in moveset
+                                tr(onclick=`location.href='${move.link}'`, style="cursor: pointer;")
+                                    td(style="width: 70px;").pl-0
+                                        .container(style="display: inline-grid")
+                                            img.icon(src=`${move.type_sprite}`, style="width: 50px; height: 20px;" alt='Move type Icon').tableImage
+                                            img.icon(src=`${move.attack_type_sprite}`, alt='Type Icon', style="width: 50px; height: 20px;").tableImage.mt-1
+                                    td.pl-0
+                                        if move.german === move.english
+                                            p #{move.german}
+                                        else 
+                                            p #{move.german}
+                                            p #{move.english}
+                                    td.pl-0
+                                        if move.learning_method !== "level-up"
+                                            if move.learning_method === "machine"
+                                                p TM/VM
+                                            else if move.learning_method === "tutor"
+                                                p Erlernt
+                                                p Tutor
+                                            else if move.learning_method === "egg"
+                                                p Ei
+                                                p Egg
+                                        else
+                                            p Lv. #{move.level_learnt}  
         .column
             .card
-                .card-header-title
+                .card-header-title(onclick="toggleVisibility(this);")
                     p Pokédex entry
                 .card-content.pt-1
                     .columns
@@ -198,7 +231,7 @@ block append body
         
         .column
             .card
-                .card-header-title
+                .card-header-title(onclick="toggleVisibility(this);")
                     p Other Info
                 .card-content
                     p.title.is-6 Catch rate: #{captureRate}

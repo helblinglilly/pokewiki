@@ -59,3 +59,13 @@ const populateSearchFilters = () => {
 		}
 	}
 };
+
+const toggleVisibility = (sender) => {
+	sender.parentElement.childNodes.forEach((child) => {
+		if (child.classList.contains("card-content")) {
+			if (child.getAttribute("hidden") === null)
+				child.setAttribute("hidden", "");
+			else child.removeAttribute("hidden");
+		}
+	});
+};

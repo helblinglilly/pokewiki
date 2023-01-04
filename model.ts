@@ -273,9 +273,12 @@ class Model {
 
 		// Game specific sections
 		const moveset: MoveDetails[] = [];
+		const games: string[] = [];
 		if (game) {
 			const game1 = game.split("-")[0];
 			const game2 = game.split("-")[1];
+			games.push(game1);
+			if (game2 !== undefined) games.push(game2);
 
 			speciesData.flavor_text_entries.forEach((entry) => {
 				if (
@@ -318,11 +321,12 @@ class Model {
 			english: english ? english.name : "",
 			id: parseInt(id),
 			link: `/pokemon/${id}`,
-			sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-			backSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`,
-			shinySprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
-			shinyBackSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png`,
+			sprite: pokemonData.sprites.front_default,
+			backSprite: pokemonData.sprites.back_default,
+			shinySprite: pokemonData.sprites.front_shiny,
+			shinyBackSprite: pokemonData.sprites.back_shiny,
 			types: types,
+			selectedGames: games,
 			pokedex: pokedexEntries,
 			weight: parseFloat(
 				pokemonData.weight.toString().slice(0, -1) +

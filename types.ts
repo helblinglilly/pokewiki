@@ -77,6 +77,7 @@ export interface PokemonDetails extends PokemonName {
 		special_defense: any;
 		speed: any;
 	};
+	selectedGames: string[];
 }
 
 export interface APIResponsePokemon {
@@ -118,6 +119,12 @@ export interface APIResponsePokemon {
 			name: string;
 		};
 	}[];
+	sprites: {
+		back_default: string;
+		back_shiny: string;
+		front_default: string;
+		front_shiny: string;
+	};
 }
 
 export interface APIResponseAbility {

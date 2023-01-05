@@ -93,14 +93,30 @@ block append body
             .card
                 .card-header-title(onclick="toggleVisibility(this);")
                     p Evolution chain
-                .card-content
+                .card-content.pt-1
                     each evolution in evolutions
                         .columns.is-vcentered.is-mobile
                             .column.has-text-centered
                                 img(src=`${evolution.sourceSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.sourceURL}'`)
                             .column.has-text-centered
-                                if evolution.evolutionMeans === "level-up"
-                                    p Level: #{evolution.evolutionRequirement}
+                                if evolution.trigger.includes("Level")
+                                    p #{evolution.trigger}
+                                
+                                else if evolution.trigger === "trade"
+                                    p Trade
+
+                                each requirement in evolution.requirements
+                                    if requirement.type === "gender"
+                                        p #{requirement.info}
+                                    if requirement.type === "use-item"
+                                        .container
+                                            p(style="vertical-align: middle; display: inline;") Use
+                                            img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;")
+                                    if requirement.type === "hold-item"
+                                        .container
+                                            p(style="vertical-align: middle; display: inline;") Hold
+                                            img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;")
+
                             .column.has-text-centered
                                 img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}'`)
     .columns

@@ -45,8 +45,12 @@ export interface MoveDetails {
 export interface Evolution {
 	sourceURL: string;
 	sourceSprite: string;
-	evolutionMeans: string;
-	evolutionRequirement: string;
+	trigger: string;
+	requirements: {
+		type: string;
+		info: string;
+		supplementary?: string;
+	}[];
 	targetURL: string;
 	targetSprite: string;
 }
@@ -175,6 +179,41 @@ export interface APIResponseSpecies {
 	}[];
 }
 
+export interface EvolutionChain {
+	species: {
+		name: string;
+		url: string;
+	};
+	evolution_details: {
+		gender: string;
+		held_item: {
+			name: string;
+			url: string;
+		};
+		item: {
+			name: string;
+			url: string;
+		};
+		known_move: string;
+		known_move_type: string;
+		location: string;
+		min_affection: string;
+		min_beauty: string;
+		min_happiness: string;
+		min_level: number;
+		needs_overworld_rain: boolean;
+		party_species: string;
+		party_type: string;
+		relative_physical_stats: string;
+		time_of_day: string;
+		trade_species: string;
+		trigger: {
+			name: string;
+			url: string;
+		};
+	}[];
+	evolves_to: EvolutionChain[];
+}
 export interface APIResponseEvolution {
-	id: number;
+	chain: EvolutionChain;
 }

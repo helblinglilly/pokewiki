@@ -13,6 +13,7 @@ import {
 	Collection,
 	MoveDetails,
 	Evolution,
+	EvolutionChain,
 } from "./types";
 
 const searchLimit = 10;
@@ -317,27 +318,8 @@ class Model {
 			});
 		}
 
-		const evolutions: Evolution[] = [];
-		evolutions.push({
-			sourceURL: "/pokemon/4",
-			sourceSprite:
-				"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
-			evolutionMeans: "level-up",
-			evolutionRequirement: "17",
-			targetURL: "/pokemon/5",
-			targetSprite:
-				"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png",
-		});
-		evolutions.push({
-			sourceURL: "/pokemon/5",
-			sourceSprite:
-				"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png",
-			evolutionMeans: "level-up",
-			evolutionRequirement: "36",
-			targetURL: "/pokemon/6",
-			targetSprite:
-				"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
-		});
+		// Evolution
+		const evolutions: Evolution[] = this.getEvolutions(evolutionData);
 
 		return {
 			german: german ? german.name : "",
@@ -413,7 +395,83 @@ class Model {
 			};
 		});
 	};
+
+	static getEvolutions = (
+		evolutionData: APIResponseEvolution
+	): Evolution[] => {
+		const results: Evolution[] = [];
+
+		let sourceID = evolutionData.chain.species.url.split("/")[6];
+
+		const process = (evolution: EvolutionChain) => {
+			const targetID = evolution.species.url.split("/")[6];
+
+			evolution.evolution_details.forEach((details) => {
+				let trigger = "";
+				const requirements: {
+					type: string;
+					info: string;
+					supplementary?: string;
+				}[] = [];
+
+				console.log(details);
+
+				if (details.trigger.name === "level-up") {
+					trigger = `Level ${details.min_level}`;
+				} else if (details.trigger.name === "use-item") {
+					trigger = "use-item";
+					requirements.push({
+						type: "use-item",
+						info: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${details.item.name}.png`,
+						supplementary: `/item/${
+							details.item.url.split("/")[6]
+						}`,
+					});
+				} else {
+					trigger = details.trigger.name;
+				}
+
+				if (details.gender !== null) {
+					if (details.gender == "1")
+						requirements.push({ type: "gender", info: "Female" });
+					if (details.gender == "2")
+						requirements.push({ type: "gender", info: "Male" });
+				}
+
+				if (details.held_item !== null) {
+					requirements.push({
+						type: "hold-item",
+						info: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${details.held_item.name}.png`,
+						supplementary: `/item/${
+							details.held_item.url.split("/")[6]
+						}`,
+					});
+				}
+
+				console.log(trigger);
+				console.log(requirements);
+
+				results.push({
+					sourceURL: `/pokemon/${sourceID}`,
+					sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${sourceID}.png`,
+					trigger: trigger,
+					requirements: requirements,
+					targetURL: `/pokemon/${targetID}`,
+					targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${targetID}.png`,
+				});
+			});
+			evolution.evolves_to.forEach((direction) => {
+				sourceID = targetID;
+				process(direction);
+			});
+		};
+
+		evolutionData.chain.evolves_to.forEach((evolution) => {
+			process(evolution);
+		});
+
+		return results;
+	};
 }
 
-const findMoveDetails = (allMoves: Moves[], moveToFind: MoveDetails) => {};
 export default Model;

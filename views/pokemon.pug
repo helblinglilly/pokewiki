@@ -116,6 +116,22 @@ block append body
                                         .container
                                             p(style="vertical-align: middle; display: inline;") Hold
                                             img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;")
+                                    if requirement.type === "friendship"
+                                        p Friendship: #{requirement.info}
+                                    if requirement.type === "beauty"
+                                        p Beauty: #{requirement.info}
+                                    if requirement.type === "rain"
+                                        p Raining
+                                    if requirement.type === "daytime"
+                                        p.is-capitalized #{requirement.info}
+                                    if requirement.type === "know_move"
+                                        p(style="cursor: pointer;", onclick=`location.href='${requirement.info}'`) Knows: #{requirement.supplementary}
+                                    if requirement.type === "know_move_type"
+                                        p Know move of type: #{requirement.info}
+                                    if requirement.type === "affection"
+                                        p Affection: #{requirement.info}
+                                    if requirement.type === "location"
+                                        p Go to: #{requirement.info}
 
                             .column.has-text-centered
                                 img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}'`)

@@ -194,9 +194,18 @@ export interface EvolutionChain {
 			name: string;
 			url: string;
 		};
-		known_move: string;
-		known_move_type: string;
-		location: string;
+		known_move: {
+			name: string;
+			url: string;
+		};
+		known_move_type: {
+			name: string;
+			url: string;
+		};
+		location: {
+			name: string;
+			url: string;
+		};
 		min_affection: string;
 		min_beauty: string;
 		min_happiness: string;

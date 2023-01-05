@@ -417,7 +417,9 @@ class Model {
 				console.log(details);
 
 				if (details.trigger.name === "level-up") {
-					trigger = `Level ${details.min_level}`;
+					if (details.min_level)
+						trigger = `Level ${details.min_level}`;
+					else trigger = "Level Up";
 				} else if (details.trigger.name === "use-item") {
 					trigger = "use-item";
 					requirements.push({
@@ -445,6 +447,65 @@ class Model {
 						supplementary: `/item/${
 							details.held_item.url.split("/")[6]
 						}`,
+					});
+				}
+
+				if (details.min_happiness !== null) {
+					requirements.push({
+						type: "friendship",
+						info: details.min_happiness,
+					});
+				}
+
+				if (details.min_beauty !== null) {
+					requirements.push({
+						type: "beauty",
+						info: details.min_beauty,
+					});
+				}
+
+				if (details.needs_overworld_rain === true) {
+					requirements.push({
+						type: "rain",
+						info: "Raining",
+					});
+				}
+
+				if (details.time_of_day) {
+					requirements.push({
+						type: "daytime",
+						info: details.time_of_day,
+					});
+				}
+
+				if (details.known_move !== null) {
+					requirements.push({
+						type: "know_move",
+						info: `/move/${details.known_move.url.split("/")[6]}`,
+						supplementary: details.known_move.name,
+					});
+				}
+
+				if (details.known_move_type !== null) {
+					requirements.push({
+						type: "know_move_type",
+						info:
+							details.known_move_type.name[0].toUpperCase() +
+							details.known_move_type.name.slice(1),
+					});
+				}
+
+				if (details.min_affection !== null) {
+					requirements.push({
+						type: "affection",
+						info: details.min_affection,
+					});
+				}
+
+				if (details.location !== null) {
+					requirements.push({
+						type: "location",
+						info: details.location.name,
 					});
 				}
 

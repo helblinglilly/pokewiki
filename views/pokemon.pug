@@ -111,7 +111,8 @@ block append body
                                 else if evolution.trigger === "tower-of-waters"
                                     p Rapid Strike Style in Tower of Waters
                                 else if evolution.trigger === "spin"
-                                    p Spin and strike a pose while Milcery holds a Sweet
+                                    p.is-underlined(onclick="document.getElementById('moreInfo').toggleAttribute('hidden');") Expand
+                                    p#moreInfo(hidden) Spin and strike a pose while Milcery holds a Sweet
 
                                 each requirement in evolution.requirements
                                     if requirement.type === "gender"
@@ -149,7 +150,8 @@ block append body
                                     if requirement.type === "stats"
                                         p #{requirement.info}
                                     if requirement.type === "three-critical-hits"
-                                        p Land 3 critical hits in one battle
+                                        p.is-underlined(onclick="document.getElementById('moreInfo').toggleAttribute('hidden');") Expand
+                                        p#moreInfo(hidden) Land 3 critical hits in one battle
                                     if requirement.type === "trade_for"
                                         .div(style="display: inline;")
                                             p Trade for 

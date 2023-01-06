@@ -11,7 +11,8 @@
 			"skipFiles": ["<node_internals>/**"],
 			"program": "${workspaceFolder}/api/app.ts",
 			"preLaunchTask": "npm: build",
-			"outFiles": ["${workspaceFolder}/dist/**/*.js"]
+			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
+			"internalConsoleOptions": "openOnSessionStart"
 		}
 	]
 }

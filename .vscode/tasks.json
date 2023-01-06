@@ -7,7 +7,7 @@
 			"group": "build",
 			"problemMatcher": [],
 			"label": "npm: build",
-			"detail": "(rm -fr ./dist || true) && npx tsc && npm run postbuild"
+			"detail": "(rm -fr ./dist || true) && npx tsc"
 		}
 	]
 }

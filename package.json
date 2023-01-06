@@ -6,8 +6,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "nodemon ./api/app.ts",
-		"build": "(rm -fr ./dist || true) && npx tsc && npm run postbuild",
-		"postbuild": "cp -R ./views ./dist/ && cp -R ./public ./dist/",
+		"build": "(rm -fr ./dist || true) && npx tsc",
 		"start": "node ./api/app.js"
 	},
 	"author": "",

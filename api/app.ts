@@ -18,8 +18,17 @@ if (process.env.PUBLIC_VERCEL_ENV !== "production") {
 const app = express();
 
 app.set("view engine", "pug");
-app.use("/static", express.static(`${__dirname}/../public`));
-app.set("views", `${__dirname}/../views`);
+
+const selfFileExtension =
+	__filename.split(".")[__filename.split(".").length - 1];
+
+if (selfFileExtension === "js") {
+	app.use("/static", express.static(`${__dirname}/../../public`));
+	app.set("views", `${__dirname}/../../views`);
+} else {
+	app.use("/static", express.static(`${__dirname}/../public`));
+	app.set("views", `${__dirname}/../views`);
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -49,7 +49,7 @@ class Controller {
 		}
 
 		const details = await Model.getPokemonDetail(id, game);
-		console.log(details);
+		// console.log(details);
 		const options = { ...details };
 		res.render("./pokemon", { ...options });
 	};

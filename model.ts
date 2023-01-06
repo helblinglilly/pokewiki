@@ -162,9 +162,11 @@ class Model {
 		allMoves = results[3] as Moves[];
 
 		const extraPromises = [
-			axios.get(speciesData.evolution_chain.url, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			}),
+			speciesData.evolution_chain !== null
+				? axios.get(speciesData.evolution_chain.url, {
+						headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				  })
+				: new Promise<any>((resolve) => resolve([])),
 		];
 		pokemonData.abilities.forEach((ability) =>
 			extraPromises.push(
@@ -320,6 +322,73 @@ class Model {
 
 		// Evolution
 		const evolutions: Evolution[] = this.getEvolutions(evolutionData);
+		if (id === "234" || id === "899") {
+			// Stantler to Wyredeer in Legends
+			evolutions.push({
+				sourceURL: `/pokemon/234`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/234.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Use Psyshield Bash 20 times in Agile Style",
+					},
+				],
+				targetURL: `/pokemon/889`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/899.png`,
+			});
+		}
+
+		if (id === "211" || id === "904") {
+			// Qwilfish to Overqwil in Legends
+			evolutions.push({
+				sourceURL: `/pokemon/211`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/211.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Use Barb Barrage 20 times in Strong Style",
+					},
+				],
+				targetURL: `/pokemon/904`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/904.png`,
+			});
+		}
+
+		if (id === "550" || id === "902") {
+			// Basculin to Basculegion
+			evolutions.push({
+				sourceURL: `/pokemon/550`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/550.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Lose at least 294 HP from recoil damage",
+					},
+				],
+				targetURL: `/pokemon/902`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/902.png`,
+			});
+		}
+
+		if (id === "808" || id === "809") {
+			// Meltan to Melmetal
+			evolutions.push({
+				sourceURL: `/pokemon/808`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/808.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Evolve in Pokémon Go - 400 Meltan Candy",
+					},
+				],
+				targetURL: `/pokemon/809`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/809.png`,
+			});
+		}
 
 		return {
 			german: german ? german.name : "",
@@ -400,7 +469,7 @@ class Model {
 		evolutionData: APIResponseEvolution
 	): Evolution[] => {
 		const results: Evolution[] = [];
-
+		if (evolutionData === undefined) return [];
 		let sourceID = evolutionData.chain.species.url.split("/")[6];
 
 		const process = (evolution: EvolutionChain) => {
@@ -428,6 +497,19 @@ class Model {
 						supplementary: `/item/${
 							details.item.url.split("/")[6]
 						}`,
+					});
+				} else if (details.trigger.name === "shed") {
+					trigger = "shed";
+					requirements.push({
+						type: "shed",
+						info: `Hello`,
+						supplementary: `World`,
+					});
+				} else if (details.trigger.name === "three-critical-hits") {
+					trigger = "three-critical-hits";
+					requirements.push({
+						type: "three-critical-hits",
+						info: "",
 					});
 				} else {
 					trigger = details.trigger.name;
@@ -478,11 +560,75 @@ class Model {
 					});
 				}
 
+				if (details.trade_species) {
+					requirements.push({
+						type: "trade_for",
+						info:
+							details.trade_species.name[0].toUpperCase() +
+							details.trade_species.name.slice(1),
+						supplementary: `/pokemon/${
+							details.trade_species.url.split("/")[6]
+						}`,
+					});
+				}
+
+				if (details.party_species !== null) {
+					requirements.push({
+						type: "party_have",
+						info:
+							details.party_species.name[0].toUpperCase() +
+							details.party_species.name.slice(1),
+						supplementary: `/pokemon/${
+							details.party_species.url.split("/")[6]
+						}`,
+					});
+				}
+
+				if (details.party_type !== null) {
+					let tidyType = details.party_type.name;
+					tidyType = tidyType[0].toUpperCase() + tidyType.slice(1);
+					requirements.push({
+						type: "party_type",
+						info: `Party to have another ${tidyType} Pokémon`,
+					});
+				}
+
+				if (details.turn_upside_down) {
+					requirements.push({
+						type: "other",
+						info: "Turn 3DS/Switch Upside Down",
+					});
+				}
+
+				if (details.relative_physical_stats !== null) {
+					if (details.relative_physical_stats === -1) {
+						requirements.push({
+							type: "stats",
+							info: "Defensive > Attack",
+						});
+					} else if (details.relative_physical_stats === 1) {
+						requirements.push({
+							type: "stats",
+							info: "Attack > Defensive",
+						});
+					} else if (details.relative_physical_stats === 0) {
+						requirements.push({
+							type: "stats",
+							info: "Attack = Defensive",
+						});
+					}
+				}
+
 				if (details.known_move !== null) {
+					let tidyMoveName = details.known_move.name;
+					const words = tidyMoveName.split("-").map((word) => {
+						return word[0].toUpperCase() + word.slice(1);
+					});
+					tidyMoveName = words.join(" ");
 					requirements.push({
 						type: "know_move",
 						info: `/move/${details.known_move.url.split("/")[6]}`,
-						supplementary: details.known_move.name,
+						supplementary: tidyMoveName,
 					});
 				}
 
@@ -503,14 +649,41 @@ class Model {
 				}
 
 				if (details.location !== null) {
+					let tidyLocation = details.location.name;
+					const words = tidyLocation.split("-").map((word) => {
+						return word[0].toUpperCase() + word.slice(1);
+					});
+					tidyLocation = words.join(" ");
+
 					requirements.push({
 						type: "location",
-						info: details.location.name,
+						info: tidyLocation,
 					});
 				}
 
-				console.log(trigger);
-				console.log(requirements);
+				if (details.trigger.name === "take-damage") {
+					if (
+						sourceID === "562" ||
+						sourceID === "867" ||
+						sourceID === "563"
+					) {
+						// Yamask to Runerigus
+						results.push({
+							sourceURL: `/pokemon/562`,
+							sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/562.png`,
+							trigger: "other",
+							requirements: [
+								{
+									type: "other",
+									info: "Go through the Stone Gate in the Dusty Bowl after Yamask has lost more than 49 HP from one attack and did not faint in that battle - or since",
+								},
+							],
+							targetURL: `/pokemon/867`,
+							targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/867.png`,
+						});
+						return;
+					}
+				}
 
 				results.push({
 					sourceURL: `/pokemon/${sourceID}`,

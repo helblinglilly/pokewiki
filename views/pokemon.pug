@@ -101,17 +101,31 @@ block append body
                             .column.has-text-centered
                                 if evolution.trigger.includes("Level")
                                     p #{evolution.trigger}
-                                
                                 else if evolution.trigger === "trade"
                                     p Trade
+                                else if evolution.trigger === "shed"
+                                    p.is-underlined(onclick="document.getElementById('moreInfo').toggleAttribute('hidden');") Shed
+                                    p(hidden)#moreInfo Have 1+ free party slots during evolution
+                                else if evolution.trigger === "tower-of-darkness"
+                                    p Single Strike Style in Tower of Darkness
+                                else if evolution.trigger === "tower-of-waters"
+                                    p Rapid Strike Style in Tower of Waters
+                                else if evolution.trigger === "spin"
+                                    p Spin and strike a pose while Milcery holds a Sweet
 
                                 each requirement in evolution.requirements
                                     if requirement.type === "gender"
                                         p #{requirement.info}
                                     if requirement.type === "use-item"
                                         .container
-                                            p(style="vertical-align: middle; display: inline;") Use
-                                            img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;")
+                                            //- Tart and Sweet apples don't have their item sprites uploaded yet!
+                                            if requirement.supplementary.includes("1175")
+                                                p Use Tart Apple
+                                            else if requirement.supplementary.includes("1174")
+                                                p Use Sweet Apple
+                                            else 
+                                                p(style="vertical-align: middle; display: inline;") Use
+                                                img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;")
                                     if requirement.type === "hold-item"
                                         .container
                                             p(style="vertical-align: middle; display: inline;") Hold
@@ -132,6 +146,23 @@ block append body
                                         p Affection: #{requirement.info}
                                     if requirement.type === "location"
                                         p Go to: #{requirement.info}
+                                    if requirement.type === "stats"
+                                        p #{requirement.info}
+                                    if requirement.type === "three-critical-hits"
+                                        p Land 3 critical hits in one battle
+                                    if requirement.type === "trade_for"
+                                        .div(style="display: inline;")
+                                            p Trade for 
+                                            p(style="cursor: pointer;", onclick=`location.href='${requirement.supplementary}'`) #{requirement.info}
+                                    if requirement.type === "party_have"
+                                        .div(style="display: inline;")
+                                            p Party has
+                                            p(style="cursor: pointer;", onclick=`location.href='${requirement.supplementary}'`) #{requirement.info}
+                                    if requirement.type === "party_type"
+                                        p #{requirement.info}
+                                    if requirement.type === "other"
+                                        p.is-underlined(onclick="document.getElementById('moreInfo').toggleAttribute('hidden');") Expand
+                                        p#moreInfo(hidden) #{requirement.info}
 
                             .column.has-text-centered
                                 img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}'`)

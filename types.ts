@@ -211,11 +211,20 @@ export interface EvolutionChain {
 		min_happiness: string;
 		min_level: number;
 		needs_overworld_rain: boolean;
-		party_species: string;
-		party_type: string;
-		relative_physical_stats: string;
+		party_species: {
+			name: string;
+			url: string;
+		};
+		party_type: {
+			name: string;
+		};
+		relative_physical_stats: number;
 		time_of_day: string;
-		trade_species: string;
+		trade_species: {
+			name: string;
+			url: string;
+		};
+		turn_upside_down: boolean;
 		trigger: {
 			name: string;
 			url: string;

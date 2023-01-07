@@ -58,6 +58,30 @@ const populateSearchFilters = () => {
 			}
 		}
 	}
+
+	if (params.get("pokemon") == "false") {
+		document
+			.getElementById("showPokemon")
+			.attributes.removeNamedItem("checked");
+	}
+
+	if (params.get("items") == "false") {
+		document
+			.getElementById("showItems")
+			.attributes.removeNamedItem("checked");
+	}
+
+	if (params.get("moves") == "false") {
+		document
+			.getElementById("showMoves")
+			.attributes.removeNamedItem("checked");
+	}
+
+	if (params.get("abilities") == "false") {
+		document
+			.getElementById("showAbilities")
+			.attributes.removeNamedItem("checked");
+	}
 };
 
 const toggleVisibility = (sender) => {

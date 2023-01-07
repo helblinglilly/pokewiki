@@ -1,67 +1,6 @@
 extend  ./header.pug
 
 block append body
-    form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
-        .field.has-addons
-            .control.is-expanded
-                input.input(type="text", id="searchBar", name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
-            .control(onclick="openFilter();")
-                button.button.is-static(data-target="filters")#filterButton Filters
-        
-        input(type="submit" hidden)#searchSubmit
-        style.
-            table#statsTable * {
-                padding-left: 0;
-                padding-right: 0;
-            }
-        .modal#filterModal(hidden)
-            .modal-background(onclick="closeFilter();")
-            .modal-card
-                .modal-card-body
-                    .box
-                        p.title.is-5 Types of results
-                        .columns
-                            .column
-                                input(type='checkbox', id='showPokemon', name="pokemon", value="true", checked).mr-2
-                                label(for="showPokemon").pr-4 Pokémon
-                            .column
-                                input(type='checkbox', id='showItems', name="items", value="true", checked).mr-2
-                                label(for="showItems").pr-4 Items
-                            .column
-                                input(type='checkbox', id='showMoves', name="moves", value="true", checked).mr-2
-                                label(for="showMoves").pr-4 Moves
-                            .column
-                                input(type='checkbox', id='showAbilities', name="abilities" value="true", checked).mr-2
-                                label(for="showAbilities").pr-4 Abilities
-                    .box
-                        p.title.is-5 Filter by game
-                        .select(form="search", name="game")
-                            select(form="search", name="game", id="gameSelector")
-                                option(value="all") Any
-                                option(value="legends-arceus") Legends Areceus
-                                option(value="brilliant-diamond-and-shining-pearl") Brilliant Diamond / Shining Perl
-                                option(value="sword-shield") Sword / Shield
-                                option(value="lets-go-pikachu-lets-go-eevee") Let's Go Pikachu / Eevee 
-                                option(value="ultra-sun-ultra-moon") Ultra Sun / Ultra Moon
-                                option(value="sun-moon") Sun / Moon
-                                option(value="omega-ruby-alpha-sapphire") Omega Ruby / Alpha Sapphire
-                                option(value="x-y") X / Y
-                                option(value="black-2-white-2") Black 2 / White 2
-                                option(value="black-white") Black / White
-                                option(value="heartgold-soulsilver") Heart Gold / Sould Silver
-                                option(value="platinum") Platinum
-                                option(value="diamond-perl") Diamond / Perl
-                                option(value="firered-leafgreen") Firered / Leafgreen
-                                option(value="emerald") Emerald
-                                option(value="ruby-sapphire") Ruby / Sapphire
-                                option(value="crystal") Crystal
-                                option(value="gold-silver") Gold / Silver
-                                option(value="yellow") Yellow
-                                option(value="red-blue") Red / Blue
-                footer.modal-card-foot
-                    button.button(onclick="document.forms['search'].submit()").is-info Search
-                    button.button(onclick="closeFilter();") Cancel
-    
     if selectedGames.length > 0 && moveset.length === 0
         .notification.is-warning.is-light 
             p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
@@ -94,10 +33,12 @@ block append body
                 .card-header-title(onclick="toggleVisibility(this);")
                     p Evolution chain
                 .card-content.pt-1
+                    if evolutions.length === 0
+                        p This Pokémon has no evolutions.
                     each evolution in evolutions
                         .columns.is-vcentered.is-mobile
                             .column.has-text-centered
-                                img(src=`${evolution.sourceSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.sourceURL}'`)
+                                img(src=`${evolution.sourceSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.sourceURL}' + window.location.search`)
                             .column.has-text-centered
                                 if evolution.trigger.includes("Level")
                                     p #{evolution.trigger}
@@ -167,7 +108,7 @@ block append body
                                         p#moreInfo(hidden) #{requirement.info}
 
                             .column.has-text-centered
-                                img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}'`)
+                                img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}' + window.location.search`)
     .columns
         .column
             .card
@@ -175,7 +116,7 @@ block append body
                     p Abilities
                 .card-content
                     each ability in abilities
-                        .box(onclick=`location.href='${ability.link}'`, style="cursor: pointer;")
+                        .box(onclick=`location.href='${ability.link}' + window.location.search`, style="cursor: pointer;")
                             p.has-text-weight-bold #{ability.name}
                             if ability.isHidden
                                 p.is-italic Hidden
@@ -301,7 +242,7 @@ block append body
                                     th.pl-0 Level
                             tbody(style="width: 100%")
                             for move in moveset
-                                tr(onclick=`location.href='${move.link}'`, style="cursor: pointer;")
+                                tr(onclick=`location.href='${move.link}' + window.location.search`, style="cursor: pointer;")
                                     td(style="width: 70px;").pl-0
                                         .container(style="display: inline-grid")
                                             img.icon(src=`${move.type_sprite}`, style="width: 50px; height: 20px;" alt='Move type Icon').tableImage

@@ -4,6 +4,9 @@ block append body
     if selectedGames.length > 0 && moveset.length === 0
         .notification.is-warning.is-light 
             p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
+    else if selectedGames.length === 0
+        .notification.is-warning.is-light
+            p Moveset and Pokédex are hidden because no game is selected. Use the 'Options' button next to the search bar to select a game.
     
     .columns
         .column
@@ -30,7 +33,7 @@ block append body
                                     p.is-italic Shiny
         .column
             .card
-                .card-header-title(onclick="toggleVisibility(this);")
+                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
                     p Evolution chain
                 .card-content.pt-1
                     if evolutions.length === 0
@@ -67,11 +70,11 @@ block append body
                                                 p Use Sweet Apple
                                             else 
                                                 p(style="vertical-align: middle; display: inline;") Use
-                                                img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;")
+                                                img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;", title=`${requirement.info.split("/")[8].split(".")[0]}`)
                                     if requirement.type === "hold-item"
                                         .container
                                             p(style="vertical-align: middle; display: inline;") Hold
-                                            img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;")
+                                            img(src=`${requirement.info}`, onclick=`location.href='${requirement.supplementary}'`, style="cursor: pointer; vertical-align: middle;", title=`${requirement.info.split("/")[8].split(".")[0]}`)
                                     if requirement.type === "friendship"
                                         p Friendship: #{requirement.info}
                                     if requirement.type === "beauty"
@@ -112,7 +115,7 @@ block append body
     .columns
         .column
             .card
-                .card-header-title(onclick="toggleVisibility(this);")
+                .card-header-title(onclick="toggleVisibility(this);",style="cursor: pointer;")
                     p Abilities
                 .card-content
                     each ability in abilities
@@ -123,7 +126,7 @@ block append body
                             p #{ability.effect}
         .column
             .card
-                .card-header-title(onclick="toggleVisibility(this);")
+                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
                     p Base stats
                 .card-content
                     table.table(style="width: 100%")#statsTable
@@ -203,7 +206,7 @@ block append body
     .columns
         .column
             .card
-                .card-header-title(onclick="toggleVisibility(this);")
+                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
                     p Other Info
                 .card-content
                     p.title.is-6 Catch rate: #{captureRate}
@@ -217,7 +220,7 @@ block append body
         .columns
             .column
                 .card
-                    .card-header-title(onclick="toggleVisibility(this);")
+                    .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
                         p Pokédex entry
                     .card-content.pt-1
                         .columns
@@ -231,7 +234,7 @@ block append body
                                 p.pb-2 #{entry.entry}
             .column
                 .card
-                    .card-header-title(onclick="toggleVisibility(this);")
+                    .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
                         p Moveset
                     .card-content.pt-1
                         table.table(style="width: 100%").is-striped.is-hoverable
@@ -266,7 +269,3 @@ block append body
                                         else
                                             p Lv. #{move.level_learnt}  
             
-
-
-    
-

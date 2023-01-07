@@ -60,11 +60,10 @@ class Controller {
 
 		let game = "";
 		if (typeof req.query.game === "string") {
-			game = req.query.game;
+			if (req.query.game !== "all") game = req.query.game;
 		}
 
 		const details = await Model.getPokemonDetail(id, game);
-		// console.log(details);
 		const options = { ...details };
 		res.render("./pokemon", { ...options });
 	};

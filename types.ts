@@ -1,3 +1,8 @@
+export interface ErrorMessage {
+	error: string;
+	info: string;
+}
+
 export interface GenericEntry {
 	german: string;
 	english: string;

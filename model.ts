@@ -130,7 +130,7 @@ class Model {
 	};
 
 	static getPokemonDetail = async (
-		id: string,
+		id: number,
 		game?: string
 	): Promise<PokemonDetails | void> => {
 		let pokemonData: APIResponsePokemon;
@@ -322,7 +322,7 @@ class Model {
 
 		// Evolution
 		const evolutions: Evolution[] = this.getEvolutions(evolutionData);
-		if (id === "234" || id === "899") {
+		if (id === 234 || id === 899) {
 			// Stantler to Wyredeer in Legends
 			evolutions.push({
 				sourceURL: `/pokemon/234`,
@@ -339,7 +339,7 @@ class Model {
 			});
 		}
 
-		if (id === "211" || id === "904") {
+		if (id === 211 || id === 904) {
 			// Qwilfish to Overqwil in Legends
 			evolutions.push({
 				sourceURL: `/pokemon/211`,
@@ -356,7 +356,7 @@ class Model {
 			});
 		}
 
-		if (id === "550" || id === "902") {
+		if (id === 550 || id === 902) {
 			// Basculin to Basculegion
 			evolutions.push({
 				sourceURL: `/pokemon/550`,
@@ -373,7 +373,7 @@ class Model {
 			});
 		}
 
-		if (id === "808" || id === "809") {
+		if (id === 808 || id === 809) {
 			// Meltan to Melmetal
 			evolutions.push({
 				sourceURL: `/pokemon/808`,
@@ -393,7 +393,7 @@ class Model {
 		return {
 			german: german ? german.name : "",
 			english: english ? english.name : "",
-			id: parseInt(id),
+			id: id,
 			link: `/pokemon/${id}`,
 			sprite: pokemonData.sprites.front_default,
 			backSprite: pokemonData.sprites.back_default,

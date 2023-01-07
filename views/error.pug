@@ -1,0 +1,19 @@
+extend  ./header.pug
+
+block append body
+    form(action="/search", method="get", id="search", onsubmit="addHistory();") 
+        input.input(type="text" name="search" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
+        input(type="submit" hidden)
+
+    .has-text-centered.pt-6
+        img(src=`https://wiki.p-insurgence.com/images/0/09/722.png`, style="height: 250px; display: inline-block;")
+    p.title.is-3.pt-4.mb-3 Something went wrong!
+    .div(style="display: inline;")
+        p(style="display: inline;") If you believe this to be an error with the website, please raise an Issue on 
+        a(href="https://github.com/helblingjoel/pokewiki", style="display: inline;") GitHub 
+        p(style="display: inline;") using the error details below.
+
+    hr
+
+    p.title.is-4.pt-2 #{error}
+    p #{info}

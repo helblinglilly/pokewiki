@@ -42,16 +42,68 @@ app.get("/", (req, res, next) => {
 	Controller.getIndex(req, res);
 });
 
+app.all("/", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
 app.get("/search", (req, res, next) => {
 	Controller.getSearch(req, res);
+});
+app.all("/search", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
 });
 
 app.get("/pokemon/*", (req, res, next) => {
 	Controller.getPokemon(req, res);
 });
+app.all("/pokemon/*", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/item/*", (req, res, next) => {
+	Controller.getItem(req, res);
+});
+app.all("/item/*", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/move/*", (req, res, next) => {
+	Controller.getMove(req, res);
+});
+app.all("/move/*", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/ability/*", (req, res, next) => {
+	Controller.getAbility(req, res);
+});
+app.all("/ability/*", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
 
 app.all("/*", (req, res) => {
-	res.render("404");
+	res.status(404).render("error", {
+		error: "Page does not exist",
+		info: "The page you are trying to access does not exist.",
+	});
 });
 
 app.listen(port, "0.0.0.0", () => {

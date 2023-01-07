@@ -276,7 +276,7 @@ class Model {
 		});
 
 		// Game specific sections
-		const moveset: MoveDetails[] = [];
+		let moveset: MoveDetails[] = [];
 		const games: string[] = [];
 		if (game) {
 			const game1 = game.split("-")[0];
@@ -299,25 +299,12 @@ class Model {
 			});
 
 			// Moves
-			pokemonData.moves.forEach((move) => {
-				move.version_group_details.forEach((version) => {
-					if (
-						version.version_group.name.includes(game1) ||
-						(game2 !== undefined &&
-							version.version_group.name.includes(game2))
-					) {
-						const moveDetail = allMoves.find(
-							(a) => a.english_id === move.move.name
-						);
-						if (moveDetail !== undefined)
-							moveset.push({
-								...moveDetail,
-								learning_method: version.move_learn_method.name,
-								level_learnt: version.level_learned_at,
-							});
-					}
-				});
-			});
+			moveset = this.processMoveset(
+				allMoves,
+				pokemonData.moves,
+				game1,
+				game2
+			);
 		}
 
 		// Evolution
@@ -416,11 +403,7 @@ class Model {
 			growthRate:
 				speciesData.growth_rate.name[0].toUpperCase() +
 				speciesData.growth_rate.name.substring(1),
-			moveset: moveset
-				.sort((a, b) =>
-					a.learning_method > b.learning_method ? 1 : -1
-				)
-				.sort((a, b) => (a.level_learnt > b.level_learnt ? 1 : -1)),
+			moveset: moveset,
 			baseStats: stats,
 		};
 	};
@@ -703,6 +686,79 @@ class Model {
 		});
 
 		return results;
+	};
+
+	static processMoveset = (
+		allMoves: Moves[],
+		moves: APIResponsePokemon["moves"],
+		game1: string,
+		game2?: string
+	): MoveDetails[] => {
+		const moveset: MoveDetails[] = [];
+
+		const levelMoves: MoveDetails[] = [];
+		const tmMoves: MoveDetails[] = [];
+		const eggMoves: MoveDetails[] = [];
+		const tutorMoves: MoveDetails[] = [];
+		moves.forEach((move) => {
+			move.version_group_details.forEach((version) => {
+				if (
+					version.version_group.name.includes(game1) ||
+					(game2 !== undefined &&
+						version.version_group.name.includes(game2))
+				) {
+					const moveDetail = allMoves.find(
+						(a) => a.english_id === move.move.name
+					);
+					if (moveDetail !== undefined) {
+						const move = {
+							...moveDetail,
+							learning_method: version.move_learn_method.name,
+							level_learnt: version.level_learned_at,
+						};
+
+						if (
+							move.learning_method === "level-up" &&
+							levelMoves.filter((a) => a.english === move.english)
+								.length === 0
+						) {
+							levelMoves.push(move);
+						}
+
+						if (
+							move.learning_method === "egg" &&
+							eggMoves.filter((a) => a.english === move.english)
+								.length === 0
+						) {
+							eggMoves.push(move);
+						}
+
+						if (
+							move.learning_method === "machine" &&
+							tmMoves.filter((a) => a.english === move.english)
+								.length === 0
+						) {
+							tmMoves.push(move);
+						}
+
+						if (
+							move.learning_method === "tutor" &&
+							tutorMoves.filter((a) => a.english === move.english)
+								.length === 0
+						) {
+							tutorMoves.push(move);
+						}
+					}
+				}
+			});
+		});
+
+		levelMoves.sort((a, b) => (a.level_learnt > b.level_learnt ? 1 : -1));
+		tmMoves.sort((a, b) => (a.type > b.type ? 1 : -1));
+		eggMoves.sort((a, b) => (a.type > b.type ? 1 : -1));
+		tutorMoves.sort((a, b) => (a.type > b.type ? 1 : -1));
+
+		return levelMoves.concat(tmMoves, eggMoves, tutorMoves);
 	};
 }
 

@@ -43,7 +43,7 @@ export interface MoveDetails {
 	attack_type_sprite: string;
 	type: string;
 	type_sprite: string;
-	learning_method: string;
+	learning_method: "level-up" | "machine" | "tutor" | "egg";
 	level_learnt: number;
 }
 
@@ -112,7 +112,7 @@ export interface APIResponsePokemon {
 		version_group_details: {
 			level_learned_at: number;
 			move_learn_method: {
-				name: string;
+				name: "level-up" | "machine" | "tutor" | "egg";
 				url: string;
 			};
 			version_group: {

@@ -1,4 +1,39 @@
 extend  ./header.pug
+block append head
+    style.
+        @media screen and (max-width: 768px) {
+            .otherEntry {
+                max-width: 150px !important;
+                cursor: pointer;
+            }
+            .otherEntryContent {
+                padding: 15px !important;
+            }
+            .otherSprite {
+                max-width: 48px;
+                display: inline;
+                vertical-align: middle;
+            }
+            .otherNumber {
+                display: none;
+            }
+        }
+        @media screen and (min-width: 768px) {
+            .otherEntry {
+                max-width: 150px !important;
+                cursor: pointer;
+            }
+            .otherSprite {
+                height: 40px;
+                display: inline;
+                vertical-align: middle;
+            }
+            .otherNumber {
+                display: inline;
+                vertical-align: middle;
+            }
+        }
+
 
 block append body
     if selectedGames.length > 0 && moveset.length === 0
@@ -8,6 +43,20 @@ block append body
         .notification.is-warning.is-light
             p Moveset and Pokédex are hidden because no game is selected. Use the 'Options' button next to the search bar to select a game.
     
+    .columns.is-mobile
+        .column.is-one-third
+            .card.otherEntry
+                .card-content(onclick=`location.href='/pokemon/${id - 1}' + window.location.search`).otherEntryContent
+                    p.otherNumber ##{id - 1} 
+                    img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`).otherSprite
+        .column.has-text-centered(style="display: inline-flex;")
+            p.title.is-4(style="margin: auto;") ##{id} 
+        .column.is-one-third
+            .card.otherEntry.is-pulled-right
+                .card-content(onclick=`location.href='/pokemon/${id + 1}' + window.location.search`).otherEntryContent
+                    img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`).otherSprite
+                    p.otherNumber ##{id + 1} 
+
     .columns
         .column
             .card

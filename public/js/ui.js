@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	if (isMobile) {
 		document.querySelectorAll(".collapsable").forEach((item) => {
-			toggleVisibility(item);
+			toggleCardContentVisibility(item);
 		});
 	}
 
@@ -94,7 +94,7 @@ const populateSearchFilters = () => {
 	}
 };
 
-const toggleVisibility = (sender) => {
+const toggleCardContentVisibility = (sender) => {
 	sender.parentElement.childNodes.forEach((child) => {
 		if (child.classList.contains("card-content")) {
 			if (child.getAttribute("hidden") === null)

@@ -483,8 +483,6 @@ class Model {
 					supplementary?: string;
 				}[] = [];
 
-				console.log(details);
-
 				if (details.trigger.name === "level-up") {
 					if (details.min_level)
 						trigger = `Level ${details.min_level}`;

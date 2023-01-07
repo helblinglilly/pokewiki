@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
 	populateSearchFilters();
 
+	if (isMobile) {
+		document.querySelectorAll(".collapsable").forEach((item) => {
+			toggleVisibility(item);
+		});
+	}
+
 	document.addEventListener("keydown", (event) => {
 		const e = event || window.event;
 
@@ -9,6 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 });
+
+const isMobile = new RegExp("Android|Mobile|iPhone|iOS").test(
+	navigator.userAgent
+);
 
 const openFilter = () => {
 	const modal = document.getElementById("filterModal");

@@ -33,7 +33,7 @@ block append body
                                     p.is-italic Shiny
         .column
             .card
-                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
+                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;").collapsable
                     p Evolution chain
                 .card-content.pt-1
                     if evolutions.length === 0
@@ -115,7 +115,7 @@ block append body
     .columns
         .column
             .card
-                .card-header-title(onclick="toggleVisibility(this);",style="cursor: pointer;")
+                .card-header-title(onclick="toggleVisibility(this);",style="cursor: pointer;").collapsable
                     p Abilities
                 .card-content
                     each ability in abilities
@@ -126,7 +126,7 @@ block append body
                             p #{ability.effect}
         .column
             .card
-                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
+                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;").collapsable
                     p Base stats
                 .card-content
                     table.table(style="width: 100%")#statsTable
@@ -206,7 +206,7 @@ block append body
     .columns
         .column
             .card
-                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
+                .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;").collapsable
                     p Other Info
                 .card-content
                     p.title.is-6 Catch rate: #{captureRate}
@@ -220,7 +220,7 @@ block append body
         .columns
             .column
                 .card
-                    .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
+                    .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;").collapsable
                         p Pokédex entry
                     .card-content.pt-1
                         .columns
@@ -234,7 +234,7 @@ block append body
                                 p.pb-2 #{entry.entry}
             .column
                 .card
-                    .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;")
+                    .card-header-title(onclick="toggleVisibility(this);", style="cursor: pointer;").collapsable
                         p Moveset
                     .card-content.pt-1
                         table.table(style="width: 100%").is-striped.is-hoverable

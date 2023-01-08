@@ -14,6 +14,8 @@ import {
 	MoveDetails,
 	Evolution,
 	EvolutionChain,
+	Games,
+	VersionGroup,
 } from "./types";
 
 const searchLimit = 10;
@@ -277,18 +279,16 @@ class Model {
 
 		// Game specific sections
 		let moveset: MoveDetails[] = [];
+		let selectedGames: VersionGroup | undefined;
 		const games: string[] = [];
 		if (game) {
-			const game1 = game.split("-")[0];
-			const game2 = game.split("-")[1];
-			games.push(game1);
-			if (game2 !== undefined) games.push(game2);
+			selectedGames = Games.findEntry(game);
 
 			speciesData.flavor_text_entries.forEach((entry) => {
 				if (
-					(game1 === entry.version.name ||
-						(game2 !== undefined &&
-							entry.version.name === game2)) &&
+					selectedGames !== undefined &&
+					Games.findEntry(entry.version.name)?.version_group_name ==
+						selectedGames.version_group_name &&
 					entry.language.name === "en"
 				) {
 					pokedexEntries.push({
@@ -299,12 +299,13 @@ class Model {
 			});
 
 			// Moves
-			moveset = this.processMoveset(
-				allMoves,
-				pokemonData.moves,
-				game1,
-				game2
-			);
+			if (selectedGames !== undefined) {
+				moveset = this.processMoveset(
+					allMoves,
+					pokemonData.moves,
+					selectedGames
+				);
+			}
 		}
 
 		// Evolution
@@ -387,7 +388,7 @@ class Model {
 			shinySprite: pokemonData.sprites.front_shiny,
 			shinyBackSprite: pokemonData.sprites.back_shiny,
 			types: types,
-			selectedGames: games,
+			selectedGames: selectedGames,
 			pokedex: pokedexEntries,
 			weight: parseFloat(
 				pokemonData.weight.toString().slice(0, -1) +
@@ -691,21 +692,21 @@ class Model {
 	static processMoveset = (
 		allMoves: Moves[],
 		moves: APIResponsePokemon["moves"],
-		game1: string,
-		game2?: string
+		toBeFoundVersionGroup: VersionGroup
 	): MoveDetails[] => {
-		const moveset: MoveDetails[] = [];
-
 		const levelMoves: MoveDetails[] = [];
 		const tmMoves: MoveDetails[] = [];
 		const eggMoves: MoveDetails[] = [];
 		const tutorMoves: MoveDetails[] = [];
 		moves.forEach((move) => {
 			move.version_group_details.forEach((version) => {
+				const foundVersion = Games.findEntry(
+					version.version_group.name
+				);
 				if (
-					version.version_group.name.includes(game1) ||
-					(game2 !== undefined &&
-						version.version_group.name.includes(game2))
+					foundVersion !== undefined &&
+					foundVersion.version_group_name ===
+						toBeFoundVersionGroup.version_group_name
 				) {
 					const moveDetail = allMoves.find(
 						(a) => a.english_id === move.move.name

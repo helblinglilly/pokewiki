@@ -36,7 +36,7 @@ block append head
 
 
 block append body
-    if selectedGames.length > 0 && moveset.length === 0
+    if selectedGames === undefined && moveset.length === 0
         .notification.is-warning.is-light 
             p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
     else if selectedGames.length === 0

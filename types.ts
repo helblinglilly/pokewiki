@@ -1,3 +1,103 @@
+export class Games {
+	static names = [
+		{
+			version_group_name: "red-blue",
+			consistsOf: ["red", "blue"],
+		},
+		{
+			version_group_name: "yellow",
+			consistsOf: ["yellow"],
+		},
+		{
+			version_group_name: "gold-silver",
+			consistsOf: ["gold", "silver"],
+		},
+		{
+			version_group_name: "crystal",
+			consistsOf: ["crystal"],
+		},
+		{
+			version_group_name: "ruby-sapphire",
+			consistsOf: ["ruby", "sapphire"],
+		},
+		{
+			version_group_name: "emerald",
+			consistsOf: ["emerald"],
+		},
+		{
+			version_group_name: "firered-leafgreen",
+			consistsOf: ["firered", "leafgreen"],
+		},
+		{
+			version_group_name: "diamond-pearl",
+			consistsOf: ["diamond", "pearl"],
+		},
+		{
+			version_group_name: "platinum",
+			consistsOf: ["platinum"],
+		},
+		{
+			version_group_name: "heartgold-soulsilver",
+			consistsOf: ["heartgold", "soulsilver"],
+		},
+		{
+			version_group_name: "black-white",
+			consistsOf: ["black", "white"],
+		},
+		{
+			version_group_name: "colosseum",
+			consistsOf: ["colosseum"],
+		},
+		{
+			version_group_name: "xd",
+			consistsOf: ["xd"],
+		},
+		{
+			version_group_name: "black-2-white-2",
+			consistsOf: ["black-2", "white-2"],
+		},
+		{
+			version_group_name: "x-y",
+			consistsOf: ["x", "y"],
+		},
+		{
+			version_group_name: "omega-ruby-alpha-sapphire",
+			consistsOf: ["omega-ruby", "alpha-sapphire"],
+		},
+		{
+			version_group_name: "sun-moon",
+			consistsOf: ["sun", "moon"],
+		},
+		{
+			version_group_name: "ultra-sun-ultra-moon",
+			consistsOf: ["ultra-sun", "ultra-moon"],
+		},
+		{
+			version_group_name: "lets-go-pikachu-lets-go-eevee",
+			consistsOf: ["lets-go-pikachu", "lets-go-eevee"],
+		},
+		{
+			version_group_name: "sword-shield",
+			consistsOf: ["sword", "shield"],
+		},
+		{
+			version_group_name: "legends-arceus",
+			consistsOf: ["legends-arceus"],
+		},
+	];
+
+	static findEntry = (game: string): VersionGroup | undefined => {
+		return this.names.find(
+			(a) => a.version_group_name === game || a.consistsOf.includes(game)
+		);
+	};
+}
+
+export interface VersionGroup {
+	version_group_name: string;
+	consistsOf: string[];
+}
+
 export interface ErrorMessage {
 	error: string;
 	info: string;
@@ -91,7 +191,7 @@ export interface PokemonDetails extends PokemonName {
 		special_defense: any;
 		speed: any;
 	};
-	selectedGames: string[];
+	selectedGames: VersionGroup | undefined;
 }
 
 export interface APIResponsePokemon {

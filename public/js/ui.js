@@ -16,6 +16,56 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 });
 
+const submitSearch = () => {
+	const urlNoParams = document.URL.split("?")[0];
+	const queryParams = document.URL.split("?")[1];
+	const potentialPokemonRoute =
+		urlNoParams.split("/")[urlNoParams.split("/").length - 2];
+	const currentlySelectedPokemon =
+		urlNoParams.split("/")[urlNoParams.split("/").length - 1];
+
+	if (potentialPokemonRoute === "pokemon") {
+		const params = queryParams.split("&");
+		const changedParams = [];
+		let currentGame;
+		let selectedGame;
+
+		params.forEach((entry) => {
+			let currentSelection;
+			let newSelection;
+
+			if (entry.includes("term")) {
+				currentSelection = entry.split("=")[1];
+				newSelection = document.getElementById("searchBar").value;
+			} else if (entry.includes("game")) {
+				currentGame = entry.split("=")[1];
+				selectedGame = document.getElementById("gameSelector").value;
+			} else if (entry.includes("pokemon")) {
+				currentSelection = entry.split("=")[1] == "true" ? true : false;
+				newSelection = document.getElementById("showPokemon").checked;
+			} else if (entry.includes("items")) {
+				currentSelection = entry.split("=")[1] == "true" ? true : false;
+				newSelection = document.getElementById("showItems").checked;
+			} else if (entry.includes("moves")) {
+				currentSelection = entry.split("=")[1] == "true" ? true : false;
+				newSelection = document.getElementById("showMoves").checked;
+			} else if (entry.includes("abilities")) {
+				currentSelection = entry.split("=")[1] == "true" ? true : false;
+				newSelection = document.getElementById("showAbilities").checked;
+			}
+			changedParams.push(currentSelection == newSelection);
+		});
+
+		const search = document.getElementById("search");
+		if (!changedParams.includes(false)) {
+			// If all you changed is the Game, then stay on the current page
+			search.action = `/pokemon/${currentlySelectedPokemon}`;
+		}
+		console.log();
+		search.submit();
+	}
+};
+
 const isMobile = new RegExp("Android|Mobile|iPhone|iOS").test(
 	navigator.userAgent
 );

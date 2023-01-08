@@ -21,14 +21,14 @@ body
   
   .container.is-max-desktop.pl-6.pr-6.pb-6
     block body
-      form(action="/search", method="get", id="search", onsubmit="addHistory();").pb-3
+      form(action="/search", method="get", id="search").pb-3
         .field.has-addons
             .control.is-expanded
                 input.input(type="text", id="searchBar", name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
             .control(onclick="openFilter();")
                 button.button.is-static(data-target="filters")#filterButton Options
         
-        input(type="submit" hidden)#searchSubmit
+        input(type="submit", hidden)#searchSubmit
         style.
             table#statsTable * {
                 padding-left: 0;
@@ -79,6 +79,6 @@ body
                                 input(type='checkbox', id='showAbilities', name="abilities" value="true", checked).mr-2
                                 label(for="showAbilities").pr-4 Abilities
                 footer.modal-card-foot
-                    button.button(onclick="document.forms['search'].submit()").is-info Search
-                    button.button(onclick="closeFilter();") Cancel
+                    button.button(onclick="submitSearch();", type="button").is-info Search
+                    button.button(onclick="closeFilter();", type="button") Close
     

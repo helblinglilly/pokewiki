@@ -54,7 +54,10 @@ block append body
         .column.is-one-third
             .card.otherEntry.is-pulled-right
                 .card-content(onclick=`location.href='/pokemon/${id + 1}' + window.location.search`).otherEntryContent
-                    img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`).otherSprite
+                    if (id + 1) > 905
+                        img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`).otherSprite  
+                    else  
+                        img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`).otherSprite
                     p.otherNumber ##{id + 1} 
 
     .columns

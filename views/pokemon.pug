@@ -43,6 +43,7 @@ block append body
         .notification.is-warning.is-light
             p Moveset and Pokédex are hidden because no game is selected. Use the 'Options' button next to the search bar to select a game.
     
+    //- Navigator
     .columns.is-mobile
         .column.is-one-third
             .card.otherEntry
@@ -60,9 +61,10 @@ block append body
                         img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`).otherSprite
                     p.otherNumber ##{id + 1} 
 
+    //- Sprites and Evolutions
     .columns
-        .column
-            .card
+        .column.is-flex
+            .card(style="width: 100%;")
                 .card-header-title.is-justify-content-space-between
                     if german === english
                         p #{german}
@@ -83,8 +85,8 @@ block append body
                                 div.has-text-centered
                                     img(src=`${shinySprite}` style="height: auto; width: 100%")#sprite-back
                                     p.is-italic Shiny
-        .column
-            .card
+        .column.is-flex
+            .card(style="width: 100%;")
                 .card-header-title(onclick="toggleCardContentVisibility(this);", style="cursor: pointer;").collapsable
                     p Evolution chain
                 .card-content.pt-1
@@ -164,9 +166,11 @@ block append body
 
                             .column.has-text-centered
                                 img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}' + window.location.search`)
+    
+    //- Abilities and Base Stats
     .columns
-        .column
-            .card
+        .column.is-flex
+            .card(style="width: 100%;")
                 .card-header-title(onclick="toggleCardContentVisibility(this);",style="cursor: pointer;").collapsable
                     p Abilities
                 .card-content
@@ -176,8 +180,8 @@ block append body
                             if ability.isHidden
                                 p.is-italic Hidden
                             p #{ability.effect}
-        .column
-            .card
+        .column.is-flex
+            .card(style="width: 100%;")
                 .card-header-title(onclick="toggleCardContentVisibility(this);", style="cursor: pointer;").collapsable
                     p Base stats
                 .card-content
@@ -255,9 +259,26 @@ block append body
                                     td #{((baseStats.hp.stat + baseStats.attack.stat + baseStats.defense.stat + baseStats.special_attack.stat + baseStats.special_defense.stat + baseStats.speed.stat) / 6).toFixed(2)}
                                     td 70.85
 
+    //- Pokedex and Other info
     .columns
-        .column
-            .card
+        .column.is-flex
+            .card(style="width: 100%;")
+                .card-header-title(onclick="toggleCardContentVisibility(this);", style="cursor: pointer;").collapsable
+                    p Pokédex entry
+                .card-content.pt-1
+                    .columns
+                        .column
+                            p Weight: #{weight} kg
+                        .column
+                            p Height: #{height}0 cm
+                    if pokedex.length > 0
+                        each entry in pokedex
+                            p.is-capitalized.has-text-weight-bold #{entry.game}
+                            p.pb-2 #{entry.entry}
+                    else
+                        p Select a game where this Pokémon is featured to see its Pokédex entry.
+        .column.is-flex
+            .card(style="width: 100%;")
                 .card-header-title(onclick="toggleCardContentVisibility(this);", style="cursor: pointer;").collapsable
                     p Other Info
                 .card-content
@@ -268,22 +289,24 @@ block append body
                     p.title.is-6.mb-2 Growth rate: #{growthRate}
                     p How quickly this Pokémon is able to level-up
     
-    if moveset.length > 0
-        .columns
-            .column
-                .card
-                    .card-header-title(onclick="toggleCardContentVisibility(this);", style="cursor: pointer;").collapsable
-                        p Pokédex entry
-                    .card-content.pt-1
-                        .columns
-                            .column
-                                p Weight: #{weight} kg
-                            .column
-                                p Height: #{height}0 cm
-                        if pokedex.length > 0
-                            each entry in pokedex
-                                p.is-capitalized.has-text-weight-bold #{entry.game}
-                                p.pb-2 #{entry.entry}
+    //- Forms and Moveset
+    .columns
+        .column    
+            .card
+                .card-header-title(onclick="toggleCardContentVisibility(this);", style="cursor: pointer;").collapsable
+                    p Forms
+                .card-content
+                    each form in forms
+                        .columns.is-mobile
+                            .column.has-text-centered.is-flex
+                                .box(style="width: 100%")
+                                    img(src=`${form.sprite}`, onclick=`location.href='${form.url}' + window.location.search`, style="cursor: pointer;")
+                                    p #{form.name}
+                            .column.has-text-centered.is-flex
+                                .box(style="width: 100%")
+                                    img(src=`${form.spriteShiny}`, onclick=`location.href='${form.url}' + window.location.search`,)
+                                    p Shiny #{form.name}
+        if moveset.length > 0
             .column
                 .card
                     .card-header-title(onclick="toggleCardContentVisibility(this);", style="cursor: pointer;").collapsable

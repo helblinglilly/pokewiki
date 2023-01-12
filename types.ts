@@ -164,6 +164,12 @@ export interface PokemonDetails extends PokemonName {
 		name: string;
 		sprite: string;
 	}[];
+	forms: {
+		name: string;
+		sprite: string;
+		spriteShiny: string;
+		url: string;
+	}[];
 	backSprite: string;
 	shinySprite: string;
 	shinyBackSprite: string;
@@ -194,6 +200,21 @@ export interface PokemonDetails extends PokemonName {
 	selectedGames: VersionGroup | undefined;
 }
 
+export interface APIResponseForm {
+	form_names: {
+		language: {
+			name: string;
+		};
+		name: string;
+	}[];
+	sprites: {
+		front_default: string;
+		front_shiny: string;
+		front_female: string | null;
+		front_shiny_female: string | null;
+	};
+}
+
 export interface APIResponsePokemon {
 	weight: number;
 	height: number;
@@ -203,6 +224,10 @@ export interface APIResponsePokemon {
 			url: string;
 		};
 		is_hidden: boolean;
+	}[];
+	forms: {
+		name: string;
+		url: string;
 	}[];
 	moves: {
 		move: {
@@ -280,6 +305,13 @@ export interface APIResponseSpecies {
 		};
 		version: {
 			name: string;
+		};
+	}[];
+	varieties: {
+		is_default: boolean;
+		pokemon: {
+			name: string;
+			url: string;
 		};
 	}[];
 }

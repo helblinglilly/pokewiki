@@ -16,6 +16,7 @@ import {
 	EvolutionChain,
 	Games,
 	VersionGroup,
+	APIResponseForm,
 } from "./types";
 
 const searchLimit = 10;
@@ -177,11 +178,38 @@ class Model {
 				})
 			)
 		);
+		pokemonData.forms.forEach((form) => {
+			extraPromises.push(
+				axios.get(form.url, {
+					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				})
+			);
+		});
+		speciesData.varieties.forEach((variety) => {
+			extraPromises.push(
+				axios.get(variety.pokemon.url, {
+					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				})
+			);
+		});
 		const extraResults = await Promise.all(extraPromises);
 		evolutionData = extraResults[0].data;
 
+		const formData: APIResponseForm[] = [];
+		const varietiseData: any[] = [];
+
 		extraResults.forEach((entry, i) => {
-			if (i !== 0) abilitiesData.push(entry.data);
+			if (i !== 0 && i <= pokemonData.abilities.length) {
+				abilitiesData.push(entry.data);
+			} else if (
+				i !== 0 &&
+				i > pokemonData.abilities.length &&
+				i <= pokemonData.abilities.length + pokemonData.forms.length
+			) {
+				formData.push(entry.data);
+			} else if (i !== 0) {
+				varietiseData.push(entry.data);
+			}
 		});
 
 		// Abilities
@@ -234,6 +262,63 @@ class Model {
 			});
 		});
 
+		// Alternative forms
+		const forms: {
+			name: string;
+			sprite: string;
+			spriteShiny: string;
+			url: string;
+		}[] = [];
+
+		formData.forEach((response) => {
+			let name = "";
+			if (response.form_names.length > 0) {
+				const nameEntry = response.form_names.filter(
+					(langEntry) => langEntry.language.name === "en"
+				);
+				name = nameEntry[0].name;
+			} else {
+				name = english ? english.name : "";
+			}
+
+			if (response.sprites.front_female) {
+				forms.push({
+					name: name + " ♀",
+					sprite: response.sprites.front_female,
+					spriteShiny: response.sprites.front_shiny_female
+						? response.sprites.front_shiny_female
+						: "",
+					url: `/pokemon/${id}`,
+				});
+				name += " ♂";
+			}
+
+			forms.push({
+				name: name,
+				sprite: response.sprites.front_default,
+				spriteShiny: response.sprites.front_shiny,
+				url: `/pokemon/${id}`,
+			});
+		});
+
+		varietiseData.forEach((variety, i) => {
+			let name = `Form ${i}`;
+			if (variety.forms.length > 0) {
+				name = variety.forms[0].name;
+			}
+			let parts = name.split("-");
+			parts = parts.map((word) => word[0].toUpperCase() + word.slice(1));
+			name = parts.join(" ");
+			if (variety.id !== id) {
+				forms.push({
+					name: name,
+					sprite: variety.sprites.front_default,
+					spriteShiny: variety.sprites.front_shiny,
+					url: `/pokemon/${id}?variety=${variety.id}`,
+				});
+			}
+		});
+
 		// Stats
 		let stats = {
 			hp: {},
@@ -280,7 +365,6 @@ class Model {
 		// Game specific sections
 		let moveset: MoveDetails[] = [];
 		let selectedGames: VersionGroup | undefined;
-		const games: string[] = [];
 		if (game) {
 			selectedGames = Games.findEntry(game);
 
@@ -387,6 +471,7 @@ class Model {
 			backSprite: pokemonData.sprites.back_default,
 			shinySprite: pokemonData.sprites.front_shiny,
 			shinyBackSprite: pokemonData.sprites.back_shiny,
+			forms: forms,
 			types: types,
 			selectedGames: selectedGames,
 			pokedex: pokedexEntries,

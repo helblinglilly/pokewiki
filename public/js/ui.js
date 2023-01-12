@@ -61,9 +61,8 @@ const submitSearch = () => {
 			// If all you changed is the Game, then stay on the current page
 			search.action = `/pokemon/${currentlySelectedPokemon}`;
 		}
-		console.log();
-		search.submit();
 	}
+	search.submit();
 };
 
 const isMobile = new RegExp("Android|Mobile|iPhone|iOS").test(
@@ -72,8 +71,7 @@ const isMobile = new RegExp("Android|Mobile|iPhone|iOS").test(
 
 const openFilter = () => {
 	const modal = document.getElementById("filterModal");
-	modal.classList.add("is-active");
-	modal.classList.remove("hidden");
+	modal.classList.toggle("is-active");
 };
 
 const closeFilter = () => {

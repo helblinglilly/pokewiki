@@ -23,10 +23,9 @@ body
     block body
       form(action="/search", method="get", id="search").pb-3
         .field.has-addons
-            .control.is-expanded
-                input.input(type="text", id="searchBar", name="term" placeholder="Search for something!" onsubmit="document.forms['search'].submit()")
-            .control(onclick="openFilter();")
-                button.button.is-static(data-target="filters")#filterButton Options
+            .control(style="width: 100%")
+                input.input(type="text", id="searchBar", name="term" placeholder="Search for something!")
+            button.button(onclick="openFilter();", type="button", style="background-color: #f5f5f5;") Options
         
         input(type="submit", hidden)#searchSubmit
         style.
@@ -39,7 +38,7 @@ body
             .modal-card
                 .modal-card-body
                     .box
-                        p.title.is-5 Select game
+                        p.title.is-5 Select game    
                         .select(form="search", name="game")
                             select(form="search", name="game", id="gameSelector")
                                 option(value="all") Any

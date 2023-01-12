@@ -300,11 +300,11 @@ block append body
                         .columns.is-mobile
                             .column.has-text-centered.is-flex
                                 .box(style="width: 100%")
-                                    img(src=`${form.sprite}`, onclick=`location.href='${form.url}' + window.location.search`, style="cursor: pointer;")
+                                    img(src=`${form.sprite}`, onclick=`location.href='${form.url}' + removeVarieties()`, style="cursor: pointer;")
                                     p #{form.name}
                             .column.has-text-centered.is-flex
                                 .box(style="width: 100%")
-                                    img(src=`${form.spriteShiny}`, onclick=`location.href='${form.url}' + window.location.search`,)
+                                    img(src=`${form.spriteShiny}`, onclick=`location.href='${form.url}' + removeVarieties()`, style="cursor: pointer;")
                                     p Shiny #{form.name}
         if moveset.length > 0
             .column

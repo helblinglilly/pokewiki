@@ -80,6 +80,10 @@ const closeFilter = () => {
 	modal.classList.add("hidden");
 };
 
+const removeVarieties = () => {
+	return window.location.search.replace(/\?variety=[0-9]*/g, "");
+};
+
 const populateSearchFilters = () => {
 	const params = new URL(document.location).searchParams;
 

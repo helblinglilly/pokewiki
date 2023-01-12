@@ -134,6 +134,7 @@ class Model {
 
 	static getPokemonDetail = async (
 		id: number,
+		varietyId: number,
 		game?: string
 	): Promise<PokemonDetails | void> => {
 		let pokemonData: APIResponsePokemon;
@@ -145,9 +146,14 @@ class Model {
 		const pokedexEntries: { game: string; entry: string }[] = [];
 
 		const results = await Promise.all([
-			axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			}),
+			axios.get(
+				`https://pokeapi.co/api/v2/pokemon/${
+					varietyId !== 0 ? varietyId : id
+				}`,
+				{
+					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				}
+			),
 			axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`, {
 				headers: {
 					"Accept-Encoding": "gzip,deflate,compress",
@@ -309,7 +315,24 @@ class Model {
 			let parts = name.split("-");
 			parts = parts.map((word) => word[0].toUpperCase() + word.slice(1));
 			name = parts.join(" ");
-			if (variety.id !== id) {
+			if (varietyId !== 0 && variety.id === id) {
+				// The whole entry is for a variety, and this is the OG
+				forms.push({
+					name: name,
+					sprite: variety.sprites.front_default,
+					spriteShiny: variety.sprites.front_shiny,
+					url: `/pokemon/${id}`,
+				});
+			} else if (varietyId !== 0 && variety.id !== varietyId) {
+				// This is a variety and the current entry is for the same one
+				forms.push({
+					name: name,
+					sprite: variety.sprites.front_default,
+					spriteShiny: variety.sprites.front_shiny,
+					url: `/pokemon/${id}?variety=${variety.id}`,
+				});
+			} else if (varietyId === 0 && variety.id !== id) {
+				// This is the OG and there's a bunch of varieties - don't double count yourself
 				forms.push({
 					name: name,
 					sprite: variety.sprites.front_default,

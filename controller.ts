@@ -63,7 +63,21 @@ class Controller {
 			if (req.query.game !== "all") game = req.query.game;
 		}
 
-		const details = await Model.getPokemonDetail(id, game);
+		let variety = 0;
+		if (typeof req.query.variety === "string") {
+			try {
+				variety = parseInt(req.query.variety);
+			} catch {
+				const err: ErrorMessage = {
+					error: "Invalid query type",
+					info: `You requested a variety of a Pokémon that does not exist. Varieties are not sequential, so please don't modify them as only the UI will lead you to a predictable path.`,
+				};
+				res.status(400).render("./error", { ...err });
+				return;
+			}
+		}
+
+		const details = await Model.getPokemonDetail(id, variety, game);
 		const options = { ...details };
 		res.render("./pokemon", { ...options });
 	};

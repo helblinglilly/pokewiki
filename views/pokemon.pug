@@ -332,11 +332,11 @@ block append body
                                             img.icon(src=`${move.type_sprite}`, style="width: 50px; height: 20px;" alt='Move type Icon').tableImage
                                             img.icon(src=`${move.attack_type_sprite}`, alt='Type Icon', style="width: 50px; height: 20px;").tableImage.mt-1
                                     td.pl-0
-                                        if move.german === move.english
+                                        if move.english === move.german || !move.german
                                             p #{move.german}
                                         else 
-                                            p #{move.german}
                                             p #{move.english}
+                                            p #{move.german}
                                     td.pl-0
                                         if move.learning_method !== "level-up"
                                             if move.learning_method === "machine"

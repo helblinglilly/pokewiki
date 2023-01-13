@@ -1,88 +1,120 @@
 export class Games {
+	static generationOrder = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii"];
 	static names = [
+		{
+			version_group_name: "all",
+			consistsOf: ["all"],
+			generation: "",
+		},
 		{
 			version_group_name: "red-blue",
 			consistsOf: ["red", "blue"],
+			generation: "i",
 		},
 		{
 			version_group_name: "yellow",
 			consistsOf: ["yellow"],
+			generation: "i",
 		},
 		{
 			version_group_name: "gold-silver",
 			consistsOf: ["gold", "silver"],
+			generation: "ii",
 		},
 		{
 			version_group_name: "crystal",
 			consistsOf: ["crystal"],
+			generation: "ii",
 		},
 		{
 			version_group_name: "ruby-sapphire",
 			consistsOf: ["ruby", "sapphire"],
+			generation: "iii",
 		},
 		{
 			version_group_name: "emerald",
 			consistsOf: ["emerald"],
+			generation: "iii",
 		},
 		{
 			version_group_name: "firered-leafgreen",
 			consistsOf: ["firered", "leafgreen"],
+			generation: "iii",
 		},
 		{
 			version_group_name: "diamond-pearl",
 			consistsOf: ["diamond", "pearl"],
+			generation: "iv",
 		},
 		{
 			version_group_name: "platinum",
 			consistsOf: ["platinum"],
+			generation: "iv",
 		},
 		{
 			version_group_name: "heartgold-soulsilver",
 			consistsOf: ["heartgold", "soulsilver"],
+			generation: "iv",
 		},
 		{
 			version_group_name: "black-white",
 			consistsOf: ["black", "white"],
+			generation: "v",
 		},
 		{
 			version_group_name: "colosseum",
 			consistsOf: ["colosseum"],
+			generation: "iv",
 		},
 		{
 			version_group_name: "xd",
 			consistsOf: ["xd"],
+			generation: "iv",
 		},
 		{
 			version_group_name: "black-2-white-2",
 			consistsOf: ["black-2", "white-2"],
+			generation: "v",
 		},
 		{
 			version_group_name: "x-y",
 			consistsOf: ["x", "y"],
+			generation: "vi",
 		},
 		{
 			version_group_name: "omega-ruby-alpha-sapphire",
 			consistsOf: ["omega-ruby", "alpha-sapphire"],
+			generation: "vi",
 		},
 		{
 			version_group_name: "sun-moon",
 			consistsOf: ["sun", "moon"],
+			generation: "vii",
 		},
 		{
 			version_group_name: "ultra-sun-ultra-moon",
 			consistsOf: ["ultra-sun", "ultra-moon"],
+			generation: "vii",
 		},
 		{
 			version_group_name: "lets-go-pikachu-lets-go-eevee",
 			consistsOf: ["lets-go-pikachu", "lets-go-eevee"],
+			generation: "vii",
 		},
 		{
 			version_group_name: "sword-shield",
 			consistsOf: ["sword", "shield"],
+			generation: "viii",
+		},
+		{
+			version_group_name: "brilliant-diamond-and-shining-pearl",
+			consistsOf: ["brilliant-diamond", "shining-pearl"],
+			generation: "viii",
 		},
 		{
 			version_group_name: "legends-arceus",
 			consistsOf: ["legends-arceus"],
+			generation: "viii",
 		},
 	];
 
@@ -96,6 +128,7 @@ export class Games {
 export interface VersionGroup {
 	version_group_name: string;
 	consistsOf: string[];
+	generation: string;
 }
 
 export interface ErrorMessage {
@@ -210,8 +243,8 @@ export interface APIResponseForm {
 	sprites: {
 		front_default: string;
 		front_shiny: string;
-		front_female: string | null;
-		front_shiny_female: string | null;
+		front_female: string;
+		front_shiny_female: string;
 	};
 }
 
@@ -250,6 +283,16 @@ export interface APIResponsePokemon {
 		type: {
 			name: string;
 		};
+	}[];
+	past_types: {
+		generation: {
+			name: string;
+		};
+		types: {
+			type: {
+				name: string;
+			};
+		}[];
 	}[];
 	stats: {
 		base_stat: number;
@@ -314,6 +357,7 @@ export interface APIResponseSpecies {
 			url: string;
 		};
 	}[];
+	has_gender_differences: boolean;
 }
 
 export interface EvolutionChain {

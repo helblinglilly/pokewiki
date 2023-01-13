@@ -256,7 +256,7 @@ class Model {
 		);
 
 		// Pokemon Types
-		const types: { name: string; sprite: string }[] = [];
+		let types: { name: string; sprite: string }[] = [];
 		allTypes.forEach((allType) => {
 			pokemonData.types.forEach((pokeType) => {
 				if (allType.english_id === pokeType.type.name) {
@@ -287,7 +287,7 @@ class Model {
 				name = english ? english.name : "";
 			}
 
-			if (response.sprites.front_female) {
+			if (speciesData.has_gender_differences) {
 				forms.push({
 					name: name + " ♀",
 					sprite: response.sprites.front_female,
@@ -390,7 +390,7 @@ class Model {
 		let selectedGames: VersionGroup | undefined;
 		if (game) {
 			selectedGames = Games.findEntry(game);
-
+			// Pokédex entries
 			speciesData.flavor_text_entries.forEach((entry) => {
 				if (
 					selectedGames !== undefined &&
@@ -405,13 +405,42 @@ class Model {
 				}
 			});
 
-			// Moves
 			if (selectedGames !== undefined) {
+				// Moves
 				moveset = this.processMoveset(
 					allMoves,
 					pokemonData.moves,
 					selectedGames
 				);
+
+				// Past Types
+				const selectedGenIndex = Games.generationOrder.findIndex(
+					(a) => a === selectedGames?.generation
+				);
+
+				let oldTypes: { name: string; sprite: string }[] = [];
+				pokemonData.past_types.forEach((pastEntry) => {
+					const pastGenIndex = Games.generationOrder.findIndex(
+						(a) => a == pastEntry.generation.name.split("-")[1]
+					);
+
+					if (selectedGenIndex <= pastGenIndex) {
+						allTypes.forEach((allType) => {
+							pastEntry.types.forEach((oldType) => {
+								if (allType.english_id === oldType.type.name) {
+									oldTypes.push({
+										name: allType.english_id,
+										sprite: allType.sprite,
+									});
+								}
+							});
+						});
+					}
+				});
+
+				if (oldTypes.length > 0) {
+					types = oldTypes;
+				}
 			}
 		}
 

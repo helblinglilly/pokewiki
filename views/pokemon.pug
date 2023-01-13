@@ -36,10 +36,13 @@ block append head
 
 
 block append body
-    if selectedGames === undefined && moveset.length === 0
+    if moveset.length === 0
         .notification.is-warning.is-light 
             p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
-    else if selectedGames.length === 0
+    else if selectedGames.version_group_name === "all"
+        .notification.is-warning.is-light
+            p Select a game from the "Options" section to see its Pokédex entry and Moveset.
+    else if selectedGames === undefined
         .notification.is-warning.is-light
             p Moveset and Pokédex are hidden because no game is selected. Use the 'Options' button next to the search bar to select a game.
     
@@ -47,14 +50,14 @@ block append body
     .columns.is-mobile
         .column.is-one-third
             .card.otherEntry
-                .card-content(onclick=`location.href='/pokemon/${id - 1}' + window.location.search`).otherEntryContent
+                .card-content(onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`).otherEntryContent
                     p.otherNumber ##{id - 1} 
                     img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`).otherSprite
         .column.has-text-centered(style="display: inline-flex;")
             p.title.is-4(style="margin: auto;") ##{id} 
         .column.is-one-third
             .card.otherEntry.is-pulled-right
-                .card-content(onclick=`location.href='/pokemon/${id + 1}' + window.location.search`).otherEntryContent
+                .card-content(onclick=`location.href='/pokemon/${id + 1}' + removeVarieties()`).otherEntryContent
                     if (id + 1) > 905
                         img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`).otherSprite  
                     else  
@@ -95,7 +98,7 @@ block append body
                     each evolution in evolutions
                         .columns.is-vcentered.is-mobile
                             .column.has-text-centered
-                                img(src=`${evolution.sourceSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.sourceURL}' + window.location.search`)
+                                img(src=`${evolution.sourceSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.sourceURL}' + removeVarieties()`)
                             .column.has-text-centered
                                 if evolution.trigger.includes("Level")
                                     p #{evolution.trigger}
@@ -165,7 +168,7 @@ block append body
                                         p#moreInfo(hidden) #{requirement.info}
 
                             .column.has-text-centered
-                                img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}' + window.location.search`)
+                                img(src=`${evolution.targetSprite}`, style="cursor: pointer;", onclick=`location.href='${evolution.targetURL}' + removeVarieties()`)
     
     //- Abilities and Base Stats
     .columns
@@ -175,7 +178,7 @@ block append body
                     p Abilities
                 .card-content
                     each ability in abilities
-                        .box(onclick=`location.href='${ability.link}' + window.location.search`, style="cursor: pointer;")
+                        .box(onclick=`location.href='${ability.link}' + removeVarieties()`, style="cursor: pointer;")
                             p.has-text-weight-bold #{ability.name}
                             if ability.isHidden
                                 p.is-italic Hidden
@@ -299,12 +302,12 @@ block append body
                     each form in forms
                         .columns.is-mobile
                             .column.has-text-centered.is-flex
-                                .box(style="width: 100%")
-                                    img(src=`${form.sprite}`, onclick=`location.href='${form.url}' + removeVarieties()`, style="cursor: pointer;")
+                                .box(style="width: 100%; cursor: pointer;",  onclick=`location.href='${form.url}' + removeVarieties()`)
+                                    img(src=`${form.sprite}`)
                                     p #{form.name}
                             .column.has-text-centered.is-flex
-                                .box(style="width: 100%")
-                                    img(src=`${form.spriteShiny}`, onclick=`location.href='${form.url}' + removeVarieties()`, style="cursor: pointer;")
+                                .box(style="width: 100%; cursor: pointer;",  onclick=`location.href='${form.url}' + removeVarieties()`)
+                                    img(src=`${form.spriteShiny}`)
                                     p Shiny #{form.name}
         if moveset.length > 0
             .column
@@ -320,7 +323,7 @@ block append body
                                     th.pl-0 Level
                             tbody(style="width: 100%")
                             for move in moveset
-                                tr(onclick=`location.href='${move.link}' + window.location.search`, style="cursor: pointer;")
+                                tr(onclick=`location.href='${move.link}' + removeVarieties()`, style="cursor: pointer;")
                                     td(style="width: 70px;").pl-0
                                         .container(style="display: inline-grid")
                                             img.icon(src=`${move.type_sprite}`, style="width: 50px; height: 20px;" alt='Move type Icon').tableImage

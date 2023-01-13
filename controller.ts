@@ -59,9 +59,7 @@ class Controller {
 		}
 
 		let game = "";
-		if (typeof req.query.game === "string") {
-			if (req.query.game !== "all") game = req.query.game;
-		}
+		if (typeof req.query.game === "string") game = req.query.game;
 
 		let variety = 0;
 		if (typeof req.query.variety === "string") {

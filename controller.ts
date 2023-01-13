@@ -46,7 +46,7 @@ class Controller {
 		try {
 			id = parseInt(req.url.split("/")[2].split("?")[0]);
 			if (!id) throw new Error("No Pokémon ID");
-			if (id < 1 || id > 905) throw new Error("Invalid Pokémon ID");
+			if (id < 1 || id > 1008) throw new Error("Invalid Pokémon ID");
 		} catch {
 			const err: ErrorMessage = {
 				error: "Invalid Pokémon ID",

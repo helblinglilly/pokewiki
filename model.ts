@@ -290,10 +290,12 @@ class Model {
 			if (speciesData.has_gender_differences) {
 				forms.push({
 					name: name + " ♀",
-					sprite: response.sprites.front_female,
+					sprite: response.sprites.front_female
+						? response.sprites.front_female
+						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
 					spriteShiny: response.sprites.front_shiny_female
 						? response.sprites.front_shiny_female
-						: "",
+						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
 					url: `/pokemon/${id}`,
 				});
 				name += " ♂";
@@ -301,8 +303,12 @@ class Model {
 
 			forms.push({
 				name: name,
-				sprite: response.sprites.front_default,
-				spriteShiny: response.sprites.front_shiny,
+				sprite: response.sprites.front_default
+					? response.sprites.front_default
+					: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
+				spriteShiny: response.sprites.front_shiny
+					? response.sprites.front_shiny
+					: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
 				url: `/pokemon/${id}`,
 			});
 		});
@@ -319,24 +325,36 @@ class Model {
 				// The whole entry is for a variety, and this is the OG
 				forms.push({
 					name: name,
-					sprite: variety.sprites.front_default,
-					spriteShiny: variety.sprites.front_shiny,
+					sprite: variety.sprites.front_default
+						? variety.sprites.front_default
+						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
+					spriteShiny: variety.sprites.front_shiny
+						? variety.sprites.front_shiny
+						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
 					url: `/pokemon/${id}`,
 				});
 			} else if (varietyId !== 0 && variety.id !== varietyId) {
 				// This is a variety and the current entry is for the same one
 				forms.push({
 					name: name,
-					sprite: variety.sprites.front_default,
-					spriteShiny: variety.sprites.front_shiny,
+					sprite: variety.sprites.front_default
+						? variety.sprites.front_default
+						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
+					spriteShiny: variety.sprites.front_shiny
+						? variety.sprites.front_shiny
+						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
 					url: `/pokemon/${id}?variety=${variety.id}`,
 				});
 			} else if (varietyId === 0 && variety.id !== id) {
 				// This is the OG and there's a bunch of varieties - don't double count yourself
 				forms.push({
 					name: name,
-					sprite: variety.sprites.front_default,
-					spriteShiny: variety.sprites.front_shiny,
+					sprite: variety.sprites.front_default
+						? variety.sprites.front_default
+						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
+					spriteShiny: variety.sprites.front_shiny
+						? variety.sprites.front_shiny
+						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
 					url: `/pokemon/${id}?variety=${variety.id}`,
 				});
 			}
@@ -514,15 +532,30 @@ class Model {
 			});
 		}
 
+		let growthRate = "Unknown";
+		if (speciesData.growth_rate) {
+			growthRate =
+				speciesData.growth_rate.name[0].toUpperCase() +
+				speciesData.growth_rate.name.substring(1);
+		}
+
 		return {
 			german: german ? german.name : "",
 			english: english ? english.name : "",
 			id: id,
 			link: `/pokemon/${id}`,
-			sprite: pokemonData.sprites.front_default,
-			backSprite: pokemonData.sprites.back_default,
-			shinySprite: pokemonData.sprites.front_shiny,
-			shinyBackSprite: pokemonData.sprites.back_shiny,
+			sprite: pokemonData.sprites.front_default
+				? pokemonData.sprites.front_default
+				: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
+			backSprite: pokemonData.sprites.back_default
+				? pokemonData.sprites.back_default
+				: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
+			shinySprite: pokemonData.sprites.front_shiny
+				? pokemonData.sprites.front_shiny
+				: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
+			shinyBackSprite: pokemonData.sprites.back_shiny
+				? pokemonData.sprites.back_shiny
+				: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
 			forms: forms,
 			types: types,
 			selectedGames: selectedGames,
@@ -538,9 +571,7 @@ class Model {
 			evolutions: evolutions,
 			abilities: abilities,
 			captureRate: speciesData.capture_rate,
-			growthRate:
-				speciesData.growth_rate.name[0].toUpperCase() +
-				speciesData.growth_rate.name.substring(1),
+			growthRate: growthRate,
 			moveset: moveset,
 			baseStats: stats,
 		};

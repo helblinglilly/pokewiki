@@ -52,7 +52,10 @@ block append body
             .card.otherEntry
                 .card-content(onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`).otherEntryContent
                     p.otherNumber ##{id - 1} 
-                    img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`).otherSprite
+                    if (id - 1) > 905
+                        img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`).otherSprite
+                    else
+                        img(src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`).otherSprite
         .column.has-text-centered(style="display: inline-flex;")
             p.title.is-4(style="margin: auto;") ##{id} 
         .column.is-one-third
@@ -69,10 +72,10 @@ block append body
         .column.is-flex
             .card(style="width: 100%;")
                 .card-header-title.is-justify-content-space-between
-                    if german === english
-                        p #{german}
+                    if english === german || !german
+                        p #{english}
                     else
-                        p #{german} - #{english}
+                        p #{english} - #{german}
                 
                     div
                         each pType in types

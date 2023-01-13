@@ -1,6 +1,47 @@
 const axios = require("axios");
 const fs = require("fs");
 
+const pokemon = async () => {
+	const startFrom = 905;
+	const upTo = 1008;
+
+	const results = [];
+
+	for (let i = startFrom; i <= upTo; i++) {
+		let response;
+		try {
+			response = await axios.get(
+				`https://pokeapi.co/api/v2/pokemon-species/${i}`,
+				{
+					headers: { "Accept-Encoding": "gzip,deflate,compress" },
+				}
+			);
+			console.log(i);
+		} catch (err) {
+			console.log(i, "failed");
+			continue;
+		}
+
+		let german, english;
+		response.data.names.forEach((entry) => {
+			if (entry.language.name === "de") {
+				german = entry.name;
+			}
+			if (entry.language.name === "en") {
+				english = entry.name;
+			}
+		});
+
+		results.push({
+			german: german ? german : english,
+			english: english,
+			id: i,
+		});
+		await new Promise((r) => setTimeout(r, 200));
+	}
+	fs.writeFileSync("newPokemon.json", JSON.stringify(results), "utf8");
+};
+
 const moves = async () => {
 	const maxMoves = 826;
 
@@ -62,6 +103,7 @@ const addTypeSprites = () => {
 	fs.writeFileSync("moves.json", JSON.stringify(moves), "utf8");
 };
 
-addTypeSprites();
+pokemon();
+// addTypeSprites();
 
 // moves();

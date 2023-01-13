@@ -1,5 +1,15 @@
 export class Games {
-	static generationOrder = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii"];
+	static generationOrder = [
+		"i",
+		"ii",
+		"iii",
+		"iv",
+		"v",
+		"vi",
+		"vii",
+		"viii",
+		"ix",
+	];
 	static names = [
 		{
 			version_group_name: "all",
@@ -115,6 +125,11 @@ export class Games {
 			version_group_name: "legends-arceus",
 			consistsOf: ["legends-arceus"],
 			generation: "viii",
+		},
+		{
+			version_group_name: "scarlet-violet",
+			consistsOf: ["scarlet", "violet"],
+			generation: "ix",
 		},
 	];
 

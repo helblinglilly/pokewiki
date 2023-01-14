@@ -1,5 +1,5 @@
 import express from "express";
-import Controller from "../controller";
+import Router from "../router";
 import log from "../log";
 
 export let port = 443;
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res, next) => {
-	Controller.getIndex(req, res);
+	res.render("./index");
 });
 
 app.all("/", (req, res) => {
@@ -49,7 +49,7 @@ app.all("/", (req, res) => {
 });
 
 app.get("/search", (req, res, next) => {
-	Controller.getSearch(req, res);
+	Router.getSearch(req, res);
 });
 app.all("/search", (req, res) => {
 	res.status(405).render("error", {
@@ -59,7 +59,7 @@ app.all("/search", (req, res) => {
 });
 
 app.get("/pokemon/*", (req, res, next) => {
-	Controller.getPokemon(req, res);
+	Router.getPokemon(req, res);
 });
 app.all("/pokemon/*", (req, res) => {
 	res.status(405).render("error", {
@@ -69,7 +69,7 @@ app.all("/pokemon/*", (req, res) => {
 });
 
 app.get("/item/*", (req, res, next) => {
-	Controller.getItem(req, res);
+	Router.getItem(req, res);
 });
 app.all("/item/*", (req, res) => {
 	res.status(405).render("error", {
@@ -79,7 +79,7 @@ app.all("/item/*", (req, res) => {
 });
 
 app.get("/move/*", (req, res, next) => {
-	Controller.getMove(req, res);
+	Router.getMove(req, res);
 });
 app.all("/move/*", (req, res) => {
 	res.status(405).render("error", {
@@ -89,13 +89,17 @@ app.all("/move/*", (req, res) => {
 });
 
 app.get("/ability/*", (req, res, next) => {
-	Controller.getAbility(req, res);
+	Router.getAbility(req, res);
 });
 app.all("/ability/*", (req, res) => {
 	res.status(405).render("error", {
 		error: "Method not allowed",
 		info: `${req.method} is not supported on this endpoint`,
 	});
+});
+
+app.get("/test", (req, res, next) => {
+	Router.getTest(req, res);
 });
 
 app.all("/*", (req, res) => {

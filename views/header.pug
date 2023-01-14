@@ -15,14 +15,14 @@ head
 		@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 	title Pokéwiki
 
-body
+body(style="min-height: 100vw; display: flex; flex-direction: column")
 	nav.navbar(role="navigation", aria-label="main navigation")
 		.navbar-brand(href="/")
 			a.navbar-item(href="/")
 				img(src="/static/pokemon.png")
 			a.navbar-item(href="/") Pokémon
 
-	.container.is-max-desktop.pl-6.pr-6.pb-6
+	.container.is-max-desktop.pl-6.pr-6.pb-6(style="width: 100%")
 		block body
 			form#search.pb-3(action="/search", method="get")
 				.field.has-addons
@@ -53,9 +53,9 @@ body
 								.select(form="search", name="game")
 									select#gameSelector(form="search", name="game")
 										option(value="all") Any
-										option(value="scarlet-violet") * Scarlet / Violet
-										option(value="legends-arceus") * Legends Areceus
-										option(value="brilliant-diamond-and-shining-pearl") * Brilliant Diamond / Shining Pearl
+										option(value="scarlet-violet") Scarlet / Violet
+										option(value="legends-arceus") Legends Areceus
+										option(value="brilliant-diamond-and-shining-pearl") Brilliant Diamond / Shining Pearl
 										option(value="sword-shield") Sword / Shield
 										option(value="lets-go-pikachu-lets-go-eevee") Let's Go Pikachu / Eevee
 										option(value="ultra-sun-ultra-moon") Ultra Sun / Ultra Moon
@@ -74,7 +74,6 @@ body
 										option(value="gold-silver") Gold / Silver
 										option(value="yellow") Yellow
 										option(value="red-blue") Red / Blue
-								p * known to have data issues
 							.box
 								p.title.is-5 Types of results
 								.columns
@@ -88,8 +87,18 @@ body
 										input#showMoves.mr-2(type="checkbox", name="moves", value="true", checked)
 										label.pr-4(for="showMoves") Moves
 									.column
-										input#showAbilities.mr-2(type="checkbox", name="abilities", value="true", checked)
+										input#showAbilities.mr-2(
+											type="checkbox",
+											name="abilities",
+											value="true",
+											checked
+										)
 										label.pr-4(for="showAbilities") Abilities
 						footer.modal-card-foot
 							button.button.is-info(onclick="submitSearch();", type="button") Search
 							button.button(onclick="closeFilter();", type="button") Close
+	hr
+	footer.m-3.has-text-centered
+		p Development Build
+		p Built at #[a(href="https://github.com/helblingjoel/pokewiki") https://github.com/helblingjoel/pokewiki]
+		p Using data from #[a(href="https://github.com/PokeAPI/pokeapi") https://github.com/PokeAPI/pokeapi]

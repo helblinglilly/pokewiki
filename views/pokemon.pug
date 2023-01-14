@@ -39,6 +39,7 @@ block append body
 		.notification.is-warning.is-light 
 			|
 			|
+			|
 			p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
 	else if selectedGames.version_group_name === "all"
 		.notification.is-warning.is-light
@@ -363,6 +364,7 @@ block append body
 		.column 
 			|
 			|
+			|
 			.card
 				.card-header-title.collapsable(
 					onclick="toggleCardContentVisibility(this);",
@@ -430,10 +432,10 @@ block append body
 											if move.learning_method === "machine"
 												p TM/VM
 											else if move.learning_method === "tutor"
-												p Erlernt
 												p Tutor
+												p Erlernt
 											else if move.learning_method === "egg"
-												p Ei
 												p Egg
+												p Ei
 										else
 											p Lv. #{ move.level_learnt }

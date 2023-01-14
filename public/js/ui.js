@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 });
 
+const hideNotice = () => {
+	document.getElementById("notice").setAttribute("hidden", "");
+};
+
 const submitSearch = () => {
 	const urlNoParams = document.URL.split("?")[0];
 	const queryParams = document.URL.split("?")[1];

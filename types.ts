@@ -1,15 +1,5 @@
 export class Games {
-	static generationOrder = [
-		"i",
-		"ii",
-		"iii",
-		"iv",
-		"v",
-		"vi",
-		"vii",
-		"viii",
-		"ix",
-	];
+	static generationOrder = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix"];
 	static names = [
 		{
 			version_group_name: "all",
@@ -135,7 +125,7 @@ export class Games {
 
 	static findEntry = (game: string): VersionGroup | undefined => {
 		return this.names.find(
-			(a) => a.version_group_name === game || a.consistsOf.includes(game)
+			a => a.version_group_name === game || a.consistsOf.includes(game)
 		);
 	};
 }

@@ -10,12 +10,9 @@ const pokemon = async () => {
 	for (let i = startFrom; i <= upTo; i++) {
 		let response;
 		try {
-			response = await axios.get(
-				`https://pokeapi.co/api/v2/pokemon-species/${i}`,
-				{
-					headers: { "Accept-Encoding": "gzip,deflate,compress" },
-				}
-			);
+			response = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${i}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
 			console.log(i);
 		} catch (err) {
 			console.log(i, "failed");
@@ -23,7 +20,7 @@ const pokemon = async () => {
 		}
 
 		let german, english;
-		response.data.names.forEach((entry) => {
+		response.data.names.forEach(entry => {
 			if (entry.language.name === "de") {
 				german = entry.name;
 			}
@@ -37,7 +34,7 @@ const pokemon = async () => {
 			english: english,
 			id: i,
 		});
-		await new Promise((r) => setTimeout(r, 200));
+		await new Promise(r => setTimeout(r, 200));
 	}
 	fs.writeFileSync("newPokemon.json", JSON.stringify(results), "utf8");
 };
@@ -58,7 +55,7 @@ const moves = async () => {
 			continue;
 		}
 		let german, english;
-		response.data.names.forEach((entry) => {
+		response.data.names.forEach(entry => {
 			if (entry.language.name === "de") {
 				german = entry.name;
 			}
@@ -80,7 +77,7 @@ const moves = async () => {
 			type: type,
 		});
 		// Wait a bit
-		await new Promise((r) => setTimeout(r, 200));
+		await new Promise(r => setTimeout(r, 200));
 	}
 	fs.writeFileSync("moves.json", JSON.stringify(results), "utf8");
 };
@@ -89,9 +86,9 @@ const addTypeSprites = () => {
 	const types = JSON.parse(fs.readFileSync("./public/pokedata/types.json"));
 	let moves = JSON.parse(fs.readFileSync("./public/pokedata/moves.json"));
 
-	moves = moves.map((move) => {
+	moves = moves.map(move => {
 		let rightType;
-		types.forEach((type) => {
+		types.forEach(type => {
 			if (type.english_id === move.type) {
 				rightType = type;
 			}

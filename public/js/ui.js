@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	populateSearchFilters();
 
 	if (isMobile) {
-		document.querySelectorAll(".collapsable").forEach((item) => {
+		document.querySelectorAll(".collapsable").forEach(item => {
 			toggleCardContentVisibility(item);
 		});
 	}
 
-	document.addEventListener("keydown", (event) => {
+	document.addEventListener("keydown", event => {
 		const e = event || window.event;
 
 		if (e.key === "Escape") {
@@ -19,8 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const submitSearch = () => {
 	const urlNoParams = document.URL.split("?")[0];
 	const queryParams = document.URL.split("?")[1];
-	const potentialPokemonRoute =
-		urlNoParams.split("/")[urlNoParams.split("/").length - 2];
+	const potentialPokemonRoute = urlNoParams.split("/")[urlNoParams.split("/").length - 2];
 	const currentlySelectedPokemon =
 		urlNoParams.split("/")[urlNoParams.split("/").length - 1];
 
@@ -30,7 +29,7 @@ const submitSearch = () => {
 		let currentGame;
 		let selectedGame;
 
-		params.forEach((entry) => {
+		params.forEach(entry => {
 			let currentSelection;
 			let newSelection;
 
@@ -65,9 +64,7 @@ const submitSearch = () => {
 	search.submit();
 };
 
-const isMobile = new RegExp("Android|Mobile|iPhone|iOS").test(
-	navigator.userAgent
-);
+const isMobile = new RegExp("Android|Mobile|iPhone|iOS").test(navigator.userAgent);
 
 const openFilter = () => {
 	const modal = document.getElementById("filterModal");
@@ -96,7 +93,7 @@ const populateSearchFilters = () => {
 	typeSelections.push(params.get("abilities"));
 
 	// Only de-select entries if they're not ALL (un)selected
-	if (!typeSelections.every((item) => item === typeSelections[0])) {
+	if (!typeSelections.every(item => item === typeSelections[0])) {
 		if (!params.get("pokemon")) {
 			document.getElementById("showPokemon").removeAttribute("checked");
 		}
@@ -122,35 +119,26 @@ const populateSearchFilters = () => {
 	}
 
 	if (params.get("pokemon") == "false") {
-		document
-			.getElementById("showPokemon")
-			.attributes.removeNamedItem("checked");
+		document.getElementById("showPokemon").attributes.removeNamedItem("checked");
 	}
 
 	if (params.get("items") == "false") {
-		document
-			.getElementById("showItems")
-			.attributes.removeNamedItem("checked");
+		document.getElementById("showItems").attributes.removeNamedItem("checked");
 	}
 
 	if (params.get("moves") == "false") {
-		document
-			.getElementById("showMoves")
-			.attributes.removeNamedItem("checked");
+		document.getElementById("showMoves").attributes.removeNamedItem("checked");
 	}
 
 	if (params.get("abilities") == "false") {
-		document
-			.getElementById("showAbilities")
-			.attributes.removeNamedItem("checked");
+		document.getElementById("showAbilities").attributes.removeNamedItem("checked");
 	}
 };
 
-const toggleCardContentVisibility = (sender) => {
-	sender.parentElement.childNodes.forEach((child) => {
+const toggleCardContentVisibility = sender => {
+	sender.parentElement.childNodes.forEach(child => {
 		if (child.classList.contains("card-content")) {
-			if (child.getAttribute("hidden") === null)
-				child.setAttribute("hidden", "");
+			if (child.getAttribute("hidden") === null) child.setAttribute("hidden", "");
 			else child.removeAttribute("hidden");
 		}
 	});

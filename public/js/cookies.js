@@ -1,8 +1,8 @@
 const searchHistoryLimit = 5;
 
-document.addEventListener("DOMContentLoaded", (event) => {});
+document.addEventListener("DOMContentLoaded", event => {});
 
-const addHistory = (item) => {
+const addHistory = item => {
 	const history = getCookie("history");
 
 	if (history === undefined) {
@@ -26,7 +26,7 @@ const getHistory = () => {
 	return items;
 };
 
-const getCookie = (name) => {
+const getCookie = name => {
 	const cookies = document.cookie.split(";");
 	for (let i = 0; i < cookies.length; i++) {
 		if (cookies[i].split("=")[0].trim() === name) {

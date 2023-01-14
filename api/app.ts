@@ -19,8 +19,7 @@ const app = express();
 
 app.set("view engine", "pug");
 
-const selfFileExtension =
-	__filename.split(".")[__filename.split(".").length - 1];
+const selfFileExtension = __filename.split(".")[__filename.split(".").length - 1];
 
 if (selfFileExtension === "js" && process.env.NODE_ENV !== "production") {
 	app.use("/static", express.static(`${__dirname}/../../public`));

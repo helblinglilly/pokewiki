@@ -28,20 +28,15 @@ class Model {
 	): Promise<GenericEntry[]> => {
 		let entries: GenericEntry[] = [];
 		try {
-			const result = await axios.get(
-				`${host}:${port}/static/pokedata/${location}`,
-				{
-					headers: { "Accept-Encoding": "gzip,deflate,compress" },
-				}
-			);
+			const result = await axios.get(`${host}:${port}/static/pokedata/${location}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
 			entries = result.data;
 		} catch (error) {
-			log.error(
-				`Failed to fetch ${host}:${port}${location} with error ${error}`
-			);
+			log.error(`Failed to fetch ${host}:${port}${location} with error ${error}`);
 		}
 
-		entries = entries.map((entry) => {
+		entries = entries.map(entry => {
 			if (location === "abilities.json") {
 				entry.link = `/ability/${entry.id}`;
 			} else if (location === "items.json") {
@@ -51,14 +46,11 @@ class Model {
 				const move = entry as Moves;
 				move.link = `/move/${entry.id}`;
 				if (move.attack_type === "physical")
-					move.attack_type_sprite =
-						"https://i.stack.imgur.com/UATOp.png";
+					move.attack_type_sprite = "https://i.stack.imgur.com/UATOp.png";
 				else if (move.attack_type === "special")
-					move.attack_type_sprite =
-						"https://i.stack.imgur.com/dS0qQ.png";
+					move.attack_type_sprite = "https://i.stack.imgur.com/dS0qQ.png";
 				else if (move.attack_type === "status")
-					move.attack_type_sprite =
-						"https://i.stack.imgur.com/LWKMo.png";
+					move.attack_type_sprite = "https://i.stack.imgur.com/LWKMo.png";
 
 				entry = move;
 			} else if (location === "types.json") {
@@ -72,13 +64,13 @@ class Model {
 		const searchRegex = new RegExp(
 			`${searchTerm
 				.split("")
-				.map((char) => `${char}\\s*`)
+				.map(char => `${char}\\s*`)
 				.join("")}`,
 			"gi"
 		);
 
 		const filtered: GenericEntry[] = [];
-		entries.forEach((entry) => {
+		entries.forEach(entry => {
 			if (filtered.length < searchLimit) {
 				if (searchRegex.test(entry.english)) filtered.push(entry);
 				else if (searchRegex.test(entry.german)) filtered.push(entry);
@@ -88,17 +80,12 @@ class Model {
 		return filtered;
 	};
 
-	static getPokemonOverview = async (
-		searchTerm?: string
-	): Promise<PokemonName[]> => {
+	static getPokemonOverview = async (searchTerm?: string): Promise<PokemonName[]> => {
 		let pokemon: PokemonName[] = [];
 		try {
-			const result = await axios.get(
-				`${host}:${port}/static/pokedata/pokemon.json`,
-				{
-					headers: { "Accept-Encoding": "gzip,deflate,compress" },
-				}
-			);
+			const result = await axios.get(`${host}:${port}/static/pokedata/pokemon.json`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
 			pokemon = result.data;
 		} catch (error) {
 			log.error(
@@ -106,7 +93,7 @@ class Model {
 			);
 		}
 
-		pokemon = pokemon.map((mon) => {
+		pokemon = pokemon.map(mon => {
 			mon.link = `/pokemon/${mon.id}`;
 			return mon;
 		});
@@ -116,13 +103,13 @@ class Model {
 		const searchRegex = new RegExp(
 			`${searchTerm
 				.split("")
-				.map((char) => `${char}\\s*`)
+				.map(char => `${char}\\s*`)
 				.join("")}`,
 			"gi"
 		);
 
 		const filtered: PokemonName[] = [];
-		pokemon.forEach((mon) => {
+		pokemon.forEach(mon => {
 			if (filtered.length < searchLimit) {
 				if (searchRegex.test(mon.english)) filtered.push(mon);
 				else if (searchRegex.test(mon.german)) filtered.push(mon);
@@ -146,14 +133,9 @@ class Model {
 		const pokedexEntries: { game: string; entry: string }[] = [];
 
 		const results = await Promise.all([
-			axios.get(
-				`https://pokeapi.co/api/v2/pokemon/${
-					varietyId !== 0 ? varietyId : id
-				}`,
-				{
-					headers: { "Accept-Encoding": "gzip,deflate,compress" },
-				}
-			),
+			axios.get(`https://pokeapi.co/api/v2/pokemon/${varietyId !== 0 ? varietyId : id}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			}),
 			axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`, {
 				headers: {
 					"Accept-Encoding": "gzip,deflate,compress",
@@ -175,23 +157,23 @@ class Model {
 				? axios.get(speciesData.evolution_chain.url, {
 						headers: { "Accept-Encoding": "gzip,deflate,compress" },
 				  })
-				: new Promise<any>((resolve) => resolve([])),
+				: new Promise<any>(resolve => resolve([])),
 		];
-		pokemonData.abilities.forEach((ability) =>
+		pokemonData.abilities.forEach(ability =>
 			extraPromises.push(
 				axios.get(ability.ability.url, {
 					headers: { "Accept-Encoding": "gzip,deflate,compress" },
 				})
 			)
 		);
-		pokemonData.forms.forEach((form) => {
+		pokemonData.forms.forEach(form => {
 			extraPromises.push(
 				axios.get(form.url, {
 					headers: { "Accept-Encoding": "gzip,deflate,compress" },
 				})
 			);
 		});
-		speciesData.varieties.forEach((variety) => {
+		speciesData.varieties.forEach(variety => {
 			extraPromises.push(
 				axios.get(variety.pokemon.url, {
 					headers: { "Accept-Encoding": "gzip,deflate,compress" },
@@ -219,20 +201,20 @@ class Model {
 		});
 
 		// Abilities
-		const abilities = abilitiesData.map((entry) => {
+		const abilities = abilitiesData.map(entry => {
 			let name = entry.name;
 			let isHidden = false;
 			let effect = "";
-			pokemonData.abilities.forEach((ability) => {
+			pokemonData.abilities.forEach(ability => {
 				if (ability.ability.name === entry.name) {
 					isHidden = ability.is_hidden;
 				}
 			});
-			entry.names.forEach((a) => {
+			entry.names.forEach(a => {
 				if (a.language.name === "en") name = a.name;
 			});
 
-			entry.effect_entries.forEach((a) => {
+			entry.effect_entries.forEach(a => {
 				if (a.language.name === "en") {
 					effect = a.short_effect;
 				}
@@ -247,18 +229,14 @@ class Model {
 		});
 
 		// Names
-		const german = speciesData.names.find(
-			(name) => name.language.name === "de"
-		);
+		const german = speciesData.names.find(name => name.language.name === "de");
 
-		const english = speciesData.names.find(
-			(name) => name.language.name === "en"
-		);
+		const english = speciesData.names.find(name => name.language.name === "en");
 
 		// Pokemon Types
 		let types: { name: string; sprite: string }[] = [];
-		allTypes.forEach((allType) => {
-			pokemonData.types.forEach((pokeType) => {
+		allTypes.forEach(allType => {
+			pokemonData.types.forEach(pokeType => {
 				if (allType.english_id === pokeType.type.name) {
 					types.push({
 						name: allType.english_id,
@@ -276,11 +254,11 @@ class Model {
 			url: string;
 		}[] = [];
 
-		formData.forEach((response) => {
+		formData.forEach(response => {
 			let name = "";
 			if (response.form_names.length > 0) {
 				const nameEntry = response.form_names.filter(
-					(langEntry) => langEntry.language.name === "en"
+					langEntry => langEntry.language.name === "en"
 				);
 				name = nameEntry[0].name;
 			} else {
@@ -319,7 +297,7 @@ class Model {
 				name = variety.forms[0].name;
 			}
 			let parts = name.split("-");
-			parts = parts.map((word) => word[0].toUpperCase() + word.slice(1));
+			parts = parts.map(word => word[0].toUpperCase() + word.slice(1));
 			name = parts.join(" ");
 			if (varietyId !== 0 && variety.id === id) {
 				// The whole entry is for a variety, and this is the OG
@@ -370,7 +348,7 @@ class Model {
 			speed: {},
 		};
 
-		pokemonData.stats.forEach((stat) => {
+		pokemonData.stats.forEach(stat => {
 			if (stat.stat.name === "hp")
 				stats.hp = {
 					stat: stat.base_stat,
@@ -409,7 +387,7 @@ class Model {
 		if (game) {
 			selectedGames = Games.findEntry(game);
 			// Pokédex entries
-			speciesData.flavor_text_entries.forEach((entry) => {
+			speciesData.flavor_text_entries.forEach(entry => {
 				if (
 					selectedGames !== undefined &&
 					Games.findEntry(entry.version.name)?.version_group_name ==
@@ -425,26 +403,22 @@ class Model {
 
 			if (selectedGames !== undefined) {
 				// Moves
-				moveset = this.processMoveset(
-					allMoves,
-					pokemonData.moves,
-					selectedGames
-				);
+				moveset = this.processMoveset(allMoves, pokemonData.moves, selectedGames);
 
 				// Past Types
 				const selectedGenIndex = Games.generationOrder.findIndex(
-					(a) => a === selectedGames?.generation
+					a => a === selectedGames?.generation
 				);
 
 				let oldTypes: { name: string; sprite: string }[] = [];
-				pokemonData.past_types.forEach((pastEntry) => {
+				pokemonData.past_types.forEach(pastEntry => {
 					const pastGenIndex = Games.generationOrder.findIndex(
-						(a) => a == pastEntry.generation.name.split("-")[1]
+						a => a == pastEntry.generation.name.split("-")[1]
 					);
 
 					if (selectedGenIndex <= pastGenIndex) {
-						allTypes.forEach((allType) => {
-							pastEntry.types.forEach((oldType) => {
+						allTypes.forEach(allType => {
+							pastEntry.types.forEach(oldType => {
 								if (allType.english_id === oldType.type.name) {
 									oldTypes.push({
 										name: allType.english_id,
@@ -563,9 +537,7 @@ class Model {
 			weight: parseFloat(
 				pokemonData.weight.toString().slice(0, -1) +
 					"." +
-					pokemonData.weight
-						.toString()
-						.charAt(pokemonData.weight.toString().length - 1)
+					pokemonData.weight.toString().charAt(pokemonData.weight.toString().length - 1)
 			),
 			height: pokemonData.height,
 			evolutions: evolutions,
@@ -589,25 +561,25 @@ class Model {
 		promises.push(
 			abilities
 				? this.getGeneric("abilities.json", searchTerm)
-				: new Promise<[]>((resolve) => resolve([]))
+				: new Promise<[]>(resolve => resolve([]))
 		);
 		promises.push(
 			items
 				? this.getGeneric("items.json", searchTerm)
-				: new Promise<[]>((resolve) => resolve([]))
+				: new Promise<[]>(resolve => resolve([]))
 		);
 		promises.push(
 			moves
 				? this.getGeneric("moves.json", searchTerm)
-				: new Promise<[]>((resolve) => resolve([]))
+				: new Promise<[]>(resolve => resolve([]))
 		);
 		promises.push(
 			pokemon
 				? this.getPokemonOverview(searchTerm)
-				: new Promise<[]>((resolve) => resolve([]))
+				: new Promise<[]>(resolve => resolve([]))
 		);
 
-		return Promise.all(promises).then((values) => {
+		return Promise.all(promises).then(values => {
 			return {
 				Abilities: values[0],
 				Items: values[1],
@@ -617,9 +589,7 @@ class Model {
 		});
 	};
 
-	static getEvolutions = (
-		evolutionData: APIResponseEvolution
-	): Evolution[] => {
+	static getEvolutions = (evolutionData: APIResponseEvolution): Evolution[] => {
 		const results: Evolution[] = [];
 		if (evolutionData === undefined) return [];
 		let sourceID = evolutionData.chain.species.url.split("/")[6];
@@ -627,7 +597,7 @@ class Model {
 		const process = (evolution: EvolutionChain) => {
 			const targetID = evolution.species.url.split("/")[6];
 
-			evolution.evolution_details.forEach((details) => {
+			evolution.evolution_details.forEach(details => {
 				let trigger = "";
 				const requirements: {
 					type: string;
@@ -636,17 +606,14 @@ class Model {
 				}[] = [];
 
 				if (details.trigger.name === "level-up") {
-					if (details.min_level)
-						trigger = `Level ${details.min_level}`;
+					if (details.min_level) trigger = `Level ${details.min_level}`;
 					else trigger = "Level Up";
 				} else if (details.trigger.name === "use-item") {
 					trigger = "use-item";
 					requirements.push({
 						type: "use-item",
 						info: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${details.item.name}.png`,
-						supplementary: `/item/${
-							details.item.url.split("/")[6]
-						}`,
+						supplementary: `/item/${details.item.url.split("/")[6]}`,
 					});
 				} else if (details.trigger.name === "shed") {
 					trigger = "shed";
@@ -668,17 +635,14 @@ class Model {
 				if (details.gender !== null) {
 					if (details.gender == "1")
 						requirements.push({ type: "gender", info: "Female" });
-					if (details.gender == "2")
-						requirements.push({ type: "gender", info: "Male" });
+					if (details.gender == "2") requirements.push({ type: "gender", info: "Male" });
 				}
 
 				if (details.held_item !== null) {
 					requirements.push({
 						type: "hold-item",
 						info: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${details.held_item.name}.png`,
-						supplementary: `/item/${
-							details.held_item.url.split("/")[6]
-						}`,
+						supplementary: `/item/${details.held_item.url.split("/")[6]}`,
 					});
 				}
 
@@ -716,9 +680,7 @@ class Model {
 						info:
 							details.trade_species.name[0].toUpperCase() +
 							details.trade_species.name.slice(1),
-						supplementary: `/pokemon/${
-							details.trade_species.url.split("/")[6]
-						}`,
+						supplementary: `/pokemon/${details.trade_species.url.split("/")[6]}`,
 					});
 				}
 
@@ -728,9 +690,7 @@ class Model {
 						info:
 							details.party_species.name[0].toUpperCase() +
 							details.party_species.name.slice(1),
-						supplementary: `/pokemon/${
-							details.party_species.url.split("/")[6]
-						}`,
+						supplementary: `/pokemon/${details.party_species.url.split("/")[6]}`,
 					});
 				}
 
@@ -771,7 +731,7 @@ class Model {
 
 				if (details.known_move !== null) {
 					let tidyMoveName = details.known_move.name;
-					const words = tidyMoveName.split("-").map((word) => {
+					const words = tidyMoveName.split("-").map(word => {
 						return word[0].toUpperCase() + word.slice(1);
 					});
 					tidyMoveName = words.join(" ");
@@ -800,7 +760,7 @@ class Model {
 
 				if (details.location !== null) {
 					let tidyLocation = details.location.name;
-					const words = tidyLocation.split("-").map((word) => {
+					const words = tidyLocation.split("-").map(word => {
 						return word[0].toUpperCase() + word.slice(1);
 					});
 					tidyLocation = words.join(" ");
@@ -812,11 +772,7 @@ class Model {
 				}
 
 				if (details.trigger.name === "take-damage") {
-					if (
-						sourceID === "562" ||
-						sourceID === "867" ||
-						sourceID === "563"
-					) {
+					if (sourceID === "562" || sourceID === "867" || sourceID === "563") {
 						// Yamask to Runerigus
 						results.push({
 							sourceURL: `/pokemon/562`,
@@ -844,13 +800,13 @@ class Model {
 					targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${targetID}.png`,
 				});
 			});
-			evolution.evolves_to.forEach((direction) => {
+			evolution.evolves_to.forEach(direction => {
 				sourceID = targetID;
 				process(direction);
 			});
 		};
 
-		evolutionData.chain.evolves_to.forEach((evolution) => {
+		evolutionData.chain.evolves_to.forEach(evolution => {
 			process(evolution);
 		});
 
@@ -866,19 +822,14 @@ class Model {
 		const tmMoves: MoveDetails[] = [];
 		const eggMoves: MoveDetails[] = [];
 		const tutorMoves: MoveDetails[] = [];
-		moves.forEach((move) => {
-			move.version_group_details.forEach((version) => {
-				const foundVersion = Games.findEntry(
-					version.version_group.name
-				);
+		moves.forEach(move => {
+			move.version_group_details.forEach(version => {
+				const foundVersion = Games.findEntry(version.version_group.name);
 				if (
 					foundVersion !== undefined &&
-					foundVersion.version_group_name ===
-						toBeFoundVersionGroup.version_group_name
+					foundVersion.version_group_name === toBeFoundVersionGroup.version_group_name
 				) {
-					const moveDetail = allMoves.find(
-						(a) => a.english_id === move.move.name
-					);
+					const moveDetail = allMoves.find(a => a.english_id === move.move.name);
 					if (moveDetail !== undefined) {
 						const move = {
 							...moveDetail,
@@ -888,32 +839,28 @@ class Model {
 
 						if (
 							move.learning_method === "level-up" &&
-							levelMoves.filter((a) => a.english === move.english)
-								.length === 0
+							levelMoves.filter(a => a.english === move.english).length === 0
 						) {
 							levelMoves.push(move);
 						}
 
 						if (
 							move.learning_method === "egg" &&
-							eggMoves.filter((a) => a.english === move.english)
-								.length === 0
+							eggMoves.filter(a => a.english === move.english).length === 0
 						) {
 							eggMoves.push(move);
 						}
 
 						if (
 							move.learning_method === "machine" &&
-							tmMoves.filter((a) => a.english === move.english)
-								.length === 0
+							tmMoves.filter(a => a.english === move.english).length === 0
 						) {
 							tmMoves.push(move);
 						}
 
 						if (
 							move.learning_method === "tutor" &&
-							tutorMoves.filter((a) => a.english === move.english)
-								.length === 0
+							tutorMoves.filter(a => a.english === move.english).length === 0
 						) {
 							tutorMoves.push(move);
 						}

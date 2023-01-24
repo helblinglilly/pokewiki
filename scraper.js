@@ -82,6 +82,25 @@ const moves = async () => {
 	fs.writeFileSync("moves.json", JSON.stringify(results), "utf8");
 };
 
+const fixMoves = () => {
+	const moves = JSON.parse(fs.readFileSync("./public/pokedata/moves.json"));
+	const fixed = moves.map(a => {
+		let sprite =
+			"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
+
+		if (a.attack_type === "physical") sprite = "/public/assets/attack-types/physical.png";
+		if (a.attack_type === "special") sprite = "/public/assets/attack-types/special.png";
+		if (a.attack_type === "status") sprite = "/public/assets/attack-types/status.png";
+		return {
+			...a,
+			link: `/move/${a.id}`,
+			attack_type_sprite: sprite,
+		};
+	});
+
+	fs.writeFileSync("fixedMoves.json", JSON.stringify(fixed), "utf-8");
+};
+
 const addTypeSprites = () => {
 	const types = JSON.parse(fs.readFileSync("./public/pokedata/types.json"));
 	let moves = JSON.parse(fs.readFileSync("./public/pokedata/moves.json"));
@@ -100,7 +119,8 @@ const addTypeSprites = () => {
 	fs.writeFileSync("moves.json", JSON.stringify(moves), "utf8");
 };
 
-pokemon();
+fixMoves();
+// pokemon();
 // addTypeSprites();
 
 // moves();

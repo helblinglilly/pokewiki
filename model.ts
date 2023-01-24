@@ -1,10 +1,10 @@
-import axios from "axios";
 import log from "./log";
+import axios from "axios";
 import { host, port } from "./api/app";
+import Moves from "./public/pokedata/moves.json";
 import {
 	GenericEntry,
-	Moves,
-	PokemonName,
+	MoveEntry,
 	PokemonDetails,
 	APIResponsePokemon,
 	APIResponseSpecies,
@@ -18,6 +18,8 @@ import {
 	VersionGroup,
 	APIResponseForm,
 } from "./types";
+import { Data } from "./test";
+const data = new Data();
 
 const searchLimit = 10;
 
@@ -43,7 +45,7 @@ class Model {
 				entry.link = `/item/${entry.id}`;
 				entry.sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${entry.english_id}.png`;
 			} else if (location === "moves.json") {
-				const move = entry as Moves;
+				const move = entry as MoveEntry;
 				move.link = `/move/${entry.id}`;
 				if (move.attack_type === "physical")
 					move.attack_type_sprite = "https://i.stack.imgur.com/UATOp.png";
@@ -80,56 +82,18 @@ class Model {
 		return filtered;
 	};
 
-	static getPokemonOverview = async (searchTerm?: string): Promise<PokemonName[]> => {
-		let pokemon: PokemonName[] = [];
-		try {
-			const result = await axios.get(`${host}:${port}/static/pokedata/pokemon.json`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
-			pokemon = result.data;
-		} catch (error) {
-			log.error(
-				`Failed to fetch ${host}:${port}/static/pokedata/pokemon.json with error ${error}`
-			);
-		}
-
-		pokemon = pokemon.map(mon => {
-			mon.link = `/pokemon/${mon.id}`;
-			return mon;
-		});
-
-		if (searchTerm === undefined || pokemon.length === 0) return pokemon;
-
-		const searchRegex = new RegExp(
-			`${searchTerm
-				.split("")
-				.map(char => `${char}\\s*`)
-				.join("")}`,
-			"gi"
-		);
-
-		const filtered: PokemonName[] = [];
-		pokemon.forEach(mon => {
-			if (filtered.length < searchLimit) {
-				if (searchRegex.test(mon.english)) filtered.push(mon);
-				else if (searchRegex.test(mon.german)) filtered.push(mon);
-				else if (searchTerm === mon.id.toString()) filtered.push(mon);
-			}
-		});
-		return filtered;
-	};
-
 	static getPokemonDetail = async (
 		id: number,
 		varietyId: number,
 		game?: string
 	): Promise<PokemonDetails | void> => {
+		const apidata = await data.pokemonData(id);
+
 		let pokemonData: APIResponsePokemon;
 		let speciesData: APIResponseSpecies;
 		let evolutionData: APIResponseEvolution;
 		let allTypes: { english_id: string; sprite: string }[];
 		let abilitiesData: APIResponseAbility[] = [];
-		let allMoves: Moves[] = [];
 		const pokedexEntries: { game: string; entry: string }[] = [];
 
 		const results = await Promise.all([
@@ -144,13 +108,11 @@ class Model {
 			axios.get(`${host}:${port}/static/pokedata/types.json`, {
 				headers: { "Accept-Encoding": "gzip,deflate,compress" },
 			}),
-			this.getGeneric("moves.json"),
 		]);
 
 		pokemonData = results[0].data;
 		speciesData = results[1].data;
 		allTypes = results[2].data;
-		allMoves = results[3] as Moves[];
 
 		const extraPromises = [
 			speciesData.evolution_chain !== null
@@ -403,7 +365,7 @@ class Model {
 
 			if (selectedGames !== undefined) {
 				// Moves
-				moveset = this.processMoveset(allMoves, pokemonData.moves, selectedGames);
+				moveset = this.processMoveset(pokemonData.moves, selectedGames);
 
 				// Past Types
 				const selectedGenIndex = Games.generationOrder.findIndex(
@@ -556,37 +518,17 @@ class Model {
 		moves: boolean,
 		abilities: boolean
 	): Promise<Collection> => {
-		const promises: any[] = [];
+		const pkmnResults = pokemon ? data.findPokemonFromName(searchTerm) : [];
+		const itemResults = items ? data.findItemFromName(searchTerm) : [];
+		const moveResults = moves ? data.findMoveFromName(searchTerm) : [];
+		const abilityResults = abilities ? data.findAbilityFromName(searchTerm) : [];
 
-		promises.push(
-			abilities
-				? this.getGeneric("abilities.json", searchTerm)
-				: new Promise<[]>(resolve => resolve([]))
-		);
-		promises.push(
-			items
-				? this.getGeneric("items.json", searchTerm)
-				: new Promise<[]>(resolve => resolve([]))
-		);
-		promises.push(
-			moves
-				? this.getGeneric("moves.json", searchTerm)
-				: new Promise<[]>(resolve => resolve([]))
-		);
-		promises.push(
-			pokemon
-				? this.getPokemonOverview(searchTerm)
-				: new Promise<[]>(resolve => resolve([]))
-		);
-
-		return Promise.all(promises).then(values => {
-			return {
-				Abilities: values[0],
-				Items: values[1],
-				Moves: values[2] as Moves[],
-				Pokemon: values[3] as PokemonName[],
-			};
-		});
+		return {
+			Pokemon: pkmnResults,
+			Items: itemResults,
+			Moves: moveResults,
+			Abilities: abilityResults,
+		};
 	};
 
 	static getEvolutions = (evolutionData: APIResponseEvolution): Evolution[] => {
@@ -814,7 +756,6 @@ class Model {
 	};
 
 	static processMoveset = (
-		allMoves: Moves[],
 		moves: APIResponsePokemon["moves"],
 		toBeFoundVersionGroup: VersionGroup
 	): MoveDetails[] => {
@@ -829,7 +770,7 @@ class Model {
 					foundVersion !== undefined &&
 					foundVersion.version_group_name === toBeFoundVersionGroup.version_group_name
 				) {
-					const moveDetail = allMoves.find(a => a.english_id === move.move.name);
+					const moveDetail = Moves.find(a => a.english_id === move.move.name);
 					if (moveDetail !== undefined) {
 						const move = {
 							...moveDetail,

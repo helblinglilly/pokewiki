@@ -1,13 +1,11 @@
 import * as ex from "express";
 import log from "./log";
 import Model from "./model";
-// import Pokedex from "pokedex-promise-v2";
 import { ErrorMessage } from "./types";
 
 class Router {
 	static getTest = async (req: ex.Request, res: ex.Response) => {
 		log.debug("Here");
-		// const P = new Pokedex();
 	};
 
 	static getSearch = async (req: ex.Request, res: ex.Response) => {

@@ -150,8 +150,8 @@ export interface GenericEntry {
 	sprite: string;
 }
 
-export interface Moves extends GenericEntry {
-	attack_type: "physical" | "special" | "status";
+export interface MoveEntry extends GenericEntry {
+	attack_type: string;
 	attack_type_sprite: string;
 	type: string;
 	type_sprite: string;
@@ -165,11 +165,17 @@ export interface PokemonName {
 	sprite: string;
 }
 
+interface GenericResult {
+	german: string;
+	english: string;
+	id: number;
+}
+
 export interface Collection {
-	Abilities?: GenericEntry[];
-	Items?: GenericEntry[];
-	Moves?: Moves[];
-	Types?: GenericEntry[];
+	Abilities?: GenericResult[];
+	Items?: GenericResult[];
+	Moves?: MoveEntry[];
+	Types?: GenericResult[];
 	Pokemon?: PokemonName[];
 }
 
@@ -177,7 +183,7 @@ export interface MoveDetails {
 	german: string;
 	english: string;
 	link: string;
-	attack_type: "physical" | "special" | "status";
+	attack_type: string;
 	attack_type_sprite: string;
 	type: string;
 	type_sprite: string;

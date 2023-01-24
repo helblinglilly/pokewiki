@@ -2,6 +2,7 @@ import log from "./log";
 import axios from "axios";
 import { host, port } from "./api/app";
 import Moves from "./public/pokedata/moves.json";
+import Types from "./public/pokedata/types.json";
 import {
 	GenericEntry,
 	MoveEntry,
@@ -88,31 +89,12 @@ class Model {
 		game?: string
 	): Promise<PokemonDetails | void> => {
 		const apidata = await data.pokemonData(id);
+		const pokemonData = apidata.pokemon;
+		const speciesData = apidata.species;
+		const evolutionData = apidata.evolution;
 
-		let pokemonData: APIResponsePokemon;
-		let speciesData: APIResponseSpecies;
-		let evolutionData: APIResponseEvolution;
-		let allTypes: { english_id: string; sprite: string }[];
 		let abilitiesData: APIResponseAbility[] = [];
 		const pokedexEntries: { game: string; entry: string }[] = [];
-
-		const results = await Promise.all([
-			axios.get(`https://pokeapi.co/api/v2/pokemon/${varietyId !== 0 ? varietyId : id}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			}),
-			axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`, {
-				headers: {
-					"Accept-Encoding": "gzip,deflate,compress",
-				},
-			}),
-			axios.get(`${host}:${port}/static/pokedata/types.json`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			}),
-		]);
-
-		pokemonData = results[0].data;
-		speciesData = results[1].data;
-		allTypes = results[2].data;
 
 		const extraPromises = [
 			speciesData.evolution_chain !== null
@@ -121,6 +103,7 @@ class Model {
 				  })
 				: new Promise<any>(resolve => resolve([])),
 		];
+
 		pokemonData.abilities.forEach(ability =>
 			extraPromises.push(
 				axios.get(ability.ability.url, {
@@ -143,7 +126,6 @@ class Model {
 			);
 		});
 		const extraResults = await Promise.all(extraPromises);
-		evolutionData = extraResults[0].data;
 
 		const formData: APIResponseForm[] = [];
 		const varietiseData: any[] = [];
@@ -197,7 +179,7 @@ class Model {
 
 		// Pokemon Types
 		let types: { name: string; sprite: string }[] = [];
-		allTypes.forEach(allType => {
+		Types.forEach(allType => {
 			pokemonData.types.forEach(pokeType => {
 				if (allType.english_id === pokeType.type.name) {
 					types.push({
@@ -379,7 +361,7 @@ class Model {
 					);
 
 					if (selectedGenIndex <= pastGenIndex) {
-						allTypes.forEach(allType => {
+						Types.forEach(allType => {
 							pastEntry.types.forEach(oldType => {
 								if (allType.english_id === oldType.type.name) {
 									oldTypes.push({

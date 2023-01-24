@@ -81,7 +81,7 @@ export class Data {
 
 	getPokemonForm = async (id: number): Promise<APIResponseForm> => {
 		try {
-			await fs.access(`${this.cacheDir}/evolution/${id}.json`);
+			await fs.access(`${this.cacheDir}/pokemon-form/${id}.json`);
 			const data = await fs.readFile(`${this.cacheDir}/pokemon-form/${id}.json`, "utf-8");
 			return JSON.parse(data) as APIResponseForm;
 		} catch {
@@ -100,15 +100,18 @@ export class Data {
 
 	getEvolutionChain = async (id: number): Promise<APIResponseEvolution> => {
 		try {
-			await fs.access(`${this.cacheDir}/evolution/${id}.json`);
-			const data = await fs.readFile(`${this.cacheDir}/evolution/${id}.json`, "utf-8");
+			await fs.access(`${this.cacheDir}/evolution-chain/${id}.json`);
+			const data = await fs.readFile(
+				`${this.cacheDir}/evolution-chain/${id}.json`,
+				"utf-8"
+			);
 			return JSON.parse(data) as APIResponseEvolution;
 		} catch {
 			const data = await axios.get(`${this.api}/evolution-chain/${id}`, {
 				headers: { "Accept-Encoding": "gzip,deflate,compress" },
 			});
 			fs.writeFile(
-				`${this.cacheDir}/evolution/${id}.json`,
+				`${this.cacheDir}/evolution-chain/${id}.json`,
 				JSON.stringify(data.data),
 				"utf-8"
 			);
@@ -119,15 +122,15 @@ export class Data {
 
 	getAbility = async (id: number): Promise<APIResponseAbility> => {
 		try {
-			await fs.access(`${this.cacheDir}/evolution/${id}.json`);
-			const data = await fs.readFile(`${this.cacheDir}/ability/${id}.json`, "utf-8");
+			await fs.access(`${this.cacheDir}/abilities/${id}.json`);
+			const data = await fs.readFile(`${this.cacheDir}/abilities/${id}.json`, "utf-8");
 			return JSON.parse(data) as APIResponseAbility;
 		} catch {
 			const data = await axios.get(`${this.api}/ability/${id}`, {
 				headers: { "Accept-Encoding": "gzip,deflate,compress" },
 			});
 			fs.writeFile(
-				`${this.cacheDir}/ability/${id}.json`,
+				`${this.cacheDir}/abilities/${id}.json`,
 				JSON.stringify(data.data),
 				"utf-8"
 			);
@@ -343,25 +346,31 @@ export class Data {
 		return results;
 	};
 
-	pokemonData = async (id: number) => {
-		const pokemonData = await this.getPokemon(id);
-		const speciesData = await this.getPokemonSpecies(id);
+	pokemonData = async (id: number, varietyId?: number) => {
+		const [pokemonData, speciesData] = await Promise.all([
+			this.getPokemon(varietyId ? varietyId : id),
+			this.getPokemonSpecies(id),
+		]);
 
-		const evolutionId = speciesData.evolution_chain.url.split("/").at(-1);
-		if (evolutionId) {
-			const evolutionData = await this.getEvolutionChain(parseInt(evolutionId));
-		}
+		const promises = [];
 
-		const abilityData = [];
-		pokemonData.abilities.forEach(ability => {
-			const abilityId = ability.ability.url.split("/").at(-1);
-			if (abilityId) {
-				this.getAbility(parseInt(abilityId));
-			}
+		const evolutionURL = speciesData.evolution_chain.url.split("/");
+		const evolutionId = evolutionURL[evolutionURL.length - 2];
+		promises.push(this.getEvolutionChain(parseInt(evolutionId)));
+
+		pokemonData.abilities.forEach(async ability => {
+			const abilityURL = ability.ability.url.split("/");
+			const abilityId = abilityURL[abilityURL.length - 2];
+			promises.push(this.getAbility(parseInt(abilityId)));
 		});
 
-		const allTypes = null;
-		const abilities = null;
-		const pokedex = null;
+		const [evolutionData, ...abilityData] = await Promise.all(promises);
+
+		return {
+			pokemon: pokemonData,
+			species: speciesData,
+			evolution: evolutionData,
+			abilities: abilityData,
+		};
 	};
 }

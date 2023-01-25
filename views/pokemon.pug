@@ -40,6 +40,28 @@ block append body
 			|
 			|
 			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
 			p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
 	else if selectedGames.version_group_name === "all"
 		.notification.is-warning.is-light
@@ -97,14 +119,37 @@ block append body
 				.card-content
 					.columns.mb-0.is-mobile
 						.column
-							img#sprite-front(src=`${sprite}`, style="height: auto; width: 100%")
+							.has-text-centered
+								if sprites.primary.includes(".gif")
+									img#sprite-front.p-5.is-square(
+										src=`${sprites.primary}`,
+										style="height: auto; width: 100%"
+									)
+								else
+									img#sprite-front.is-square(
+										src=`${sprites.primary}`,
+										style="height: auto; width: 100%"
+									)
+									if sprites.secondary.includes("/shiny/")
+										p.is-italic Regular
+									if sprites.secondary.includes("/female/")
+										p.is-italic Male
 						.column
-							if backSprite !== null
-								img#sprite-back(src=`${backSprite}`, style="height: auto; width: 100%")
-							else
-								.has-text-centered
-									img#sprite-back(src=`${shinySprite}`, style="height: auto; width: 100%")
-									p.is-italic Shiny
+							.has-text-centered
+								if sprites.secondary.includes(".gif")
+									img#sprite-front.p-5.is-square(
+										src=`${sprites.secondary}`,
+										style="height: auto; width: 100%"
+									)
+								else
+									img#sprite-back.is-square(
+										src=`${sprites.secondary}`,
+										style="height: auto; width: 100%"
+									)
+									if sprites.secondary.includes("/shiny/")
+										p.is-italic Shiny
+									if sprites.secondary.includes("/female/")
+										p.is-italic Female
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title.collapsable(
@@ -362,6 +407,28 @@ block append body
 	//- Forms and Moveset
 	.columns
 		.column 
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
+			|
 			|
 			|
 			|

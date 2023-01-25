@@ -1,6 +1,6 @@
 import * as ex from "express";
 import log from "./log";
-import Model from "./model";
+import Controller from "./controller";
 import { ErrorMessage } from "./types";
 
 class Router {
@@ -22,7 +22,7 @@ class Router {
 			showAbilities = true;
 		}
 
-		const searchResults = await Model.getSearchResults(
+		const searchResults = await Controller.getSearchResults(
 			req.query.term,
 			showPokemon,
 			showItems,
@@ -70,8 +70,8 @@ class Router {
 				return;
 			}
 		}
-
-		const details = await Model.getPokemonDetail(id, variety, game);
+		const controller = new Controller("en", "de");
+		const details = await controller.getPokemonDetail(id, variety, game);
 		const options = { ...details };
 		res.render("./pokemon", { ...options });
 	};

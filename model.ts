@@ -1,804 +1,397 @@
-import log from "./log";
 import axios from "axios";
-import { host, port } from "./api/app";
-import Moves from "./public/pokedata/moves.json";
-import Types from "./public/pokedata/types.json";
 import {
-	GenericEntry,
-	MoveEntry,
-	PokemonDetails,
+	APIResponseAbility,
+	APIResponseEvolution,
+	APIResponseForm,
 	APIResponsePokemon,
 	APIResponseSpecies,
-	APIResponseEvolution,
-	APIResponseAbility,
-	Collection,
-	MoveDetails,
-	Evolution,
-	EvolutionChain,
-	Games,
-	VersionGroup,
-	APIResponseForm,
+	GenericEntry,
+	MoveEntry,
+	PokemonName,
 } from "./types";
-import { Data } from "./test";
-const data = new Data();
+import Pokemon from "./public/pokedata/pokemon.json";
+import Items from "./public/pokedata/items.json";
+import Moves from "./public/pokedata/moves.json";
+import Abilities from "./public/pokedata/abilities.json";
+import log from "./log";
 
-const searchLimit = 10;
+interface Cache {
+	pokemon: {
+		id: number;
+		data: APIResponsePokemon;
+	}[];
+	pokemon_species: {
+		id: number;
+		data: APIResponseSpecies;
+	}[];
+	pokemon_forms: {
+		id: number;
+		data: APIResponseForm;
+	}[];
+	evolution_chain: {
+		id: number;
+		data: APIResponseEvolution;
+	}[];
+	abilities: {
+		id: number;
+		data: APIResponseAbility;
+	}[];
+}
 
-class Model {
-	static getGeneric = async (
-		location: "abilities.json" | "types.json" | "moves.json" | "items.json",
-		searchTerm?: string
-	): Promise<GenericEntry[]> => {
-		let entries: GenericEntry[] = [];
-		try {
-			const result = await axios.get(`${host}:${port}/static/pokedata/${location}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
-			entries = result.data;
-		} catch (error) {
-			log.error(`Failed to fetch ${host}:${port}${location} with error ${error}`);
-		}
+const cache: Cache = {
+	pokemon: [],
+	pokemon_species: [],
+	pokemon_forms: [],
+	evolution_chain: [],
+	abilities: [],
+};
 
-		entries = entries.map(entry => {
-			if (location === "abilities.json") {
-				entry.link = `/ability/${entry.id}`;
-			} else if (location === "items.json") {
-				entry.link = `/item/${entry.id}`;
-				entry.sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${entry.english_id}.png`;
-			} else if (location === "moves.json") {
-				const move = entry as MoveEntry;
-				move.link = `/move/${entry.id}`;
-				if (move.attack_type === "physical")
-					move.attack_type_sprite = "https://i.stack.imgur.com/UATOp.png";
-				else if (move.attack_type === "special")
-					move.attack_type_sprite = "https://i.stack.imgur.com/dS0qQ.png";
-				else if (move.attack_type === "status")
-					move.attack_type_sprite = "https://i.stack.imgur.com/LWKMo.png";
+export class Data {
+	searchResults = 10;
+	cacheDir = "./cache";
+	api = "https://pokeapi.co/api/v2";
+	notFoundSprite =
+		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
 
-				entry = move;
-			} else if (location === "types.json") {
-				entry.link = `/type/${entry.id}`;
-			}
-			return entry;
+	getPokemon = async (id: number): Promise<APIResponsePokemon> => {
+		const cachedData = cache.pokemon.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
+
+		const data = await axios.get(`${this.api}/pokemon/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
 		});
 
-		if (searchTerm === undefined || entries.length === 0) return entries;
+		cache.pokemon.push({
+			id: id,
+			data: data.data,
+		});
 
-		const searchRegex = new RegExp(
-			`${searchTerm
+		return data.data;
+	};
+
+	getPokemonSpecies = async (id: number): Promise<APIResponseSpecies> => {
+		const cachedData = cache.pokemon_species.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
+
+		const data = await axios.get(`${this.api}/pokemon-species/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.pokemon_species.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
+	};
+
+	getPokemonForm = async (id: number): Promise<APIResponseForm> => {
+		const cachedData = cache.pokemon_forms.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
+
+		const data = await axios.get(`${this.api}/pokemon-form/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.pokemon_forms.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
+	};
+
+	getEvolutionChain = async (id: number): Promise<APIResponseEvolution> => {
+		const cachedData = cache.evolution_chain.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
+
+		const data = await axios.get(`${this.api}/evolution-chain/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.evolution_chain.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
+	};
+
+	getAbility = async (id: number): Promise<APIResponseAbility> => {
+		const cachedData = cache.abilities.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
+
+		const data = await axios.get(`${this.api}/ability/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.abilities.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
+	};
+
+	attackSprite = (name: "physical" | "special" | "status"): string => {
+		if (name === "physical") return "/public/assets/attack-types/physical.png";
+		if (name === "special") return "/public/assets/attack-types/special.png";
+		if (name === "status") return "/public/assets/attack-types/status.png";
+		return this.notFoundSprite;
+	};
+
+	typeSprite = (name: string): string => {
+		name = name.toLowerCase();
+		if (name === "normal") return "/static/assets/attack-types/normal.webp";
+		else if (name === "kampf" || name === "fight")
+			return "/static/assets/attack-types/fight.webp";
+		else if (name === "flug" || name === "flying")
+			return "/static/assets/attack-types/flying.webp";
+		else if (name === "webpt" || name === "poison")
+			return "/static/assets/attack-types/poison.webp";
+		else if (name === "boden" || name === "ground")
+			return "/static/assets/attack-types/ground.webp";
+		else if (name === "gestein" || name === "rock")
+			return "/static/assets/attack-types/rock.webp";
+		else if (name === "käfer" || name === "bug")
+			return "/static/assets/attack-types/bug.webp";
+		else if (name === "geist" || name === "ghost")
+			return "/static/assets/attack-types/ghost.webp";
+		else if (name === "stahl" || name === "steel")
+			return "/static/assets/attack-types/steel.webp";
+		else if (name === "feuer" || name === "fire")
+			return "/static/assets/attack-types/fire.webp";
+		else if (name === "wasser" || name === "water")
+			return "/static/assets/attack-types/water.webp";
+		else if (name === "pflanze" || name === "grass")
+			return "/static/assets/attack-types/grass.webp";
+		else if (name === "elektro" || name === "electric")
+			return "/static/assets/attack-types/electric.webp";
+		else if (name === "psycho" || name === "psychic")
+			return "/static/assets/attack-types/psychic.webp";
+		else if (name === "eis" || name === "ice")
+			return "/static/assets/attack-types/ice.webp";
+		else if (name === "drache" || name === "dragon")
+			return "/static/assets/attack-types/dragon.webp";
+		else if (name === "unlicht" || name === "dark")
+			return "/static/assets/attack-types/dark.webp";
+		else if (name === "fee" || name === "fairy")
+			return "/static/assets/attack-types/fairy.webp";
+		return this.notFoundSprite;
+	};
+
+	findPokemonNameFromId = (id: number): PokemonName | undefined => {
+		const result = Pokemon.find(a => a.id === id);
+		if (!result) return undefined;
+
+		return {
+			...result,
+			link: `/pokemon/${result.id}`,
+			sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${result.id}.png`,
+		};
+	};
+
+	findPokemonFromName = (name: string): PokemonName[] => {
+		name = name.toLocaleLowerCase();
+
+		const regex = new RegExp(
+			`${name
 				.split("")
 				.map(char => `${char}\\s*`)
 				.join("")}`,
 			"gi"
 		);
 
-		const filtered: GenericEntry[] = [];
-		entries.forEach(entry => {
-			if (filtered.length < searchLimit) {
-				if (searchRegex.test(entry.english)) filtered.push(entry);
-				else if (searchRegex.test(entry.german)) filtered.push(entry);
+		const results: PokemonName[] = [];
+		Pokemon.forEach(a => {
+			if (results.length === this.searchResults - 1) {
+				return;
 			}
-		});
+			let german = a.german.toLocaleLowerCase();
+			german.replace("ä", "a");
+			german.replace("ü", "u");
+			german.replace("ö", "o");
 
-		return filtered;
-	};
-
-	static getPokemonDetail = async (
-		id: number,
-		varietyId: number,
-		game?: string
-	): Promise<PokemonDetails | void> => {
-		const apidata = await data.pokemonData(id);
-		const pokemonData = apidata.pokemon;
-		const speciesData = apidata.species;
-		const evolutionData = apidata.evolution;
-
-		let abilitiesData: APIResponseAbility[] = [];
-		const pokedexEntries: { game: string; entry: string }[] = [];
-
-		const extraPromises = [
-			speciesData.evolution_chain !== null
-				? axios.get(speciesData.evolution_chain.url, {
-						headers: { "Accept-Encoding": "gzip,deflate,compress" },
-				  })
-				: new Promise<any>(resolve => resolve([])),
-		];
-
-		pokemonData.abilities.forEach(ability =>
-			extraPromises.push(
-				axios.get(ability.ability.url, {
-					headers: { "Accept-Encoding": "gzip,deflate,compress" },
-				})
-			)
-		);
-		pokemonData.forms.forEach(form => {
-			extraPromises.push(
-				axios.get(form.url, {
-					headers: { "Accept-Encoding": "gzip,deflate,compress" },
-				})
-			);
-		});
-		speciesData.varieties.forEach(variety => {
-			extraPromises.push(
-				axios.get(variety.pokemon.url, {
-					headers: { "Accept-Encoding": "gzip,deflate,compress" },
-				})
-			);
-		});
-		const extraResults = await Promise.all(extraPromises);
-
-		const formData: APIResponseForm[] = [];
-		const varietiseData: any[] = [];
-
-		extraResults.forEach((entry, i) => {
-			if (i !== 0 && i <= pokemonData.abilities.length) {
-				abilitiesData.push(entry.data);
-			} else if (
-				i !== 0 &&
-				i > pokemonData.abilities.length &&
-				i <= pokemonData.abilities.length + pokemonData.forms.length
-			) {
-				formData.push(entry.data);
-			} else if (i !== 0) {
-				varietiseData.push(entry.data);
-			}
-		});
-
-		// Abilities
-		const abilities = abilitiesData.map(entry => {
-			let name = entry.name;
-			let isHidden = false;
-			let effect = "";
-			pokemonData.abilities.forEach(ability => {
-				if (ability.ability.name === entry.name) {
-					isHidden = ability.is_hidden;
-				}
-			});
-			entry.names.forEach(a => {
-				if (a.language.name === "en") name = a.name;
-			});
-
-			entry.effect_entries.forEach(a => {
-				if (a.language.name === "en") {
-					effect = a.short_effect;
-				}
-			});
-
-			return {
-				name: name,
-				effect: effect,
-				isHidden: isHidden,
-				link: `/ability/${entry.id}`,
+			const entry = {
+				...a,
+				link: `/pokemon/${a.id}`,
+				sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${a.id}.png`,
 			};
+
+			if (regex.test(german)) results.push(entry);
+			else if (regex.test(a.english)) results.push(entry);
+			else if (a.id.toString() === name) results.push(entry);
 		});
-
-		// Names
-		const german = speciesData.names.find(name => name.language.name === "de");
-
-		const english = speciesData.names.find(name => name.language.name === "en");
-
-		// Pokemon Types
-		let types: { name: string; sprite: string }[] = [];
-		Types.forEach(allType => {
-			pokemonData.types.forEach(pokeType => {
-				if (allType.english_id === pokeType.type.name) {
-					types.push({
-						name: allType.english_id,
-						sprite: allType.sprite,
-					});
-				}
-			});
-		});
-
-		// Alternative forms
-		const forms: {
-			name: string;
-			sprite: string;
-			spriteShiny: string;
-			url: string;
-		}[] = [];
-
-		formData.forEach(response => {
-			let name = "";
-			if (response.form_names.length > 0) {
-				const nameEntry = response.form_names.filter(
-					langEntry => langEntry.language.name === "en"
-				);
-				name = nameEntry[0].name;
-			} else {
-				name = english ? english.name : "";
-			}
-
-			if (speciesData.has_gender_differences) {
-				forms.push({
-					name: name + " ♀",
-					sprite: response.sprites.front_female
-						? response.sprites.front_female
-						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-					spriteShiny: response.sprites.front_shiny_female
-						? response.sprites.front_shiny_female
-						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-					url: `/pokemon/${id}`,
-				});
-				name += " ♂";
-			}
-
-			forms.push({
-				name: name,
-				sprite: response.sprites.front_default
-					? response.sprites.front_default
-					: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-				spriteShiny: response.sprites.front_shiny
-					? response.sprites.front_shiny
-					: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-				url: `/pokemon/${id}`,
-			});
-		});
-
-		varietiseData.forEach((variety, i) => {
-			let name = `Form ${i}`;
-			if (variety.forms.length > 0) {
-				name = variety.forms[0].name;
-			}
-			let parts = name.split("-");
-			parts = parts.map(word => word[0].toUpperCase() + word.slice(1));
-			name = parts.join(" ");
-			if (varietyId !== 0 && variety.id === id) {
-				// The whole entry is for a variety, and this is the OG
-				forms.push({
-					name: name,
-					sprite: variety.sprites.front_default
-						? variety.sprites.front_default
-						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-					spriteShiny: variety.sprites.front_shiny
-						? variety.sprites.front_shiny
-						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-					url: `/pokemon/${id}`,
-				});
-			} else if (varietyId !== 0 && variety.id !== varietyId) {
-				// This is a variety and the current entry is for the same one
-				forms.push({
-					name: name,
-					sprite: variety.sprites.front_default
-						? variety.sprites.front_default
-						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-					spriteShiny: variety.sprites.front_shiny
-						? variety.sprites.front_shiny
-						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-					url: `/pokemon/${id}?variety=${variety.id}`,
-				});
-			} else if (varietyId === 0 && variety.id !== id) {
-				// This is the OG and there's a bunch of varieties - don't double count yourself
-				forms.push({
-					name: name,
-					sprite: variety.sprites.front_default
-						? variety.sprites.front_default
-						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-					spriteShiny: variety.sprites.front_shiny
-						? variety.sprites.front_shiny
-						: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-					url: `/pokemon/${id}?variety=${variety.id}`,
-				});
-			}
-		});
-
-		// Stats
-		let stats = {
-			hp: {},
-			attack: {},
-			defense: {},
-			special_attack: {},
-			special_defense: {},
-			speed: {},
-		};
-
-		pokemonData.stats.forEach(stat => {
-			if (stat.stat.name === "hp")
-				stats.hp = {
-					stat: stat.base_stat,
-					effort: stat.effort,
-				};
-			else if (stat.stat.name === "attack")
-				stats.attack = {
-					stat: stat.base_stat,
-					effort: stat.effort,
-				};
-			else if (stat.stat.name === "defense")
-				stats.defense = {
-					stat: stat.base_stat,
-					effort: stat.effort,
-				};
-			else if (stat.stat.name === "special-attack")
-				stats.special_attack = {
-					stat: stat.base_stat,
-					effort: stat.effort,
-				};
-			else if (stat.stat.name === "special-defense")
-				stats.special_defense = {
-					stat: stat.base_stat,
-					effort: stat.effort,
-				};
-			else if (stat.stat.name === "speed")
-				stats.speed = {
-					stat: stat.base_stat,
-					effort: stat.effort,
-				};
-		});
-
-		// Game specific sections
-		let moveset: MoveDetails[] = [];
-		let selectedGames: VersionGroup | undefined;
-		if (game) {
-			selectedGames = Games.findEntry(game);
-			// Pokédex entries
-			speciesData.flavor_text_entries.forEach(entry => {
-				if (
-					selectedGames !== undefined &&
-					Games.findEntry(entry.version.name)?.version_group_name ==
-						selectedGames.version_group_name &&
-					entry.language.name === "en"
-				) {
-					pokedexEntries.push({
-						game: entry.version.name,
-						entry: entry.flavor_text,
-					});
-				}
-			});
-
-			if (selectedGames !== undefined) {
-				// Moves
-				moveset = this.processMoveset(pokemonData.moves, selectedGames);
-
-				// Past Types
-				const selectedGenIndex = Games.generationOrder.findIndex(
-					a => a === selectedGames?.generation
-				);
-
-				let oldTypes: { name: string; sprite: string }[] = [];
-				pokemonData.past_types.forEach(pastEntry => {
-					const pastGenIndex = Games.generationOrder.findIndex(
-						a => a == pastEntry.generation.name.split("-")[1]
-					);
-
-					if (selectedGenIndex <= pastGenIndex) {
-						Types.forEach(allType => {
-							pastEntry.types.forEach(oldType => {
-								if (allType.english_id === oldType.type.name) {
-									oldTypes.push({
-										name: allType.english_id,
-										sprite: allType.sprite,
-									});
-								}
-							});
-						});
-					}
-				});
-
-				if (oldTypes.length > 0) {
-					types = oldTypes;
-				}
-			}
-		}
-
-		// Evolution
-		const evolutions: Evolution[] = this.getEvolutions(evolutionData);
-		if (id === 234 || id === 899) {
-			// Stantler to Wyredeer in Legends
-			evolutions.push({
-				sourceURL: `/pokemon/234`,
-				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/234.png`,
-				trigger: "other",
-				requirements: [
-					{
-						type: "other",
-						info: "Use Psyshield Bash 20 times in Agile Style",
-					},
-				],
-				targetURL: `/pokemon/889`,
-				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/899.png`,
-			});
-		}
-
-		if (id === 211 || id === 904) {
-			// Qwilfish to Overqwil in Legends
-			evolutions.push({
-				sourceURL: `/pokemon/211`,
-				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/211.png`,
-				trigger: "other",
-				requirements: [
-					{
-						type: "other",
-						info: "Use Barb Barrage 20 times in Strong Style",
-					},
-				],
-				targetURL: `/pokemon/904`,
-				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/904.png`,
-			});
-		}
-
-		if (id === 550 || id === 902) {
-			// Basculin to Basculegion
-			evolutions.push({
-				sourceURL: `/pokemon/550`,
-				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/550.png`,
-				trigger: "other",
-				requirements: [
-					{
-						type: "other",
-						info: "Lose at least 294 HP from recoil damage",
-					},
-				],
-				targetURL: `/pokemon/902`,
-				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/902.png`,
-			});
-		}
-
-		if (id === 808 || id === 809) {
-			// Meltan to Melmetal
-			evolutions.push({
-				sourceURL: `/pokemon/808`,
-				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/808.png`,
-				trigger: "other",
-				requirements: [
-					{
-						type: "other",
-						info: "Evolve in Pokémon Go - 400 Meltan Candy",
-					},
-				],
-				targetURL: `/pokemon/809`,
-				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/809.png`,
-			});
-		}
-
-		let growthRate = "Unknown";
-		if (speciesData.growth_rate) {
-			growthRate =
-				speciesData.growth_rate.name[0].toUpperCase() +
-				speciesData.growth_rate.name.substring(1);
-		}
-
-		return {
-			german: german ? german.name : "",
-			english: english ? english.name : "",
-			id: id,
-			link: `/pokemon/${id}`,
-			sprite: pokemonData.sprites.front_default
-				? pokemonData.sprites.front_default
-				: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-			backSprite: pokemonData.sprites.back_default
-				? pokemonData.sprites.back_default
-				: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-			shinySprite: pokemonData.sprites.front_shiny
-				? pokemonData.sprites.front_shiny
-				: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-			shinyBackSprite: pokemonData.sprites.back_shiny
-				? pokemonData.sprites.back_shiny
-				: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png`,
-			forms: forms,
-			types: types,
-			selectedGames: selectedGames,
-			pokedex: pokedexEntries,
-			weight: parseFloat(
-				pokemonData.weight.toString().slice(0, -1) +
-					"." +
-					pokemonData.weight.toString().charAt(pokemonData.weight.toString().length - 1)
-			),
-			height: pokemonData.height,
-			evolutions: evolutions,
-			abilities: abilities,
-			captureRate: speciesData.capture_rate,
-			growthRate: growthRate,
-			moveset: moveset,
-			baseStats: stats,
-		};
+		return results;
 	};
 
-	static getSearchResults = async (
-		searchTerm: string,
-		pokemon: boolean,
-		items: boolean,
-		moves: boolean,
-		abilities: boolean
-	): Promise<Collection> => {
-		const pkmnResults = pokemon ? data.findPokemonFromName(searchTerm) : [];
-		const itemResults = items ? data.findItemFromName(searchTerm) : [];
-		const moveResults = moves ? data.findMoveFromName(searchTerm) : [];
-		const abilityResults = abilities ? data.findAbilityFromName(searchTerm) : [];
+	findItemFromName = (name: string): GenericEntry[] => {
+		name = name.toLocaleLowerCase();
 
-		return {
-			Pokemon: pkmnResults,
-			Items: itemResults,
-			Moves: moveResults,
-			Abilities: abilityResults,
-		};
-	};
+		const regex = new RegExp(
+			`${name
+				.split("")
+				.map(char => `${char}\\s*`)
+				.join("")}`,
+			"gi"
+		);
 
-	static getEvolutions = (evolutionData: APIResponseEvolution): Evolution[] => {
-		const results: Evolution[] = [];
-		if (evolutionData === undefined) return [];
-		let sourceID = evolutionData.chain.species.url.split("/")[6];
+		const results: GenericEntry[] = [];
+		Items.forEach(a => {
+			if (results.length === this.searchResults - 1) {
+				return;
+			}
 
-		const process = (evolution: EvolutionChain) => {
-			const targetID = evolution.species.url.split("/")[6];
+			let german = a.german.toLocaleLowerCase();
+			german.replace("ä", "a");
+			german.replace("ü", "u");
+			german.replace("ö", "o");
 
-			evolution.evolution_details.forEach(details => {
-				let trigger = "";
-				const requirements: {
-					type: string;
-					info: string;
-					supplementary?: string;
-				}[] = [];
+			const entry = {
+				...a,
+				link: `/item/${a.id}`,
+				sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${a.english_id}.png`,
+			};
 
-				if (details.trigger.name === "level-up") {
-					if (details.min_level) trigger = `Level ${details.min_level}`;
-					else trigger = "Level Up";
-				} else if (details.trigger.name === "use-item") {
-					trigger = "use-item";
-					requirements.push({
-						type: "use-item",
-						info: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${details.item.name}.png`,
-						supplementary: `/item/${details.item.url.split("/")[6]}`,
-					});
-				} else if (details.trigger.name === "shed") {
-					trigger = "shed";
-					requirements.push({
-						type: "shed",
-						info: `Hello`,
-						supplementary: `World`,
-					});
-				} else if (details.trigger.name === "three-critical-hits") {
-					trigger = "three-critical-hits";
-					requirements.push({
-						type: "three-critical-hits",
-						info: "",
-					});
-				} else {
-					trigger = details.trigger.name;
-				}
-
-				if (details.gender !== null) {
-					if (details.gender == "1")
-						requirements.push({ type: "gender", info: "Female" });
-					if (details.gender == "2") requirements.push({ type: "gender", info: "Male" });
-				}
-
-				if (details.held_item !== null) {
-					requirements.push({
-						type: "hold-item",
-						info: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${details.held_item.name}.png`,
-						supplementary: `/item/${details.held_item.url.split("/")[6]}`,
-					});
-				}
-
-				if (details.min_happiness !== null) {
-					requirements.push({
-						type: "friendship",
-						info: details.min_happiness,
-					});
-				}
-
-				if (details.min_beauty !== null) {
-					requirements.push({
-						type: "beauty",
-						info: details.min_beauty,
-					});
-				}
-
-				if (details.needs_overworld_rain === true) {
-					requirements.push({
-						type: "rain",
-						info: "Raining",
-					});
-				}
-
-				if (details.time_of_day) {
-					requirements.push({
-						type: "daytime",
-						info: details.time_of_day,
-					});
-				}
-
-				if (details.trade_species) {
-					requirements.push({
-						type: "trade_for",
-						info:
-							details.trade_species.name[0].toUpperCase() +
-							details.trade_species.name.slice(1),
-						supplementary: `/pokemon/${details.trade_species.url.split("/")[6]}`,
-					});
-				}
-
-				if (details.party_species !== null) {
-					requirements.push({
-						type: "party_have",
-						info:
-							details.party_species.name[0].toUpperCase() +
-							details.party_species.name.slice(1),
-						supplementary: `/pokemon/${details.party_species.url.split("/")[6]}`,
-					});
-				}
-
-				if (details.party_type !== null) {
-					let tidyType = details.party_type.name;
-					tidyType = tidyType[0].toUpperCase() + tidyType.slice(1);
-					requirements.push({
-						type: "party_type",
-						info: `Party to have another ${tidyType} Pokémon`,
-					});
-				}
-
-				if (details.turn_upside_down) {
-					requirements.push({
-						type: "other",
-						info: "Turn 3DS/Switch Upside Down",
-					});
-				}
-
-				if (details.relative_physical_stats !== null) {
-					if (details.relative_physical_stats === -1) {
-						requirements.push({
-							type: "stats",
-							info: "Defensive > Attack",
-						});
-					} else if (details.relative_physical_stats === 1) {
-						requirements.push({
-							type: "stats",
-							info: "Attack > Defensive",
-						});
-					} else if (details.relative_physical_stats === 0) {
-						requirements.push({
-							type: "stats",
-							info: "Attack = Defensive",
-						});
-					}
-				}
-
-				if (details.known_move !== null) {
-					let tidyMoveName = details.known_move.name;
-					const words = tidyMoveName.split("-").map(word => {
-						return word[0].toUpperCase() + word.slice(1);
-					});
-					tidyMoveName = words.join(" ");
-					requirements.push({
-						type: "know_move",
-						info: `/move/${details.known_move.url.split("/")[6]}`,
-						supplementary: tidyMoveName,
-					});
-				}
-
-				if (details.known_move_type !== null) {
-					requirements.push({
-						type: "know_move_type",
-						info:
-							details.known_move_type.name[0].toUpperCase() +
-							details.known_move_type.name.slice(1),
-					});
-				}
-
-				if (details.min_affection !== null) {
-					requirements.push({
-						type: "affection",
-						info: details.min_affection,
-					});
-				}
-
-				if (details.location !== null) {
-					let tidyLocation = details.location.name;
-					const words = tidyLocation.split("-").map(word => {
-						return word[0].toUpperCase() + word.slice(1);
-					});
-					tidyLocation = words.join(" ");
-
-					requirements.push({
-						type: "location",
-						info: tidyLocation,
-					});
-				}
-
-				if (details.trigger.name === "take-damage") {
-					if (sourceID === "562" || sourceID === "867" || sourceID === "563") {
-						// Yamask to Runerigus
-						results.push({
-							sourceURL: `/pokemon/562`,
-							sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/562.png`,
-							trigger: "other",
-							requirements: [
-								{
-									type: "other",
-									info: "Go through the Stone Gate in the Dusty Bowl after Yamask has lost more than 49 HP from one attack and did not faint in that battle - or since",
-								},
-							],
-							targetURL: `/pokemon/867`,
-							targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/867.png`,
-						});
-						return;
-					}
-				}
-
-				results.push({
-					sourceURL: `/pokemon/${sourceID}`,
-					sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${sourceID}.png`,
-					trigger: trigger,
-					requirements: requirements,
-					targetURL: `/pokemon/${targetID}`,
-					targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${targetID}.png`,
-				});
-			});
-			evolution.evolves_to.forEach(direction => {
-				sourceID = targetID;
-				process(direction);
-			});
-		};
-
-		evolutionData.chain.evolves_to.forEach(evolution => {
-			process(evolution);
+			if (regex.test(german)) results.push(entry);
+			else if (regex.test(a.english)) results.push(entry);
 		});
 
 		return results;
 	};
 
-	static processMoveset = (
-		moves: APIResponsePokemon["moves"],
-		toBeFoundVersionGroup: VersionGroup
-	): MoveDetails[] => {
-		const levelMoves: MoveDetails[] = [];
-		const tmMoves: MoveDetails[] = [];
-		const eggMoves: MoveDetails[] = [];
-		const tutorMoves: MoveDetails[] = [];
-		moves.forEach(move => {
-			move.version_group_details.forEach(version => {
-				const foundVersion = Games.findEntry(version.version_group.name);
-				if (
-					foundVersion !== undefined &&
-					foundVersion.version_group_name === toBeFoundVersionGroup.version_group_name
-				) {
-					const moveDetail = Moves.find(a => a.english_id === move.move.name);
-					if (moveDetail !== undefined) {
-						const move = {
-							...moveDetail,
-							learning_method: version.move_learn_method.name,
-							level_learnt: version.level_learned_at,
-						};
+	findAbilityFromName = (name: string): GenericEntry[] => {
+		name = name.toLocaleLowerCase();
 
-						if (
-							move.learning_method === "level-up" &&
-							levelMoves.filter(a => a.english === move.english).length === 0
-						) {
-							levelMoves.push(move);
-						}
+		const regex = new RegExp(
+			`${name
+				.split("")
+				.map(char => `${char}\\s*`)
+				.join("")}`,
+			"gi"
+		);
 
-						if (
-							move.learning_method === "egg" &&
-							eggMoves.filter(a => a.english === move.english).length === 0
-						) {
-							eggMoves.push(move);
-						}
+		const results: GenericEntry[] = [];
+		Abilities.forEach(a => {
+			if (results.length === this.searchResults - 1) {
+				return;
+			}
 
-						if (
-							move.learning_method === "machine" &&
-							tmMoves.filter(a => a.english === move.english).length === 0
-						) {
-							tmMoves.push(move);
-						}
+			let german = a.german.toLocaleLowerCase();
+			german.replace("ä", "a");
+			german.replace("ü", "u");
+			german.replace("ö", "o");
 
-						if (
-							move.learning_method === "tutor" &&
-							tutorMoves.filter(a => a.english === move.english).length === 0
-						) {
-							tutorMoves.push(move);
-						}
-					}
-				}
-			});
+			const entry = {
+				...a,
+				link: `/ability/${a.id}`,
+				sprite: ``,
+			};
+			if (regex.test(german)) results.push(entry);
+			else if (regex.test(a.english)) results.push(entry);
 		});
 
-		levelMoves.sort((a, b) => (a.level_learnt > b.level_learnt ? 1 : -1));
-		tmMoves.sort((a, b) => (a.type > b.type ? 1 : -1));
-		eggMoves.sort((a, b) => (a.type > b.type ? 1 : -1));
-		tutorMoves.sort((a, b) => (a.type > b.type ? 1 : -1));
+		return results;
+	};
 
-		return levelMoves.concat(tmMoves, eggMoves, tutorMoves);
+	findMoveFromName = (name: string): MoveEntry[] => {
+		name = name.toLocaleLowerCase();
+
+		const regex = new RegExp(
+			`${name
+				.split("")
+				.map(char => `${char}\\s*`)
+				.join("")}`,
+			"gi"
+		);
+
+		const results: MoveEntry[] = [];
+		Moves.forEach(a => {
+			if (results.length === this.searchResults - 1) {
+				return;
+			}
+
+			let german = a.german.toLocaleLowerCase();
+			german.replace("ä", "a");
+			german.replace("ü", "u");
+			german.replace("ö", "o");
+
+			let attackTypeSprite = "";
+			if (a.attack_type === "physical")
+				attackTypeSprite = "/static/assets/attack-types/physical.png";
+			else if (a.attack_type === "special")
+				attackTypeSprite = "/static/assets/attack-types/special.png";
+			else if (a.attack_type === "status")
+				attackTypeSprite = "/static/assets/attack-types/status.png";
+
+			const move: MoveEntry = {
+				...a,
+				link: `/move/${a.id}`,
+				sprite: this.typeSprite(a.type),
+				attack_type_sprite: attackTypeSprite,
+			};
+
+			if (regex.test(german)) results.push(move);
+			else if (regex.test(a.english)) results.push(move);
+		});
+
+		return results;
+	};
+
+	pokemonData = async (id: number, varietyId?: number) => {
+		const [pokemonData, speciesData] = await Promise.all([
+			this.getPokemon(varietyId ? varietyId : id),
+			this.getPokemonSpecies(id),
+		]);
+
+		const promises: Array<
+			| Promise<APIResponseEvolution>
+			| Promise<APIResponseAbility>
+			| Promise<APIResponseForm>
+			| Promise<APIResponsePokemon>
+		> = [];
+
+		const evolutionURL = speciesData.evolution_chain.url.split("/");
+		const evolutionId = evolutionURL[evolutionURL.length - 2];
+		promises.push(this.getEvolutionChain(parseInt(evolutionId)));
+
+		let abilityCount = 0;
+		pokemonData.abilities.forEach(ability => {
+			const abilityURL = ability.ability.url.split("/");
+			const abilityId = abilityURL[abilityURL.length - 2];
+			promises.push(this.getAbility(parseInt(abilityId)));
+			abilityCount++;
+		});
+
+		let formCount = 0;
+		pokemonData.forms.forEach(form => {
+			const formURL = form.url.split("/");
+			const formId = formURL[formURL.length - 2];
+			promises.push(this.getPokemonForm(parseInt(formId)));
+			formCount++;
+		});
+
+		let varietyCount = 0;
+		speciesData.varieties.forEach(variety => {
+			const varietyURL = variety.pokemon.url.split("/");
+			const varietyId = varietyURL[varietyURL.length - 2];
+			promises.push(this.getPokemon(parseInt(varietyId)));
+			varietyCount++;
+		});
+
+		const results = await Promise.all(promises);
+		const evolution = results.splice(0, 1)[0] as APIResponseEvolution;
+		const abilities = results.splice(0, abilityCount) as APIResponseAbility[];
+		const forms = results.splice(0, formCount) as APIResponseForm[];
+		const varieties = results.splice(0, varietyCount) as APIResponsePokemon[];
+
+		return {
+			pokemon: pokemonData,
+			species: speciesData,
+			evolution: evolution,
+			abilities: abilities,
+			forms: forms,
+			varieties: varieties,
+		};
 	};
 }
-
-export default Model;

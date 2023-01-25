@@ -98,10 +98,6 @@ app.all("/ability/*", (req, res) => {
 	});
 });
 
-app.get("/test", (req, res, next) => {
-	Router.getTest(req, res);
-});
-
 app.all("/*", (req, res) => {
 	res.status(404).render("error", {
 		error: "Page does not exist",

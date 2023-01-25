@@ -1,4 +1,3 @@
-import fs from "fs/promises";
 import axios from "axios";
 import {
 	APIResponseAbility,
@@ -16,6 +15,37 @@ import Moves from "./public/pokedata/moves.json";
 import Abilities from "./public/pokedata/abilities.json";
 import log from "./log";
 
+interface Cache {
+	pokemon: {
+		id: number;
+		data: APIResponsePokemon;
+	}[];
+	pokemon_species: {
+		id: number;
+		data: APIResponseSpecies;
+	}[];
+	pokemon_forms: {
+		id: number;
+		data: APIResponseForm;
+	}[];
+	evolution_chain: {
+		id: number;
+		data: APIResponseEvolution;
+	}[];
+	abilities: {
+		id: number;
+		data: APIResponseAbility;
+	}[];
+}
+
+const cache: Cache = {
+	pokemon: [],
+	pokemon_species: [],
+	pokemon_forms: [],
+	evolution_chain: [],
+	abilities: [],
+};
+
 export class Data {
 	searchResults = 10;
 	cacheDir = "./cache";
@@ -23,120 +53,84 @@ export class Data {
 	notFoundSprite =
 		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
 
-	constructor() {
-		fs.access(this.cacheDir).catch(() => {
-			fs.mkdir(this.cacheDir).then(() => {
-				const dirs = [];
-				dirs.push(fs.mkdir(`${this.cacheDir}/pokemon`));
-				dirs.push(fs.mkdir(`${this.cacheDir}/pokemon-species`));
-				dirs.push(fs.mkdir(`${this.cacheDir}/pokemon-form`));
-				dirs.push(fs.mkdir(`${this.cacheDir}/evolution-chain`));
-				dirs.push(fs.mkdir(`${this.cacheDir}/moves`));
-				dirs.push(fs.mkdir(`${this.cacheDir}/abilities`));
-
-				Promise.all(dirs);
-			});
-		});
-	}
-
 	getPokemon = async (id: number): Promise<APIResponsePokemon> => {
-		try {
-			await fs.access(`${this.cacheDir}/pokemon/${id}.json`);
-			const data = await fs.readFile(`${this.cacheDir}/pokemon/${id}.json`, "utf-8");
-			return JSON.parse(data) as APIResponsePokemon;
-		} catch {
-			const data = await axios.get(`${this.api}/pokemon/${id}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
-			fs.writeFile(
-				`${this.cacheDir}/pokemon/${id}.json`,
-				JSON.stringify(data.data),
-				"utf-8"
-			);
-			return data.data;
-		}
+		const cachedData = cache.pokemon.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
+
+		const data = await axios.get(`${this.api}/pokemon/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.pokemon.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
 	};
 
 	getPokemonSpecies = async (id: number): Promise<APIResponseSpecies> => {
-		try {
-			await fs.access(`${this.cacheDir}/pokemon-species/${id}.json`);
-			const data = await fs.readFile(
-				`${this.cacheDir}/pokemon-species/${id}.json`,
-				"utf-8"
-			);
-			return JSON.parse(data) as APIResponseSpecies;
-		} catch {
-			const data = await axios.get(`${this.api}/pokemon-species/${id}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
-			fs.writeFile(
-				`${this.cacheDir}/pokemon-species/${id}.json`,
-				JSON.stringify(data.data),
-				"utf-8"
-			);
+		const cachedData = cache.pokemon_species.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
 
-			return data.data;
-		}
+		const data = await axios.get(`${this.api}/pokemon-species/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.pokemon_species.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
 	};
 
 	getPokemonForm = async (id: number): Promise<APIResponseForm> => {
-		try {
-			await fs.access(`${this.cacheDir}/pokemon-form/${id}.json`);
-			const data = await fs.readFile(`${this.cacheDir}/pokemon-form/${id}.json`, "utf-8");
-			return JSON.parse(data) as APIResponseForm;
-		} catch {
-			const data = await axios.get(`${this.api}/pokemon-form/${id}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
-			fs.writeFile(
-				`${this.cacheDir}/pokemon-form/${id}.json`,
-				JSON.stringify(data.data),
-				"utf-8"
-			);
+		const cachedData = cache.pokemon_forms.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
 
-			return data.data;
-		}
+		const data = await axios.get(`${this.api}/pokemon-form/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.pokemon_forms.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
 	};
 
 	getEvolutionChain = async (id: number): Promise<APIResponseEvolution> => {
-		try {
-			await fs.access(`${this.cacheDir}/evolution-chain/${id}.json`);
-			const data = await fs.readFile(
-				`${this.cacheDir}/evolution-chain/${id}.json`,
-				"utf-8"
-			);
-			return JSON.parse(data) as APIResponseEvolution;
-		} catch {
-			const data = await axios.get(`${this.api}/evolution-chain/${id}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
-			fs.writeFile(
-				`${this.cacheDir}/evolution-chain/${id}.json`,
-				JSON.stringify(data.data),
-				"utf-8"
-			);
+		const cachedData = cache.evolution_chain.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
 
-			return data.data;
-		}
+		const data = await axios.get(`${this.api}/evolution-chain/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.evolution_chain.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
 	};
 
 	getAbility = async (id: number): Promise<APIResponseAbility> => {
-		try {
-			await fs.access(`${this.cacheDir}/abilities/${id}.json`);
-			const data = await fs.readFile(`${this.cacheDir}/abilities/${id}.json`, "utf-8");
-			return JSON.parse(data) as APIResponseAbility;
-		} catch {
-			const data = await axios.get(`${this.api}/ability/${id}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
-			fs.writeFile(
-				`${this.cacheDir}/abilities/${id}.json`,
-				JSON.stringify(data.data),
-				"utf-8"
-			);
+		const cachedData = cache.abilities.find(a => a.id === id);
+		if (cachedData) return cachedData.data;
 
-			return data.data;
-		}
+		const data = await axios.get(`${this.api}/ability/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.abilities.push({
+			id: id,
+			data: data.data,
+		});
+
+		return data.data;
 	};
 
 	attackSprite = (name: "physical" | "special" | "status"): string => {

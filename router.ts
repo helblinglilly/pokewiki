@@ -4,10 +4,6 @@ import Model from "./model";
 import { ErrorMessage } from "./types";
 
 class Router {
-	static getTest = async (req: ex.Request, res: ex.Response) => {
-		log.debug("Here");
-	};
-
 	static getSearch = async (req: ex.Request, res: ex.Response) => {
 		if (!req.query.term || typeof req.query.term !== "string") {
 			res.redirect("/");

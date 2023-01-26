@@ -55,7 +55,10 @@ export class Data {
 
 	getPokemon = async (id: number): Promise<APIResponsePokemon> => {
 		const cachedData = cache.pokemon.find(a => a.id === id);
-		if (cachedData) return cachedData.data;
+		if (cachedData) {
+			log.info(`Cache - HIT - Pokemon ${id}`);
+			return cachedData.data;
+		}
 
 		const data = await axios.get(`${this.api}/pokemon/${id}`, {
 			headers: { "Accept-Encoding": "gzip,deflate,compress" },
@@ -66,12 +69,17 @@ export class Data {
 			data: data.data,
 		});
 
+		log.info(`Cache - MISS - Pokemon ${id}`);
+
 		return data.data;
 	};
 
 	getPokemonSpecies = async (id: number): Promise<APIResponseSpecies> => {
 		const cachedData = cache.pokemon_species.find(a => a.id === id);
-		if (cachedData) return cachedData.data;
+		if (cachedData) {
+			log.info(`Cache - HIT - Pokemon Species ${id}`);
+			return cachedData.data;
+		}
 
 		const data = await axios.get(`${this.api}/pokemon-species/${id}`, {
 			headers: { "Accept-Encoding": "gzip,deflate,compress" },
@@ -82,12 +90,16 @@ export class Data {
 			data: data.data,
 		});
 
+		log.info(`Cache - MISS - Pokemon Species ${id}`);
 		return data.data;
 	};
 
 	getPokemonForm = async (id: number): Promise<APIResponseForm> => {
 		const cachedData = cache.pokemon_forms.find(a => a.id === id);
-		if (cachedData) return cachedData.data;
+		if (cachedData) {
+			log.info(`Cache - HIT - Pokemon Form ${id}`);
+			return cachedData.data;
+		}
 
 		const data = await axios.get(`${this.api}/pokemon-form/${id}`, {
 			headers: { "Accept-Encoding": "gzip,deflate,compress" },
@@ -98,12 +110,16 @@ export class Data {
 			data: data.data,
 		});
 
+		log.info(`Cache - MISS - Pokemon Form ${id}`);
 		return data.data;
 	};
 
 	getEvolutionChain = async (id: number): Promise<APIResponseEvolution> => {
 		const cachedData = cache.evolution_chain.find(a => a.id === id);
-		if (cachedData) return cachedData.data;
+		if (cachedData) {
+			log.info(`Cache - HIT - Evolution Chain ${id}`);
+			return cachedData.data;
+		}
 
 		const data = await axios.get(`${this.api}/evolution-chain/${id}`, {
 			headers: { "Accept-Encoding": "gzip,deflate,compress" },
@@ -114,12 +130,16 @@ export class Data {
 			data: data.data,
 		});
 
+		log.info(`Cache - MISS - Evolution Chain ${id}`);
 		return data.data;
 	};
 
 	getAbility = async (id: number): Promise<APIResponseAbility> => {
 		const cachedData = cache.abilities.find(a => a.id === id);
-		if (cachedData) return cachedData.data;
+		if (cachedData) {
+			log.info(`Cache - HIT - Ability ${id}`);
+			return cachedData.data;
+		}
 
 		const data = await axios.get(`${this.api}/ability/${id}`, {
 			headers: { "Accept-Encoding": "gzip,deflate,compress" },
@@ -129,14 +149,14 @@ export class Data {
 			id: id,
 			data: data.data,
 		});
-
+		log.info(`Cache - MISS - Ability ${id}`);
 		return data.data;
 	};
 
 	attackSprite = (name: "physical" | "special" | "status"): string => {
-		if (name === "physical") return "/public/assets/attack-types/physical.png";
-		if (name === "special") return "/public/assets/attack-types/special.png";
-		if (name === "status") return "/public/assets/attack-types/status.png";
+		if (name === "physical") return "/static/assets/attack-types/physical.png";
+		if (name === "special") return "/static/assets/attack-types/special.png";
+		if (name === "status") return "/static/assets/attack-types/status.png";
 		return this.notFoundSprite;
 	};
 

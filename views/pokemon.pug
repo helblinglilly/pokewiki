@@ -36,15 +36,12 @@ block append head
 		}
 
 block append body
-	if moveset.length === 0
-		.notification.is-warning.is-light
-			p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
-	else if selectedGames.version_group_name === "all"
+	if selectedGames.version_group_name === "all"
 		.notification.is-warning.is-light
 			p Select a game from the "Options" section to see its Pokédex entry and Moveset.
-	else if selectedGames === undefined
+	else if moveset.length === 0
 		.notification.is-warning.is-light
-			p Moveset and Pokédex are hidden because no game is selected. Use the 'Options' button next to the search bar to select a game.
+			p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
 
 	//- Navigator
 	.columns.is-mobile
@@ -144,19 +141,23 @@ block append body
 									if requirement.type === "gender"
 										p #{ requirement.info }
 									if requirement.type === "use-item"
-										.container
-											//- Tart and Sweet apples don't have their item sprites uploaded yet!
-											if requirement.supplementary.includes("1175")
+										//- Tart and Sweet apples don't have their item sprites uploaded yet!
+										if requirement.supplementary.includes("1175")
+											.container
 												p Use Tart Apple
-											else if requirement.supplementary.includes("1174")
+										else if requirement.supplementary.includes("1174")
+											.container
 												p Use Sweet Apple
-											else
+										else
+											.container(
+												onclick=`location.href='${requirement.supplementary}'`,
+												style="cursor: pointer"
+											)
 												p(style="vertical-align: middle; display: inline") Use
 												img(
 													src=`${requirement.info}`,
-													onclick=`location.href='${requirement.supplementary}'`,
-													style="cursor: pointer; vertical-align: middle",
-													title=`${requirement.info.split("/")[8].split(".")[0]}`
+													title=`${requirement.info.split("/")[8].split(".")[0]}`,
+													style="vertical-align: middle"
 												)
 									if requirement.type === "hold-item"
 										.container

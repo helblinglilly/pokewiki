@@ -88,9 +88,9 @@ const fixMoves = () => {
 		let sprite =
 			"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
 
-		if (a.attack_type === "physical") sprite = "/public/assets/attack-types/physical.png";
-		if (a.attack_type === "special") sprite = "/public/assets/attack-types/special.png";
-		if (a.attack_type === "status") sprite = "/public/assets/attack-types/status.png";
+		if (a.attack_type === "physical") sprite = "/static/assets/attack-types/physical.png";
+		if (a.attack_type === "special") sprite = "/static/assets/attack-types/special.png";
+		if (a.attack_type === "status") sprite = "/static/assets/attack-types/status.png";
 		return {
 			...a,
 			link: `/move/${a.id}`,

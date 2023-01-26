@@ -321,8 +321,8 @@ class Controller {
 		}
 
 		return {
-			german: primName,
-			english: secName,
+			english: primName,
+			german: secName,
 			id: id,
 			link: `/pokemon/${id}`,
 			sprites: showcaseSprites,

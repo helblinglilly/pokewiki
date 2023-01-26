@@ -37,8 +37,6 @@ export default class Utils {
 		}
 
 		const gameDetails = Games.findEntry(game);
-		log.debug(gameDetails);
-		log.debug(game);
 
 		let primary = "";
 		let secondary = "";

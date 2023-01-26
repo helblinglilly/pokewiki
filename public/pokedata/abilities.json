@@ -1,0 +1,1599 @@
+[
+	{
+		"german": "Duftnote",
+		"english": "Stench",
+		"english_id": "stench",
+		"id": 1
+	},
+	{
+		"german": "Niesel",
+		"english": "Drizzle",
+		"english_id": "drizzle",
+		"id": 2
+	},
+	{
+		"german": "Temposchub",
+		"english": "Speed Boost",
+		"english_id": "speed-boost",
+		"id": 3
+	},
+	{
+		"german": "Kampfpanzer",
+		"english": "Battle Armor",
+		"english_id": "battle-armor",
+		"id": 4
+	},
+	{
+		"german": "Robustheit",
+		"english": "Sturdy",
+		"english_id": "sturdy",
+		"id": 5
+	},
+	{
+		"german": "Feuchtigkeit",
+		"english": "Damp",
+		"english_id": "damp",
+		"id": 6
+	},
+	{
+		"german": "Flexibilität",
+		"english": "Limber",
+		"english_id": "limber",
+		"id": 7
+	},
+	{
+		"german": "Sandschleier",
+		"english": "Sand Veil",
+		"english_id": "sand-veil",
+		"id": 8
+	},
+	{
+		"german": "Statik",
+		"english": "Static",
+		"english_id": "static",
+		"id": 9
+	},
+	{
+		"german": "Voltabsorber",
+		"english": "Volt Absorb",
+		"english_id": "volt-absorb",
+		"id": 10
+	},
+	{
+		"german": "H2O-Absorber",
+		"english": "Water Absorb",
+		"english_id": "water-absorb",
+		"id": 11
+	},
+	{
+		"german": "Dösigkeit",
+		"english": "Oblivious",
+		"english_id": "oblivious",
+		"id": 12
+	},
+	{
+		"german": "Wolke Sieben",
+		"english": "Cloud Nine",
+		"english_id": "cloud-nine",
+		"id": 13
+	},
+	{
+		"german": "Facettenauge",
+		"english": "Compound Eyes",
+		"english_id": "compound-eyes",
+		"id": 14
+	},
+	{
+		"german": "Insomnia",
+		"english": "Insomnia",
+		"english_id": "insomnia",
+		"id": 15
+	},
+	{
+		"german": "Farbwechsel",
+		"english": "Color Change",
+		"english_id": "color-change",
+		"id": 16
+	},
+	{
+		"german": "Immunität",
+		"english": "Immunity",
+		"english_id": "immunity",
+		"id": 17
+	},
+	{
+		"german": "Feuerfänger",
+		"english": "Flash Fire",
+		"english_id": "flash-fire",
+		"id": 18
+	},
+	{
+		"german": "Puderabwehr",
+		"english": "Shield Dust",
+		"english_id": "shield-dust",
+		"id": 19
+	},
+	{
+		"german": "Tempomacher",
+		"english": "Own Tempo",
+		"english_id": "own-tempo",
+		"id": 20
+	},
+	{
+		"german": "Saugnapf",
+		"english": "Suction Cups",
+		"english_id": "suction-cups",
+		"id": 21
+	},
+	{
+		"german": "Bedroher",
+		"english": "Intimidate",
+		"english_id": "intimidate",
+		"id": 22
+	},
+	{
+		"german": "Wegsperre",
+		"english": "Shadow Tag",
+		"english_id": "shadow-tag",
+		"id": 23
+	},
+	{
+		"german": "Rauhaut",
+		"english": "Rough Skin",
+		"english_id": "rough-skin",
+		"id": 24
+	},
+	{
+		"german": "Wunderwache",
+		"english": "Wonder Guard",
+		"english_id": "wonder-guard",
+		"id": 25
+	},
+	{
+		"german": "Schwebe",
+		"english": "Levitate",
+		"english_id": "levitate",
+		"id": 26
+	},
+	{
+		"german": "Sporenwirt",
+		"english": "Effect Spore",
+		"english_id": "effect-spore",
+		"id": 27
+	},
+	{
+		"german": "Synchro",
+		"english": "Synchronize",
+		"english_id": "synchronize",
+		"id": 28
+	},
+	{
+		"german": "Neutraltorso",
+		"english": "Clear Body",
+		"english_id": "clear-body",
+		"id": 29
+	},
+	{
+		"german": "Innere Kraft",
+		"english": "Natural Cure",
+		"english_id": "natural-cure",
+		"id": 30
+	},
+	{
+		"german": "Blitzfänger",
+		"english": "Lightning Rod",
+		"english_id": "lightning-rod",
+		"id": 31
+	},
+	{
+		"german": "Edelmut",
+		"english": "Serene Grace",
+		"english_id": "serene-grace",
+		"id": 32
+	},
+	{
+		"german": "Wassertempo",
+		"english": "Swift Swim",
+		"english_id": "swift-swim",
+		"id": 33
+	},
+	{
+		"german": "Chlorophyll",
+		"english": "Chlorophyll",
+		"english_id": "chlorophyll",
+		"id": 34
+	},
+	{
+		"german": "Erleuchtung",
+		"english": "Illuminate",
+		"english_id": "illuminate",
+		"id": 35
+	},
+	{
+		"german": "Erfassen",
+		"english": "Trace",
+		"english_id": "trace",
+		"id": 36
+	},
+	{
+		"german": "Kraftkoloss",
+		"english": "Huge Power",
+		"english_id": "huge-power",
+		"id": 37
+	},
+	{
+		"german": "Giftdorn",
+		"english": "Poison Point",
+		"english_id": "poison-point",
+		"id": 38
+	},
+	{
+		"german": "Konzentrator",
+		"english": "Inner Focus",
+		"english_id": "inner-focus",
+		"id": 39
+	},
+	{
+		"german": "Magmapanzer",
+		"english": "Magma Armor",
+		"english_id": "magma-armor",
+		"id": 40
+	},
+	{
+		"german": "Aquahülle",
+		"english": "Water Veil",
+		"english_id": "water-veil",
+		"id": 41
+	},
+	{
+		"german": "Magnetfalle",
+		"english": "Magnet Pull",
+		"english_id": "magnet-pull",
+		"id": 42
+	},
+	{
+		"german": "Lärmschutz",
+		"english": "Soundproof",
+		"english_id": "soundproof",
+		"id": 43
+	},
+	{
+		"german": "Regengenuss",
+		"english": "Rain Dish",
+		"english_id": "rain-dish",
+		"id": 44
+	},
+	{
+		"german": "Sandsturm",
+		"english": "Sand Stream",
+		"english_id": "sand-stream",
+		"id": 45
+	},
+	{
+		"german": "Erzwinger",
+		"english": "Pressure",
+		"english_id": "pressure",
+		"id": 46
+	},
+	{
+		"german": "Speckschicht",
+		"english": "Thick Fat",
+		"english_id": "thick-fat",
+		"id": 47
+	},
+	{
+		"german": "Frühwecker",
+		"english": "Early Bird",
+		"english_id": "early-bird",
+		"id": 48
+	},
+	{
+		"german": "Flammkörper",
+		"english": "Flame Body",
+		"english_id": "flame-body",
+		"id": 49
+	},
+	{
+		"german": "Angsthase",
+		"english": "Run Away",
+		"english_id": "run-away",
+		"id": 50
+	},
+	{
+		"german": "Adlerauge",
+		"english": "Keen Eye",
+		"english_id": "keen-eye",
+		"id": 51
+	},
+	{
+		"german": "Scherenmacht",
+		"english": "Hyper Cutter",
+		"english_id": "hyper-cutter",
+		"id": 52
+	},
+	{
+		"german": "Mitnahme",
+		"english": "Pickup",
+		"english_id": "pickup",
+		"id": 53
+	},
+	{
+		"german": "Schnarchnase",
+		"english": "Truant",
+		"english_id": "truant",
+		"id": 54
+	},
+	{
+		"german": "Übereifer",
+		"english": "Hustle",
+		"english_id": "hustle",
+		"id": 55
+	},
+	{
+		"german": "Charmebolzen",
+		"english": "Cute Charm",
+		"english_id": "cute-charm",
+		"id": 56
+	},
+	{ "german": "Plus", "english": "Plus", "english_id": "plus", "id": 57 },
+	{
+		"german": "Minus",
+		"english": "Minus",
+		"english_id": "minus",
+		"id": 58
+	},
+	{
+		"german": "Prognose",
+		"english": "Forecast",
+		"english_id": "forecast",
+		"id": 59
+	},
+	{
+		"german": "Klebekörper",
+		"english": "Sticky Hold",
+		"english_id": "sticky-hold",
+		"id": 60
+	},
+	{
+		"german": "Expidermis",
+		"english": "Shed Skin",
+		"english_id": "shed-skin",
+		"id": 61
+	},
+	{
+		"german": "Adrenalin",
+		"english": "Guts",
+		"english_id": "guts",
+		"id": 62
+	},
+	{
+		"german": "Notschutz",
+		"english": "Marvel Scale",
+		"english_id": "marvel-scale",
+		"id": 63
+	},
+	{
+		"german": "Kloakensoße",
+		"english": "Liquid Ooze",
+		"english_id": "liquid-ooze",
+		"id": 64
+	},
+	{
+		"german": "Notdünger",
+		"english": "Overgrow",
+		"english_id": "overgrow",
+		"id": 65
+	},
+	{
+		"german": "Großbrand",
+		"english": "Blaze",
+		"english_id": "blaze",
+		"id": 66
+	},
+	{
+		"german": "Sturzbach",
+		"english": "Torrent",
+		"english_id": "torrent",
+		"id": 67
+	},
+	{
+		"german": "Hexaplaga",
+		"english": "Swarm",
+		"english_id": "swarm",
+		"id": 68
+	},
+	{
+		"german": "Steinhaupt",
+		"english": "Rock Head",
+		"english_id": "rock-head",
+		"id": 69
+	},
+	{
+		"german": "Dürre",
+		"english": "Drought",
+		"english_id": "drought",
+		"id": 70
+	},
+	{
+		"german": "Ausweglos",
+		"english": "Arena Trap",
+		"english_id": "arena-trap",
+		"id": 71
+	},
+	{
+		"german": "Munterkeit",
+		"english": "Vital Spirit",
+		"english_id": "vital-spirit",
+		"id": 72
+	},
+	{
+		"german": "Pulverrauch",
+		"english": "White Smoke",
+		"english_id": "white-smoke",
+		"id": 73
+	},
+	{
+		"german": "Mentalkraft",
+		"english": "Pure Power",
+		"english_id": "pure-power",
+		"id": 74
+	},
+	{
+		"german": "Panzerhaut",
+		"english": "Shell Armor",
+		"english_id": "shell-armor",
+		"id": 75
+	},
+	{
+		"german": "Klimaschutz",
+		"english": "Air Lock",
+		"english_id": "air-lock",
+		"id": 76
+	},
+	{
+		"german": "Fußangel",
+		"english": "Tangled Feet",
+		"english_id": "tangled-feet",
+		"id": 77
+	},
+	{
+		"german": "Starthilfe",
+		"english": "Motor Drive",
+		"english_id": "motor-drive",
+		"id": 78
+	},
+	{
+		"german": "Rivalität",
+		"english": "Rivalry",
+		"english_id": "rivalry",
+		"id": 79
+	},
+	{
+		"german": "Felsenfest",
+		"english": "Steadfast",
+		"english_id": "steadfast",
+		"id": 80
+	},
+	{
+		"german": "Schneemantel",
+		"english": "Snow Cloak",
+		"english_id": "snow-cloak",
+		"id": 81
+	},
+	{
+		"german": "Völlerei",
+		"english": "Gluttony",
+		"english_id": "gluttony",
+		"id": 82
+	},
+	{
+		"german": "Kurzschluss",
+		"english": "Anger Point",
+		"english_id": "anger-point",
+		"id": 83
+	},
+	{
+		"german": "Entlastung",
+		"english": "Unburden",
+		"english_id": "unburden",
+		"id": 84
+	},
+	{
+		"german": "Hitzeschutz",
+		"english": "Heatproof",
+		"english_id": "heatproof",
+		"id": 85
+	},
+	{
+		"german": "Wankelmut",
+		"english": "Simple",
+		"english_id": "simple",
+		"id": 86
+	},
+	{
+		"german": "Trockenheit",
+		"english": "Dry Skin",
+		"english_id": "dry-skin",
+		"id": 87
+	},
+	{
+		"german": "Download",
+		"english": "Download",
+		"english_id": "download",
+		"id": 88
+	},
+	{
+		"german": "Eisenfaust",
+		"english": "Iron Fist",
+		"english_id": "iron-fist",
+		"id": 89
+	},
+	{
+		"german": "Aufheber",
+		"english": "Poison Heal",
+		"english_id": "poison-heal",
+		"id": 90
+	},
+	{
+		"german": "Anpassung",
+		"english": "Adaptability",
+		"english_id": "adaptability",
+		"id": 91
+	},
+	{
+		"german": "Wertelink",
+		"english": "Skill Link",
+		"english_id": "skill-link",
+		"id": 92
+	},
+	{
+		"german": "Hydration",
+		"english": "Hydration",
+		"english_id": "hydration",
+		"id": 93
+	},
+	{
+		"german": "Solarkraft",
+		"english": "Solar Power",
+		"english_id": "solar-power",
+		"id": 94
+	},
+	{
+		"german": "Rasanz",
+		"english": "Quick Feet",
+		"english_id": "quick-feet",
+		"id": 95
+	},
+	{
+		"german": "Regulierung",
+		"english": "Normalize",
+		"english_id": "normalize",
+		"id": 96
+	},
+	{
+		"german": "Superschütze",
+		"english": "Sniper",
+		"english_id": "sniper",
+		"id": 97
+	},
+	{
+		"german": "Magieschild",
+		"english": "Magic Guard",
+		"english_id": "magic-guard",
+		"id": 98
+	},
+	{
+		"german": "Schildlos",
+		"english": "No Guard",
+		"english_id": "no-guard",
+		"id": 99
+	},
+	{
+		"german": "Zeitspiel",
+		"english": "Stall",
+		"english_id": "stall",
+		"id": 100
+	},
+	{
+		"german": "Techniker",
+		"english": "Technician",
+		"english_id": "technician",
+		"id": 101
+	},
+	{
+		"german": "Floraschild",
+		"english": "Leaf Guard",
+		"english_id": "leaf-guard",
+		"id": 102
+	},
+	{
+		"german": "Tollpatsch",
+		"english": "Klutz",
+		"english_id": "klutz",
+		"id": 103
+	},
+	{
+		"german": "Überbrückung",
+		"english": "Mold Breaker",
+		"english_id": "mold-breaker",
+		"id": 104
+	},
+	{
+		"german": "Glückspilz",
+		"english": "Super Luck",
+		"english_id": "super-luck",
+		"id": 105
+	},
+	{
+		"german": "Finalschlag",
+		"english": "Aftermath",
+		"english_id": "aftermath",
+		"id": 106
+	},
+	{
+		"german": "Vorahnung",
+		"english": "Anticipation",
+		"english_id": "anticipation",
+		"id": 107
+	},
+	{
+		"german": "Vorwarnung",
+		"english": "Forewarn",
+		"english_id": "forewarn",
+		"id": 108
+	},
+	{
+		"german": "Unkenntnis",
+		"english": "Unaware",
+		"english_id": "unaware",
+		"id": 109
+	},
+	{
+		"german": "Aufwertung",
+		"english": "Tinted Lens",
+		"english_id": "tinted-lens",
+		"id": 110
+	},
+	{
+		"german": "Filter",
+		"english": "Filter",
+		"english_id": "filter",
+		"id": 111
+	},
+	{
+		"german": "Saumselig",
+		"english": "Slow Start",
+		"english_id": "slow-start",
+		"id": 112
+	},
+	{
+		"german": "Rauflust",
+		"english": "Scrappy",
+		"english_id": "scrappy",
+		"id": 113
+	},
+	{
+		"german": "Sturmsog",
+		"english": "Storm Drain",
+		"english_id": "storm-drain",
+		"id": 114
+	},
+	{
+		"german": "Eishaut",
+		"english": "Ice Body",
+		"english_id": "ice-body",
+		"id": 115
+	},
+	{
+		"german": "Felskern",
+		"english": "Solid Rock",
+		"english_id": "solid-rock",
+		"id": 116
+	},
+	{
+		"german": "Hagelalarm",
+		"english": "Snow Warning",
+		"english_id": "snow-warning",
+		"id": 117
+	},
+	{
+		"german": "Honigmaul",
+		"english": "Honey Gather",
+		"english_id": "honey-gather",
+		"id": 118
+	},
+	{
+		"german": "Schnüffler",
+		"english": "Frisk",
+		"english_id": "frisk",
+		"id": 119
+	},
+	{
+		"german": "Achtlos",
+		"english": "Reckless",
+		"english_id": "reckless",
+		"id": 120
+	},
+	{
+		"german": "Variabilität",
+		"english": "Multitype",
+		"english_id": "multitype",
+		"id": 121
+	},
+	{
+		"german": "Pflanzengabe",
+		"english": "Flower Gift",
+		"english_id": "flower-gift",
+		"id": 122
+	},
+	{
+		"german": "Alptraum",
+		"english": "Bad Dreams",
+		"english_id": "bad-dreams",
+		"id": 123
+	},
+	{
+		"german": "Langfinger",
+		"english": "Pickpocket",
+		"english_id": "pickpocket",
+		"id": 124
+	},
+	{
+		"german": "Rohe Gewalt",
+		"english": "Sheer Force",
+		"english_id": "sheer-force",
+		"id": 125
+	},
+	{
+		"german": "Umkehrung",
+		"english": "Contrary",
+		"english_id": "contrary",
+		"id": 126
+	},
+	{
+		"german": "Anspannung",
+		"english": "Unnerve",
+		"english_id": "unnerve",
+		"id": 127
+	},
+	{
+		"german": "Siegeswille",
+		"english": "Defiant",
+		"english_id": "defiant",
+		"id": 128
+	},
+	{
+		"german": "Schwächling",
+		"english": "Defeatist",
+		"english_id": "defeatist",
+		"id": 129
+	},
+	{
+		"german": "Tastfluch",
+		"english": "Cursed Body",
+		"english_id": "cursed-body",
+		"id": 130
+	},
+	{
+		"german": "Heilherz",
+		"english": "Healer",
+		"english_id": "healer",
+		"id": 131
+	},
+	{
+		"german": "Freundeshut",
+		"english": "Friend Guard",
+		"english_id": "friend-guard",
+		"id": 132
+	},
+	{
+		"german": "Bruchrüstung",
+		"english": "Weak Armor",
+		"english_id": "weak-armor",
+		"id": 133
+	},
+	{
+		"german": "Schwermetall",
+		"english": "Heavy Metal",
+		"english_id": "heavy-metal",
+		"id": 134
+	},
+	{
+		"german": "Leichtmetall",
+		"english": "Light Metal",
+		"english_id": "light-metal",
+		"id": 135
+	},
+	{
+		"german": "Multischuppe",
+		"english": "Multiscale",
+		"english_id": "multiscale",
+		"id": 136
+	},
+	{
+		"german": "Giftwahn",
+		"english": "Toxic Boost",
+		"english_id": "toxic-boost",
+		"id": 137
+	},
+	{
+		"german": "Hitzewahn",
+		"english": "Flare Boost",
+		"english_id": "flare-boost",
+		"id": 138
+	},
+	{
+		"german": "Reiche Ernte",
+		"english": "Harvest",
+		"english_id": "harvest",
+		"id": 139
+	},
+	{
+		"german": "Telepathie",
+		"english": "Telepathy",
+		"english_id": "telepathy",
+		"id": 140
+	},
+	{
+		"german": "Gefühlswippe",
+		"english": "Moody",
+		"english_id": "moody",
+		"id": 141
+	},
+	{
+		"german": "Partikelschutz",
+		"english": "Overcoat",
+		"english_id": "overcoat",
+		"id": 142
+	},
+	{
+		"german": "Giftgriff",
+		"english": "Poison Touch",
+		"english_id": "poison-touch",
+		"id": 143
+	},
+	{
+		"german": "Belebekraft",
+		"english": "Regenerator",
+		"english_id": "regenerator",
+		"id": 144
+	},
+	{
+		"german": "Brustbieter",
+		"english": "Big Pecks",
+		"english_id": "big-pecks",
+		"id": 145
+	},
+	{
+		"german": "Sandscharrer",
+		"english": "Sand Rush",
+		"english_id": "sand-rush",
+		"id": 146
+	},
+	{
+		"german": "Wunderhaut",
+		"english": "Wonder Skin",
+		"english_id": "wonder-skin",
+		"id": 147
+	},
+	{
+		"german": "Analyse",
+		"english": "Analytic",
+		"english_id": "analytic",
+		"id": 148
+	},
+	{
+		"german": "Trugbild",
+		"english": "Illusion",
+		"english_id": "illusion",
+		"id": 149
+	},
+	{
+		"german": "Doppelgänger",
+		"english": "Imposter",
+		"english_id": "imposter",
+		"id": 150
+	},
+	{
+		"german": "Schwebedurch",
+		"english": "Infiltrator",
+		"english_id": "infiltrator",
+		"id": 151
+	},
+	{
+		"german": "Mumie",
+		"english": "Mummy",
+		"english_id": "mummy",
+		"id": 152
+	},
+	{
+		"german": "Hochmut",
+		"english": "Moxie",
+		"english_id": "moxie",
+		"id": 153
+	},
+	{
+		"german": "Redlichkeit",
+		"english": "Justified",
+		"english_id": "justified",
+		"id": 154
+	},
+	{
+		"german": "Hasenfuß",
+		"english": "Rattled",
+		"english_id": "rattled",
+		"id": 155
+	},
+	{
+		"german": "Magiespiegel",
+		"english": "Magic Bounce",
+		"english_id": "magic-bounce",
+		"id": 156
+	},
+	{
+		"german": "Vegetarier",
+		"english": "Sap Sipper",
+		"english_id": "sap-sipper",
+		"id": 157
+	},
+	{
+		"german": "Strolch",
+		"english": "Prankster",
+		"english_id": "prankster",
+		"id": 158
+	},
+	{
+		"german": "Sandgewalt",
+		"english": "Sand Force",
+		"english_id": "sand-force",
+		"id": 159
+	},
+	{
+		"german": "Eisenstachel",
+		"english": "Iron Barbs",
+		"english_id": "iron-barbs",
+		"id": 160
+	},
+	{
+		"german": "Trance-Modus",
+		"english": "Zen Mode",
+		"english_id": "zen-mode",
+		"id": 161
+	},
+	{
+		"german": "Triumphstern",
+		"english": "Victory Star",
+		"english_id": "victory-star",
+		"id": 162
+	},
+	{
+		"german": "Turbobrand",
+		"english": "Turboblaze",
+		"english_id": "turboblaze",
+		"id": 163
+	},
+	{
+		"german": "Teravolt",
+		"english": "Teravolt",
+		"english_id": "teravolt",
+		"id": 164
+	},
+	{
+		"german": "Dufthülle",
+		"english": "Aroma Veil",
+		"english_id": "aroma-veil",
+		"id": 165
+	},
+	{
+		"german": "Blütenhülle",
+		"english": "Flower Veil",
+		"english_id": "flower-veil",
+		"id": 166
+	},
+	{
+		"german": "Backentaschen",
+		"english": "Cheek Pouch",
+		"english_id": "cheek-pouch",
+		"id": 167
+	},
+	{
+		"german": "Wandlungskunst",
+		"english": "Protean",
+		"english_id": "protean",
+		"id": 168
+	},
+	{
+		"german": "Fellkleid",
+		"english": "Fur Coat",
+		"english_id": "fur-coat",
+		"id": 169
+	},
+	{
+		"german": "Zauberer",
+		"english": "Magician",
+		"english_id": "magician",
+		"id": 170
+	},
+	{
+		"german": "Kugelsicher",
+		"english": "Bulletproof",
+		"english_id": "bulletproof",
+		"id": 171
+	},
+	{
+		"german": "Unbeugsamkeit",
+		"english": "Competitive",
+		"english_id": "competitive",
+		"id": 172
+	},
+	{
+		"german": "Titankiefer",
+		"english": "Strong Jaw",
+		"english_id": "strong-jaw",
+		"id": 173
+	},
+	{
+		"german": "Frostschicht",
+		"english": "Refrigerate",
+		"english_id": "refrigerate",
+		"id": 174
+	},
+	{
+		"german": "Zuckerhülle",
+		"english": "Sweet Veil",
+		"english_id": "sweet-veil",
+		"id": 175
+	},
+	{
+		"german": "Taktikwechsel",
+		"english": "Stance Change",
+		"english_id": "stance-change",
+		"id": 176
+	},
+	{
+		"german": "Orkanschwingen",
+		"english": "Gale Wings",
+		"english_id": "gale-wings",
+		"id": 177
+	},
+	{
+		"german": "Megawumme",
+		"english": "Mega Launcher",
+		"english_id": "mega-launcher",
+		"id": 178
+	},
+	{
+		"german": "Pflanzenpelz",
+		"english": "Grass Pelt",
+		"english_id": "grass-pelt",
+		"id": 179
+	},
+	{
+		"german": "Nutznießer",
+		"english": "Symbiosis",
+		"english_id": "symbiosis",
+		"id": 180
+	},
+	{
+		"german": "Krallenwucht",
+		"english": "Tough Claws",
+		"english_id": "tough-claws",
+		"id": 181
+	},
+	{
+		"german": "Feenschicht",
+		"english": "Pixilate",
+		"english_id": "pixilate",
+		"id": 182
+	},
+	{
+		"german": "Viskosität",
+		"english": "Gooey",
+		"english_id": "gooey",
+		"id": 183
+	},
+	{
+		"german": "Zenithaut",
+		"english": "Aerilate",
+		"english_id": "aerilate",
+		"id": 184
+	},
+	{
+		"german": "Familienbande",
+		"english": "Parental Bond",
+		"english_id": "parental-bond",
+		"id": 185
+	},
+	{
+		"german": "Dunkelaura",
+		"english": "Dark Aura",
+		"english_id": "dark-aura",
+		"id": 186
+	},
+	{
+		"german": "Feenaura",
+		"english": "Fairy Aura",
+		"english_id": "fairy-aura",
+		"id": 187
+	},
+	{
+		"german": "Aura-Umkehr",
+		"english": "Aura Break",
+		"english_id": "aura-break",
+		"id": 188
+	},
+	{
+		"german": "Urmeer",
+		"english": "Primordial Sea",
+		"english_id": "primordial-sea",
+		"id": 189
+	},
+	{
+		"german": "Endland",
+		"english": "Desolate Land",
+		"english_id": "desolate-land",
+		"id": 190
+	},
+	{
+		"german": "Delta-Wind",
+		"english": "Delta Stream",
+		"english_id": "delta-stream",
+		"id": 191
+	},
+	{
+		"german": "Zähigkeit",
+		"english": "Stamina",
+		"english_id": "stamina",
+		"id": 192
+	},
+	{
+		"german": "Reißaus",
+		"english": "Wimp Out",
+		"english_id": "wimp-out",
+		"id": 193
+	},
+	{
+		"german": "Rückzug",
+		"english": "Emergency Exit",
+		"english_id": "emergency-exit",
+		"id": 194
+	},
+	{
+		"german": "Verklumpen",
+		"english": "Water Compaction",
+		"english_id": "water-compaction",
+		"id": 195
+	},
+	{
+		"german": "Quälerei",
+		"english": "Merciless",
+		"english_id": "merciless",
+		"id": 196
+	},
+	{
+		"german": "Limitschild",
+		"english": "Shields Down",
+		"english_id": "shields-down",
+		"id": 197
+	},
+	{
+		"german": "Beschattung",
+		"english": "Stakeout",
+		"english_id": "stakeout",
+		"id": 198
+	},
+	{
+		"german": "Wasserblase",
+		"english": "Water Bubble",
+		"english_id": "water-bubble",
+		"id": 199
+	},
+	{
+		"german": "Stahlprofi",
+		"english": "Steelworker",
+		"english_id": "steelworker",
+		"id": 200
+	},
+	{
+		"german": "Wutausbruch",
+		"english": "Berserk",
+		"english_id": "berserk",
+		"id": 201
+	},
+	{
+		"german": "Schneescharrer",
+		"english": "Slush Rush",
+		"english_id": "slush-rush",
+		"id": 202
+	},
+	{
+		"german": "Langstrecke",
+		"english": "Long Reach",
+		"english_id": "long-reach",
+		"id": 203
+	},
+	{
+		"german": "Plätscherstimme",
+		"english": "Liquid Voice",
+		"english_id": "liquid-voice",
+		"id": 204
+	},
+	{
+		"german": "Heilwandel",
+		"english": "Triage",
+		"english_id": "triage",
+		"id": 205
+	},
+	{
+		"german": "Elektrohaut",
+		"english": "Galvanize",
+		"english_id": "galvanize",
+		"id": 206
+	},
+	{
+		"german": "Surf-Schweif",
+		"english": "Surge Surfer",
+		"english_id": "surge-surfer",
+		"id": 207
+	},
+	{
+		"german": "Fischschwarm",
+		"english": "Schooling",
+		"english_id": "schooling",
+		"id": 208
+	},
+	{
+		"german": "Kostümspuk",
+		"english": "Disguise",
+		"english_id": "disguise",
+		"id": 209
+	},
+	{
+		"german": "Freundschaftsakt",
+		"english": "Battle Bond",
+		"english_id": "battle-bond",
+		"id": 210
+	},
+	{
+		"german": "Scharwandel",
+		"english": "Power Construct",
+		"english_id": "power-construct",
+		"id": 211
+	},
+	{
+		"german": "Korrosion",
+		"english": "Corrosion",
+		"english_id": "corrosion",
+		"id": 212
+	},
+	{
+		"german": "Dauerschlaf",
+		"english": "Comatose",
+		"english_id": "comatose",
+		"id": 213
+	},
+	{
+		"german": "Majestät",
+		"english": "Queenly Majesty",
+		"english_id": "queenly-majesty",
+		"id": 214
+	},
+	{
+		"german": "Magenkrempler",
+		"english": "Innards Out",
+		"english_id": "innards-out",
+		"id": 215
+	},
+	{
+		"german": "Tänzer",
+		"english": "Dancer",
+		"english_id": "dancer",
+		"id": 216
+	},
+	{
+		"german": "Batterie",
+		"english": "Battery",
+		"english_id": "battery",
+		"id": 217
+	},
+	{
+		"german": "Flauschigkeit",
+		"english": "Fluffy",
+		"english_id": "fluffy",
+		"id": 218
+	},
+	{
+		"german": "Buntkörper",
+		"english": "Dazzling",
+		"english_id": "dazzling",
+		"id": 219
+	},
+	{
+		"german": "Seelenherz",
+		"english": "Soul-Heart",
+		"english_id": "soul-heart",
+		"id": 220
+	},
+	{
+		"german": "Lockenkopf",
+		"english": "Tangling Hair",
+		"english_id": "tangling-hair",
+		"id": 221
+	},
+	{
+		"german": "Receiver",
+		"english": "Receiver",
+		"english_id": "receiver",
+		"id": 222
+	},
+	{
+		"german": "Chemiekraft",
+		"english": "Power of Alchemy",
+		"english_id": "power-of-alchemy",
+		"id": 223
+	},
+	{
+		"german": "Bestien-Boost",
+		"english": "Beast Boost",
+		"english_id": "beast-boost",
+		"id": 224
+	},
+	{
+		"german": "Alpha-System",
+		"english": "RKS System",
+		"english_id": "rks-system",
+		"id": 225
+	},
+	{
+		"german": "Elektro-Erzeuger",
+		"english": "Electric Surge",
+		"english_id": "electric-surge",
+		"id": 226
+	},
+	{
+		"german": "Psycho-Erzeuger",
+		"english": "Psychic Surge",
+		"english_id": "psychic-surge",
+		"id": 227
+	},
+	{
+		"german": "Nebel-Erzeuger",
+		"english": "Misty Surge",
+		"english_id": "misty-surge",
+		"id": 228
+	},
+	{
+		"german": "Gras-Erzeuger",
+		"english": "Grassy Surge",
+		"english_id": "grassy-surge",
+		"id": 229
+	},
+	{
+		"german": "Metallprotektor",
+		"english": "Full Metal Body",
+		"english_id": "full-metal-body",
+		"id": 230
+	},
+	{
+		"german": "Phantomschutz",
+		"english": "Shadow Shield",
+		"english_id": "shadow-shield",
+		"id": 231
+	},
+	{
+		"german": "Prismarüstung",
+		"english": "Prism Armor",
+		"english_id": "prism-armor",
+		"id": 232
+	},
+	{
+		"german": "Zerebralmacht",
+		"english": "Neuroforce",
+		"english_id": "neuroforce",
+		"id": 233
+	},
+	{
+		"german": "Kühnes Schwert",
+		"english": "Intrepid Sword",
+		"english_id": "intrepid-sword",
+		"id": 234
+	},
+	{
+		"german": "Wackerer Schild",
+		"english": "Dauntless Shield",
+		"english_id": "dauntless-shield",
+		"id": 235
+	},
+	{
+		"german": "Libero",
+		"english": "Libero",
+		"english_id": "libero",
+		"id": 236
+	},
+	{
+		"german": "Apport",
+		"english": "Ball Fetch",
+		"english_id": "ball-fetch",
+		"id": 237
+	},
+	{
+		"german": "Wollflaum",
+		"english": "Cotton Down",
+		"english_id": "cotton-down",
+		"id": 238
+	},
+	{
+		"german": "Schraubflosse",
+		"english": "Propeller Tail",
+		"english_id": "propeller-tail",
+		"id": 239
+	},
+	{
+		"german": "Spiegelrüstung",
+		"english": "Mirror Armor",
+		"english_id": "mirror-armor",
+		"id": 240
+	},
+	{
+		"german": "Würggeschoss",
+		"english": "Gulp Missile",
+		"english_id": "gulp-missile",
+		"id": 241
+	},
+	{
+		"german": "Stahlrückgrat",
+		"english": "Stalwart",
+		"english_id": "stalwart",
+		"id": 242
+	},
+	{
+		"german": "Dampfantrieb",
+		"english": "Steam Engine",
+		"english_id": "steam-engine",
+		"id": 243
+	},
+	{
+		"german": "Punk Rock",
+		"english": "Punk Rock",
+		"english_id": "punk-rock",
+		"id": 244
+	},
+	{
+		"german": "Sandspeier",
+		"english": "Sand Spit",
+		"english_id": "sand-spit",
+		"id": 245
+	},
+	{
+		"german": "Eisflügelstaub",
+		"english": "Ice Scales",
+		"english_id": "ice-scales",
+		"id": 246
+	},
+	{
+		"german": "Heranreifen",
+		"english": "Ripen",
+		"english_id": "ripen",
+		"id": 247
+	},
+	{
+		"german": "Tiefkühlkopf",
+		"english": "Ice Face",
+		"english_id": "ice-face",
+		"id": 248
+	},
+	{
+		"german": "Kraftquelle",
+		"english": "Power Spot",
+		"english_id": "power-spot",
+		"id": 249
+	},
+	{
+		"german": "Mimese",
+		"english": "Mimicry",
+		"english_id": "mimicry",
+		"id": 250
+	},
+	{
+		"german": "Hemmungslos",
+		"english": "Screen Cleaner",
+		"english_id": "screen-cleaner",
+		"id": 251
+	},
+	{
+		"german": "Stählerner Wille",
+		"english": "Steely Spirit",
+		"english_id": "steely-spirit",
+		"id": 252
+	},
+	{
+		"german": "Unheilskörper",
+		"english": "Perish Body",
+		"english_id": "perish-body",
+		"id": 253
+	},
+	{
+		"german": "Rastlose Seele",
+		"english": "Wandering Spirit",
+		"english_id": "wandering-spirit",
+		"id": 254
+	},
+	{
+		"german": "Affenfokus",
+		"english": "Gorilla Tactics",
+		"english_id": "gorilla-tactics",
+		"id": 255
+	},
+	{
+		"german": "Reaktionsgas",
+		"english": "Neutralizing Gas",
+		"english_id": "neutralizing-gas",
+		"id": 256
+	},
+	{
+		"german": "Pastellhülle",
+		"english": "Pastel Veil",
+		"english_id": "pastel-veil",
+		"id": 257
+	},
+	{
+		"german": "Heißhunger",
+		"english": "Hunger Switch",
+		"english_id": "hunger-switch",
+		"id": 258
+	},
+	{
+		"german": "Schnellschuss",
+		"english": "Quick Draw",
+		"english_id": "quick-draw",
+		"id": 259
+	},
+	{
+		"german": "Verborgene Faust",
+		"english": "Unseen Fist",
+		"english_id": "unseen-fist",
+		"id": 260
+	},
+	{
+		"german": "Kuriose Arznei",
+		"english": "Curious Medicine",
+		"english_id": "curious-medicine",
+		"id": 261
+	},
+	{
+		"german": "Transistor",
+		"english": "Transistor",
+		"english_id": "transistor",
+		"id": 262
+	},
+	{
+		"german": "Drachenkiefer",
+		"english": "Dragon’s Maw",
+		"english_id": "dragons-maw",
+		"id": 263
+	},
+	{
+		"german": "Helles Wiehern",
+		"english": "Chilling Neigh",
+		"english_id": "chilling-neigh",
+		"id": 264
+	},
+	{
+		"german": "Dunkles Wiehern",
+		"english": "Grim Neigh",
+		"english_id": "grim-neigh",
+		"id": 265
+	},
+	{
+		"german": "Reitgespann",
+		"english": "As One",
+		"english_id": "as-one-glastrier",
+		"id": 266
+	},
+	{
+		"german": "Reitgespann",
+		"english": "As One",
+		"english_id": "as-one-spectrier",
+		"id": 267
+	}
+]

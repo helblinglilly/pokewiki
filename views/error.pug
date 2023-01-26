@@ -1,0 +1,15 @@
+extends ./header.pug
+
+block append body
+	.has-text-centered.pt-6
+		img(
+			src="https://wiki.p-insurgence.com/images/0/09/722.png",
+			style="height: 250px; display: inline-block"
+		)
+	p.title.is-3.pt-4.mb-3 Something went wrong!
+	p If you believe this to be an error with the website, please raise an issue on #[a(href="https://github.com/helblingjoel/pokewiki", style="display: inline") GitHub ] using the error details below.
+
+	hr
+
+	p.title.is-4.pt-2 #{ error }
+	p #{ info }

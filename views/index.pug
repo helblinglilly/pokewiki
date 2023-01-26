@@ -1,4 +1,23 @@
-extend  ./header.pug
+extends ./header.pug
 
 block append body
-    p Hello
+	#notice.message.is-warning
+		.message-header
+			p Notice
+			button.delete(onclick="hideNotice();")
+		.message-body
+			p Only partial information about Pokémon Scarlet and Pokémon Scarlet is available. Brilliant Diamond/Shining Pearl and Legends Arceus is also known to have gaps in their data.
+			p To keep track of the progress, check the #[a(href="https://github.com/PokeAPI/pokeapi/issues?q=is%3Aissue+is%3Aopen+") PokéAPIs Github Page]
+	.box
+		p.title.is-3 Changelog
+		.content
+			p While items, moves and abilities are listed, their pages have not been built yet. Only Pokémon pages are fully functional at the moment.
+			p.title.is-5 26 January 2023
+			ul
+				li Selecting a game will display Pokémon sprites of that generation
+				li Cache API responses
+			p.title.is-5 12 January 2023
+			ul
+				li Basic Scarlet/Violet support
+				li Support for different Pokémon forms
+				li Selected game to correctly represent a Pokémon's type

@@ -1,32 +1,35 @@
 import express from "express";
-import log from "loglevel";
-import Controller from "../controller";
-import prefix from "loglevel-plugin-prefix";
+import Router from "../router";
+import log from "../log";
 
-prefix.reg(log);
+export let port = 443;
+export let host = "https://pokemon.helbling.uk";
 
-prefix.apply(log, {
-	format(level) {
-		const date = new Date();
-		const day = date.toISOString().split("T")[0];
-		const time = date.toISOString().split("T")[1].split("Z")[0];
-		return `${day} ${time} ${level}:`;
-	},
-});
-
-log.setDefaultLevel("WARN");
-
-let port = 0;
+// Settings for when app is not deployed
 if (process.env.NODE_ENV !== "production") {
 	port = 3000;
+	host = "http://127.0.0.1";
+}
+// Settings for when app is deployed in non-production environment
+if (process.env.PUBLIC_VERCEL_ENV !== "production") {
+
 	log.setDefaultLevel("DEBUG");
 }
 
 const app = express();
 
 app.set("view engine", "pug");
-app.use("/static", express.static(`${__dirname}/../public`));
-app.set("views", `${__dirname}/../views`);
+
+const selfFileExtension = __filename.split(".")[__filename.split(".").length - 1];
+
+if (selfFileExtension === "js" && process.env.NODE_ENV !== "production") {
+	app.use("/static", express.static(`${__dirname}/../../public`));
+	app.set("views", `${__dirname}/../../views`);
+} else {
+	app.use("/static", express.static(`${__dirname}/../public`));
+	app.set("views", `${__dirname}/../views`);
+}
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,12 +40,75 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res, next) => {
-	// res.sendStatus(200);
-	Controller.getIndex(req, res);
+	res.render("./index");
+});
+
+app.all("/", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/search", (req, res, next) => {
+	Router.getSearch(req, res);
+});
+app.all("/search", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/pokemon/*", (req, res, next) => {
+	Router.getPokemon(req, res);
+});
+app.all("/pokemon/*", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/item/*", (req, res, next) => {
+	Router.getItem(req, res);
+});
+app.all("/item/*", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/move/*", (req, res, next) => {
+	Router.getMove(req, res);
+});
+app.all("/move/*", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/ability/*", (req, res, next) => {
+	Router.getAbility(req, res);
+});
+app.all("/ability/*", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.all("/*", (req, res) => {
+	res.status(404).render("error", {
+		error: "Page does not exist",
+		info: "The page you are trying to access does not exist.",
+	});
 });
 
 app.listen(port, "0.0.0.0", () => {
-	log.info(`Listening on http://127.0.0.1:${port}`);
+	log.info(`Listening on ${host}:${port}`);
 });
 
 export default app;

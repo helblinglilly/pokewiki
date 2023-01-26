@@ -1,0 +1,128 @@
+[
+	{
+		"german": "Normal",
+		"english": "Normal",
+		"english_id": "normal",
+		"id": 1,
+		"sprite": "/static/assets/types/normal.webp"
+	},
+	{
+		"german": "Kampf",
+		"english": "Fighting",
+		"english_id": "fighting",
+		"id": 2,
+		"sprite": "/static/assets/types/fight.webp"
+	},
+	{
+		"german": "Flug",
+		"english": "Flying",
+		"english_id": "flying",
+		"id": 3,
+		"sprite": "/static/assets/types/flying.webp"
+	},
+	{
+		"german": "Gift",
+		"english": "Poison",
+		"english_id": "poison",
+		"id": 4,
+		"sprite": "/static/assets/types/poison.webp"
+	},
+	{
+		"german": "Boden",
+		"english": "Ground",
+		"english_id": "ground",
+		"id": 5,
+		"sprite": "/static/assets/types/ground.webp"
+	},
+	{
+		"german": "Gestein",
+		"english": "Rock",
+		"english_id": "rock",
+		"id": 6,
+		"sprite": "/static/assets/types/rock.png"
+	},
+	{
+		"german": "Käfer",
+		"english": "Bug",
+		"english_id": "bug",
+		"id": 7,
+		"sprite": "/static/assets/types/bug.webp"
+	},
+	{
+		"german": "Geist",
+		"english": "Ghost",
+		"english_id": "ghost",
+		"id": 8,
+		"sprite": "/static/assets/types/ghost.webp"
+	},
+	{
+		"german": "Stahl",
+		"english": "Steel",
+		"english_id": "steel",
+		"id": 9,
+		"sprite": "/static/assets/types/steel.webp"
+	},
+	{
+		"german": "Feuer",
+		"english": "Fire",
+		"english_id": "fire",
+		"id": 10,
+		"sprite": "/static/assets/types/fire.webp"
+	},
+	{
+		"german": "Wasser",
+		"english": "Water",
+		"english_id": "water",
+		"id": 11,
+		"sprite": "/static/assets/types/water.webp"
+	},
+	{
+		"german": "Pflanze",
+		"english": "Grass",
+		"english_id": "grass",
+		"id": 12,
+		"sprite": "/static/assets/types/grass.webp"
+	},
+	{
+		"german": "Elektro",
+		"english": "Electric",
+		"english_id": "electric",
+		"id": 13,
+		"sprite": "/static/assets/types/electric.webp"
+	},
+	{
+		"german": "Psycho",
+		"english": "Psychic",
+		"english_id": "psychic",
+		"id": 14,
+		"sprite": "/static/assets/types/psycho.webp"
+	},
+	{
+		"german": "Eis",
+		"english": "Ice",
+		"english_id": "ice",
+		"id": 15,
+		"sprite": "/static/assets/types/ice.webp"
+	},
+	{
+		"german": "Drache",
+		"english": "Dragon",
+		"english_id": "dragon",
+		"id": 16,
+		"sprite": "/static/assets/types/dragon.webp"
+	},
+	{
+		"german": "Unlicht",
+		"english": "Dark",
+		"english_id": "dark",
+		"id": 17,
+		"sprite": "/static/assets/types/dark.webp"
+	},
+	{
+		"german": "Fee",
+		"english": "Fairy",
+		"english_id": "fairy",
+		"id": 18,
+		"sprite": "/static/assets/types/fairy.webp"
+	}
+]

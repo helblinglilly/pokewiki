@@ -1,0 +1,436 @@
+extends ./header.pug
+block append head
+	script(src="/static/js/pokemon.js")
+	style.
+		@media screen and (max-width: 768px) {
+			.otherEntry {
+				max-width: 150px !important;
+				cursor: pointer;
+			}
+			.otherEntryContent {
+				padding: 15px !important;
+			}
+			.otherSprite {
+				max-width: 48px;
+				display: inline;
+				vertical-align: middle;
+			}
+			.otherNumber {
+				display: none;
+			}
+		}
+		@media screen and (min-width: 768px) {
+			.otherEntry {
+				max-width: 150px !important;
+				cursor: pointer;
+			}
+			.otherSprite {
+				height: 40px;
+				display: inline;
+				vertical-align: middle;
+			}
+			.otherNumber {
+				display: inline;
+				vertical-align: middle;
+			}
+		}
+
+block append body
+	if selectedGames.version_group_name === "all"
+		.notification.is-warning.is-light
+			p Select a game from the "Options" section to see its Pokédex entry and Moveset.
+	else if moveset.length === 0
+		.notification.is-warning.is-light
+			p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
+
+	//- Navigator
+	.columns.is-mobile
+		.column.is-one-third
+			.card.otherEntry
+				.card-content.otherEntryContent(
+					onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`
+				)
+					p.otherNumber ##{ id - 1 }
+					if (id - 1) > 905
+						img.otherSprite(
+							src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
+						)
+					else
+						img.otherSprite(
+							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
+						)
+		.column.has-text-centered(style="display: inline-flex")
+			p.title.is-4(style="margin: auto") ##{ id }
+		.column.is-one-third
+			.card.otherEntry.is-pulled-right
+				.card-content.otherEntryContent(
+					onclick=`location.href='/pokemon/${id + 1}' + removeVarieties()`
+				)
+					if (id + 1) > 905
+						img.otherSprite(
+							src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
+						) 
+					else
+						img.otherSprite(
+							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`
+						)
+					p.otherNumber ##{ id + 1 }
+
+	//- Sprites and Evolutions
+	.columns
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.is-justify-content-space-between
+					if english === german || !german
+						p #{ english }
+					else
+						p #{ english } - #{ german }
+
+					div
+						each pType in types
+							img.pl-2(src=`${pType.sprite}`, style="width: 55px; height: 20px")
+				.card-content
+					.columns.mb-0.is-mobile
+						.column
+							.has-text-centered
+								img#sprite-front(src=`${sprites.primary}`, style="height: auto; width: 100%")
+								p#primarySupportText.is-italic
+						.column
+							.has-text-centered
+								img#sprite-back(src=`${sprites.secondary}`, style="height: auto; width: 100%")
+								p#secondarySupportText.is-italic
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.collapsable(
+					onclick="toggleCardContentVisibility(this);",
+					style="cursor: pointer"
+				)
+					p Evolution chain
+				.card-content.pt-1
+					if evolutions.length === 0
+						p This Pokémon has no evolutions.
+					each evolution in evolutions
+						.columns.is-vcentered.is-mobile
+							.column.has-text-centered
+								img(
+									src=`${evolution.sourceSprite}`,
+									style="cursor: pointer",
+									onclick=`location.href='${evolution.sourceURL}' + removeVarieties()`
+								)
+							.column.has-text-centered
+								if evolution.trigger.includes("Level")
+									p #{ evolution.trigger }
+								else if evolution.trigger === "trade"
+									p Trade
+								else if evolution.trigger === "shed"
+									p.is-underlined(
+										onclick="document.getElementById('moreInfo').toggleAttribute('hidden');"
+									) Shed
+									p#moreInfo(hidden) Have 1+ free party slots during evolution
+								else if evolution.trigger === "tower-of-darkness"
+									p Single Strike Style in Tower of Darkness
+								else if evolution.trigger === "tower-of-waters"
+									p Rapid Strike Style in Tower of Waters
+								else if evolution.trigger === "spin"
+									p.is-underlined(
+										onclick="document.getElementById('moreInfo').toggleAttribute('hidden');"
+									) Expand
+									p#moreInfo(hidden) Spin and strike a pose while Milcery holds a Sweet
+
+								each requirement in evolution.requirements
+									if requirement.type === "gender"
+										p #{ requirement.info }
+									if requirement.type === "use-item"
+										//- Tart and Sweet apples don't have their item sprites uploaded yet!
+										if requirement.supplementary.includes("1175")
+											.container
+												p Use Tart Apple
+										else if requirement.supplementary.includes("1174")
+											.container
+												p Use Sweet Apple
+										else
+											.container(
+												onclick=`location.href='${requirement.supplementary}'`,
+												style="cursor: pointer"
+											)
+												p(style="vertical-align: middle; display: inline") Use
+												img(
+													src=`${requirement.info}`,
+													title=`${requirement.info.split("/")[8].split(".")[0]}`,
+													style="vertical-align: middle"
+												)
+									if requirement.type === "hold-item"
+										.container
+											p(style="vertical-align: middle; display: inline") Hold
+											img(
+												src=`${requirement.info}`,
+												onclick=`location.href='${requirement.supplementary}'`,
+												style="cursor: pointer; vertical-align: middle",
+												title=`${requirement.info.split("/")[8].split(".")[0]}`
+											)
+									if requirement.type === "friendship"
+										p Friendship: #{ requirement.info }
+									if requirement.type === "beauty"
+										p Beauty: #{ requirement.info }
+									if requirement.type === "rain"
+										p Raining
+									if requirement.type === "daytime"
+										p.is-capitalized #{ requirement.info }
+									if requirement.type === "know_move"
+										p(style="cursor: pointer", onclick=`location.href='${requirement.info}'`) Knows: #{ requirement.supplementary }
+									if requirement.type === "know_move_type"
+										p Know move of type: #{ requirement.info }
+									if requirement.type === "affection"
+										p Affection: #{ requirement.info }
+									if requirement.type === "location"
+										p Go to: #{ requirement.info }
+									if requirement.type === "stats"
+										p #{ requirement.info }
+									if requirement.type === "three-critical-hits"
+										p.is-underlined(
+											onclick="document.getElementById('moreInfo').toggleAttribute('hidden');"
+										) Expand
+										p#moreInfo(hidden) Land 3 critical hits in one battle
+									if requirement.type === "trade_for"
+										.div(style="display: inline")
+											p Trade for
+											p(
+												style="cursor: pointer",
+												onclick=`location.href='${requirement.supplementary}'`
+											) #{ requirement.info }
+									if requirement.type === "party_have"
+										.div(style="display: inline")
+											p Party has
+											p(
+												style="cursor: pointer",
+												onclick=`location.href='${requirement.supplementary}'`
+											) #{ requirement.info }
+									if requirement.type === "party_type"
+										p #{ requirement.info }
+									if requirement.type === "other"
+										p.is-underlined(
+											onclick="document.getElementById('moreInfo').toggleAttribute('hidden');"
+										) Expand
+										p#moreInfo(hidden) #{ requirement.info }
+
+							.column.has-text-centered
+								img(
+									src=`${evolution.targetSprite}`,
+									style="cursor: pointer",
+									onclick=`location.href='${evolution.targetURL}' + removeVarieties()`
+								)
+
+	//- Abilities and Base Stats
+	.columns
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.collapsable(
+					onclick="toggleCardContentVisibility(this);",
+					style="cursor: pointer"
+				)
+					p Abilities
+				.card-content
+					each ability in abilities
+						.box(
+							onclick=`location.href='${ability.link}' + removeVarieties()`,
+							style="cursor: pointer"
+						)
+							p.has-text-weight-bold #{ ability.name }
+							if ability.isHidden
+								p.is-italic Hidden
+							p #{ ability.effect }
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.collapsable(
+					onclick="toggleCardContentVisibility(this);",
+					style="cursor: pointer"
+				)
+					p Base stats
+				.card-content
+					table#statsTable.table(style="width: 100%")
+						thead
+							tr
+								th Name
+								th Stat
+								th Avg
+								th EV
+						tbody
+							tr
+								if baseStats.hp.stat > 68 + 5
+									td.has-text-success-dark HP
+								else if baseStats.hp.stat < 68 - 5
+									td.has-text-danger-dark HP
+								else
+									td HP
+								td #{ baseStats.hp.stat }
+								td 68
+								td #{ baseStats.hp.effort }
+							tr
+								if baseStats.attack.stat > 76 + 5
+									td.has-text-success-dark Attack
+								else if baseStats.attack.stat < 76 - 5
+									td.has-text-danger-dark Attack
+								else
+									td Attack
+								td #{ baseStats.attack.stat }
+								td 76
+								td #{ baseStats.attack.effort }
+							tr
+								if baseStats.defense.stat > 72 + 5
+									td.has-text-success-dark Defense
+								else if baseStats.defense.stat < 72 - 5
+									td.has-text-danger-dark Defense
+								else
+									td Defense
+								td #{ baseStats.defense.stat }
+								td 72
+								td #{ baseStats.defense.effort }
+							tr
+								if baseStats.special_attack.stat > 70 + 5
+									td.has-text-success-dark Special Attack
+								else if baseStats.special_attack.stat < 70 - 5
+									td.has-text-danger-dark Special Attack
+								else
+									td Special Attack
+								td #{ baseStats.special_attack.stat }
+								td 70
+								td #{ baseStats.special_attack.effort }
+							tr
+								if baseStats.special_defense.stat > 70 + 5
+									td.has-text-success-dark Special Defense
+								else if baseStats.special_defense.stat < 70 - 5
+									td.has-text-danger-dark Special Defense
+								else
+									td Special Defense
+								td #{ baseStats.special_defense.stat }
+								td 70
+								td #{ baseStats.special_defense.effort }
+							tr
+								if baseStats.speed.stat > 66 + 5
+									td.has-text-success-dark Speed
+								else if baseStats.speed.stat < 66 - 5
+									td.has-text-danger-dark Speed
+								else
+									td Speed
+								td #{ baseStats.speed.stat }
+								td 66
+								td #{ baseStats.speed.effort }
+							tfoot
+								tr
+									th Pkmn Base Stat:
+									td #{ ((baseStats.hp.stat + baseStats.attack.stat + baseStats.defense.stat + baseStats.special_attack.stat + baseStats.special_defense.stat + baseStats.speed.stat) / 6).toFixed(2) }
+									td 70.85
+
+	//- Pokedex and Other info
+	.columns
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.collapsable(
+					onclick="toggleCardContentVisibility(this);",
+					style="cursor: pointer"
+				)
+					p Pokédex entry
+				.card-content.pt-1
+					.columns
+						.column
+							p Weight: #{ weight } kg
+						.column
+							p Height: #{ height }0 cm
+					if pokedex.length > 0
+						each entry in pokedex
+							p.is-capitalized.has-text-weight-bold #{ entry.game }
+							p.pb-2 #{ entry.entry }
+					else
+						p Select a game where this Pokémon is featured to see its Pokédex entry.
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.collapsable(
+					onclick="toggleCardContentVisibility(this);",
+					style="cursor: pointer"
+				)
+					p Other Info
+				.card-content
+					p.title.is-6 Catch rate: #{ captureRate }
+					progress.progress.is-medium(max=255, value=`${captureRate}`) #{ captureRate }%
+					p This is the base capture rate of this Pokémon - it should be used as an approximation for how difficult it is to catch. A higher catch rate means a Pokémon is easier to catch.
+					br
+					p.title.is-6.mb-2 Growth rate: #{ growthRate }
+					p How quickly this Pokémon is able to level-up
+
+	//- Forms and Moveset
+	.columns
+		.column
+			.card
+				.card-header-title.collapsable(
+					onclick="toggleCardContentVisibility(this);",
+					style="cursor: pointer"
+				)
+					p Forms
+				.card-content
+					each form in forms
+						.columns.is-mobile
+							.column.has-text-centered.is-flex
+								.box(
+									style="width: 100%; cursor: pointer",
+									onclick=`location.href='${form.url}' + removeVarieties()`
+								)
+									img(src=`${form.sprites.primary}`)
+									p #{ form.name }
+							.column.has-text-centered.is-flex
+								.box(
+									style="width: 100%; cursor: pointer",
+									onclick=`location.href='${form.url}' + removeVarieties()`
+								)
+									img(src=`${form.sprites.shiny}`)
+									p Shiny #{ form.name }
+		if moveset.length > 0
+			.column
+				.card
+					.card-header-title.collapsable(
+						onclick="toggleCardContentVisibility(this);",
+						style="cursor: pointer"
+					)
+						p Moveset
+					.card-content.pt-1
+						table.table.is-striped.is-hoverable(style="width: 100%")
+							thead
+								tr
+									th.pl-0 Type
+									th.pl-0 Name
+									th.pl-0 Level
+							tbody(style="width: 100%")
+							each move in moveset
+								tr(
+									onclick=`location.href='${move.link}' + removeVarieties()`,
+									style="cursor: pointer"
+								)
+									td.pl-0(style="width: 70px")
+										.container(style="display: inline-grid")
+											img.icon.tableImage(
+												src=`${move.type_sprite}`,
+												style="width: 50px; height: 20px",
+												alt="Move type Icon"
+											)
+											img.icon.tableImage.mt-1(
+												src=`${move.attack_type_sprite}`,
+												alt="Type Icon",
+												style="width: 50px; height: 20px"
+											)
+									td.pl-0
+										if move.english === move.german || !move.german
+											p #{ move.german }
+										else
+											p #{ move.english }
+											p #{ move.german }
+									td.pl-0
+										if move.learning_method !== "level-up"
+											if move.learning_method === "machine"
+												p TM/VM
+											else if move.learning_method === "tutor"
+												p Tutor
+												p Erlernt
+											else if move.learning_method === "egg"
+												p Egg
+												p Ei
+										else
+											p Lv. #{ move.level_learnt }

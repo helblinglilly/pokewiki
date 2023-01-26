@@ -4,125 +4,125 @@
 		"english": "Normal",
 		"english_id": "normal",
 		"id": 1,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/6/61/Type_Normal.gif"
+		"sprite": "/static/assets/types/normal.webp"
 	},
 	{
 		"german": "Kampf",
 		"english": "Fighting",
 		"english_id": "fighting",
 		"id": 2,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/6/6b/Type_Fighting.gif"
+		"sprite": "/static/assets/types/fight.webp"
 	},
 	{
 		"german": "Flug",
 		"english": "Flying",
 		"english_id": "flying",
 		"id": 3,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/4/4b/Type_Flying.gif"
+		"sprite": "/static/assets/types/flying.webp"
 	},
 	{
 		"german": "Gift",
 		"english": "Poison",
 		"english_id": "poison",
 		"id": 4,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/8/82/Type_Poison.gif"
+		"sprite": "/static/assets/types/poison.webp"
 	},
 	{
 		"german": "Boden",
 		"english": "Ground",
 		"english_id": "ground",
 		"id": 5,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/1/1d/Type_Ground.gif"
+		"sprite": "/static/assets/types/ground.webp"
 	},
 	{
 		"german": "Gestein",
 		"english": "Rock",
 		"english_id": "rock",
 		"id": 6,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/1/1d/Type_Ground.gif/"
+		"sprite": "/static/assets/types/rock.png"
 	},
 	{
 		"german": "Käfer",
 		"english": "Bug",
 		"english_id": "bug",
 		"id": 7,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/6/64/Type_Bug.gif"
+		"sprite": "/static/assets/types/bug.webp"
 	},
 	{
 		"german": "Geist",
 		"english": "Ghost",
 		"english_id": "ghost",
 		"id": 8,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/f/f2/Type_Ghost.gif"
+		"sprite": "/static/assets/types/ghost.webp"
 	},
 	{
 		"german": "Stahl",
 		"english": "Steel",
 		"english_id": "steel",
 		"id": 9,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/a/ab/Type_Steel.gif"
+		"sprite": "/static/assets/types/steel.webp"
 	},
 	{
 		"german": "Feuer",
 		"english": "Fire",
 		"english_id": "fire",
 		"id": 10,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/4/4d/Type_Fire.gif/"
+		"sprite": "/static/assets/types/fire.webp"
 	},
 	{
 		"german": "Wasser",
 		"english": "Water",
 		"english_id": "water",
 		"id": 11,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/e/ed/Type_Water.gif"
+		"sprite": "/static/assets/types/water.webp"
 	},
 	{
 		"german": "Pflanze",
 		"english": "Grass",
 		"english_id": "grass",
 		"id": 12,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/4/46/Type_Grass.gif/"
+		"sprite": "/static/assets/types/grass.webp"
 	},
 	{
 		"german": "Elektro",
 		"english": "Electric",
 		"english_id": "electric",
 		"id": 13,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/a/aa/Type_Electric.gif/"
+		"sprite": "/static/assets/types/electric.webp"
 	},
 	{
 		"german": "Psycho",
 		"english": "Psychic",
 		"english_id": "psychic",
 		"id": 14,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/6/65/Type_Psychic.gif"
+		"sprite": "/static/assets/types/psycho.webp"
 	},
 	{
 		"german": "Eis",
 		"english": "Ice",
 		"english_id": "ice",
 		"id": 15,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/8/84/Type_Ice.gif"
+		"sprite": "/static/assets/types/ice.webp"
 	},
 	{
 		"german": "Drache",
 		"english": "Dragon",
 		"english_id": "dragon",
 		"id": 16,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/2/26/Type_Dragon.gif/"
+		"sprite": "/static/assets/types/dragon.webp"
 	},
 	{
 		"german": "Unlicht",
 		"english": "Dark",
 		"english_id": "dark",
 		"id": 17,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/0/0d/Type_Dark.gif/"
+		"sprite": "/static/assets/types/dark.webp"
 	},
 	{
 		"german": "Fee",
 		"english": "Fairy",
 		"english_id": "fairy",
 		"id": 18,
-		"sprite": "https://static.wikia.nocookie.net/pokemon/images/7/74/Type_Fairy.gif"
+		"sprite": "/static/assets/types/fairy.webp"
 	}
 ]

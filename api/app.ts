@@ -12,6 +12,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 // Settings for when app is deployed in non-production environment
 if (process.env.PUBLIC_VERCEL_ENV !== "production") {
+
 	log.setDefaultLevel("DEBUG");
 }
 
@@ -28,6 +29,7 @@ if (selfFileExtension === "js" && process.env.NODE_ENV !== "production") {
 	app.use("/static", express.static(`${__dirname}/../public`));
 	app.set("views", `${__dirname}/../views`);
 }
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -1,5 +1,6 @@
 extends ./header.pug
 block append head
+	script(src="/static/js/pokemon.js")
 	style.
 		@media screen and (max-width: 768px) {
 			.otherEntry {
@@ -95,36 +96,12 @@ block append body
 					.columns.mb-0.is-mobile
 						.column
 							.has-text-centered
-								if sprites.primary.includes(".gif")
-									img#sprite-front.p-6.is-square(
-										src=`${sprites.primary}`,
-										style="height: auto; width: 100%"
-									)
-								else
-									img#sprite-front.is-square(
-										src=`${sprites.primary}`,
-										style="height: auto; width: 100%"
-									)
-									if sprites.secondary.includes("/shiny/")
-										p.is-italic Regular
-									if sprites.secondary.includes("/female/")
-										p.is-italic Male
+								img#sprite-front(src=`${sprites.primary}`, style="height: auto; width: 100%")
+								p#primarySupportText.is-italic
 						.column
 							.has-text-centered
-								if sprites.secondary.includes(".gif")
-									img#sprite-front.p-6.is-square(
-										src=`${sprites.secondary}`,
-										style="height: auto; width: 100%"
-									)
-								else
-									img#sprite-back.is-square(
-										src=`${sprites.secondary}`,
-										style="height: auto; width: 100%"
-									)
-									if sprites.secondary.includes("/shiny/")
-										p.is-italic Shiny
-									if sprites.secondary.includes("/female/")
-										p.is-italic Female
+								img#sprite-back(src=`${sprites.secondary}`, style="height: auto; width: 100%")
+								p#secondarySupportText.is-italic
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title.collapsable(
@@ -381,7 +358,7 @@ block append body
 
 	//- Forms and Moveset
 	.columns
-		.column 
+		.column
 			.card
 				.card-header-title.collapsable(
 					onclick="toggleCardContentVisibility(this);",

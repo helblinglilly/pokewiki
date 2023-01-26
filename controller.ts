@@ -98,6 +98,7 @@ class Controller {
 				form.form_names,
 				this.primaryLanguageCode
 			);
+			name = name ? name : primName;
 
 			if (speciesData.has_gender_differences) {
 				forms.push({
@@ -192,21 +193,18 @@ class Controller {
 
 		// Game specific sections
 		let moveset: MoveDetails[] = [];
-		let selectedGames: VersionGroup | undefined;
-		if (game) {
-			selectedGames = Games.findEntry(game);
+		const selectedGames = Games.findEntry(game ? game : "all");
+
+		if (selectedGames.version_group_name !== "all") {
 			// Pokédex entries
 			speciesData.flavor_text_entries.forEach(entry => {
-				if (
-					selectedGames !== undefined &&
-					Games.findEntry(entry.version.name)?.version_group_name ==
-						selectedGames.version_group_name &&
-					entry.language.name === "en"
-				) {
-					pokedexEntries.push({
-						game: entry.version.name,
-						entry: entry.flavor_text,
-					});
+				if (selectedGames.consistsOf.includes(entry.version.name)) {
+					if (entry.language.name === this.primaryLanguageCode) {
+						pokedexEntries.push({
+							game: entry.version.name,
+							entry: entry.flavor_text,
+						});
+					}
 				}
 			});
 

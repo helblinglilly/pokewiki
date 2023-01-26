@@ -36,32 +36,7 @@ block append head
 
 block append body
 	if moveset.length === 0
-		.notification.is-warning.is-light 
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
+		.notification.is-warning.is-light
 			p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
 	else if selectedGames.version_group_name === "all"
 		.notification.is-warning.is-light
@@ -121,7 +96,7 @@ block append body
 						.column
 							.has-text-centered
 								if sprites.primary.includes(".gif")
-									img#sprite-front.p-5.is-square(
+									img#sprite-front.p-6.is-square(
 										src=`${sprites.primary}`,
 										style="height: auto; width: 100%"
 									)
@@ -137,7 +112,7 @@ block append body
 						.column
 							.has-text-centered
 								if sprites.secondary.includes(".gif")
-									img#sprite-front.p-5.is-square(
+									img#sprite-front.p-6.is-square(
 										src=`${sprites.secondary}`,
 										style="height: auto; width: 100%"
 									)
@@ -407,31 +382,6 @@ block append body
 	//- Forms and Moveset
 	.columns
 		.column 
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
-			|
 			.card
 				.card-header-title.collapsable(
 					onclick="toggleCardContentVisibility(this);",
@@ -446,14 +396,14 @@ block append body
 									style="width: 100%; cursor: pointer",
 									onclick=`location.href='${form.url}' + removeVarieties()`
 								)
-									img(src=`${form.sprite}`)
+									img(src=`${form.sprites.primary}`)
 									p #{ form.name }
 							.column.has-text-centered.is-flex
 								.box(
 									style="width: 100%; cursor: pointer",
 									onclick=`location.href='${form.url}' + removeVarieties()`
 								)
-									img(src=`${form.spriteShiny}`)
+									img(src=`${form.sprites.shiny}`)
 									p Shiny #{ form.name }
 		if moveset.length > 0
 			.column

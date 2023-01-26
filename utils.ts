@@ -7,10 +7,11 @@ export default class Utils {
 
 	static findNameFromLanguageCode = (
 		iterable: { language: { name: string }; name: string }[],
-		langCode: string
+		langCode: string,
+		fallback?: string
 	): string => {
 		const entry = iterable.find(a => a.language.name === langCode);
-		return entry ? entry.name : "";
+		return entry ? entry.name : fallback ? fallback : "";
 	};
 
 	static getPokemonSprite = (
@@ -24,9 +25,9 @@ export default class Utils {
 			sprites = sprites as SpriteForm;
 			if (variation === "default")
 				return {
-					primary: sprites.front_default,
+					primary: sprites.front_default ? sprites.front_default : Utils.notFoundSprite,
 					secondary: Utils.notFoundSprite,
-					shiny: sprites.front_shiny,
+					shiny: sprites.front_shiny ? sprites.front_shiny : Utils.notFoundSprite,
 				};
 			return {
 				primary: sprites.front_female,
@@ -89,7 +90,7 @@ export default class Utils {
 			shiny = sprites.versions[`generation-vii`][`ultra-sun-ultra-moon`].front_shiny;
 			if (!secondary) secondary = shiny;
 		} else {
-		/*
+			/*
         Okay, Gen 7 sprites might look awful, and I'm keeping that for consistency, but Icons is where I draw the line
         Better off to wait until actual sprites have come out (if that'll ever happen)
 

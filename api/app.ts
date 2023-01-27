@@ -36,11 +36,15 @@ const buildType =
 			? undefined
 			: "Development"
 		: "Local";
-const buildDate = fs.statSync(`./api/app.${selfFileExtension}`).ctime;
+
+const buildInfo =
+	buildType === "Local"
+		? fs.statSync(`./api/app.${selfFileExtension}`).ctime.toISOString().split("T")[0]
+		: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 5);
 
 export const appSettings = {
-	buildDetails: [buildType, buildDate.toISOString().split("T")[0]].join(" - "),
-	buildDate: buildDate,
+	buildDetails: [buildType, buildInfo].join(" - "),
+	buildDate: buildInfo,
 };
 
 app.use(express.json());

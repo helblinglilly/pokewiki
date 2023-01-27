@@ -40,7 +40,7 @@ const buildType =
 const buildInfo =
 	buildType === "Local"
 		? fs.statSync(`./api/app.${selfFileExtension}`).ctime.toISOString().split("T")[0]
-		: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 5);
+		: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 6);
 
 export const appSettings = {
 	buildDetails: [buildType, buildInfo].join(" - "),

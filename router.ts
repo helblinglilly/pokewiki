@@ -2,6 +2,7 @@ import * as ex from "express";
 import log from "./log";
 import Controller from "./controller";
 import { ErrorMessage } from "./types";
+import { appSettings } from "./api/app";
 
 class Router {
 	static getSearch = async (req: ex.Request, res: ex.Response) => {
@@ -34,7 +35,7 @@ class Router {
 			searchTerm: req.query.term,
 		};
 
-		res.render("./searchResults", { ...options });
+		res.render("./searchResults", { ...options, ...appSettings });
 	};
 
 	static getPokemon = async (req: ex.Request, res: ex.Response) => {
@@ -73,7 +74,7 @@ class Router {
 		const controller = new Controller("en", "de");
 		const details = await controller.getPokemonDetail(id, variety, game);
 		const options = { ...details };
-		res.render("./pokemon", { ...options });
+		res.render("./pokemon", { ...options, ...appSettings });
 	};
 
 	static getMove = async (req: ex.Request, res: ex.Response) => {

@@ -95,10 +95,11 @@ block append body
 							.has-text-centered
 								img#sprite-front(src=`${sprites.primary}`, style="height: auto; width: 100%")
 								p#primarySupportText.is-italic
-						.column
-							.has-text-centered
-								img#sprite-back(src=`${sprites.secondary}`, style="height: auto; width: 100%")
-								p#secondarySupportText.is-italic
+						if sprites.primary !== sprites.secondary
+							.column
+								.has-text-centered
+									img#sprite-back(src=`${sprites.secondary}`, style="height: auto; width: 100%")
+									p#secondarySupportText.is-italic
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title.collapsable(

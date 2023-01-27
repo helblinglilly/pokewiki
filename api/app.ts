@@ -1,5 +1,6 @@
 import express from "express";
 import Router from "../router";
+import fs from "fs";
 import log from "../log";
 
 export let port = 443;
@@ -12,7 +13,6 @@ if (process.env.NODE_ENV !== "production") {
 }
 // Settings for when app is deployed in non-production environment
 if (process.env.PUBLIC_VERCEL_ENV !== "production") {
-
 	log.setDefaultLevel("DEBUG");
 }
 
@@ -30,6 +30,22 @@ if (selfFileExtension === "js" && process.env.NODE_ENV !== "production") {
 	app.set("views", `${__dirname}/../views`);
 }
 
+const buildType =
+	process.env.NODE_ENV === "production"
+		? process.env.PUBLIC_VERCEL_ENV === "production"
+			? undefined
+			: "Development"
+		: "Local";
+
+const buildInfo =
+	buildType === "Local"
+		? fs.statSync(`./api/app.${selfFileExtension}`).ctime.toISOString().split("T")[0]
+		: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 6);
+
+export const appSettings = {
+	buildDetails: [buildType, buildInfo].join(" - "),
+	buildDate: buildInfo,
+};
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,7 +56,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res, next) => {
-	res.render("./index");
+	res.render("./index", { ...appSettings });
 });
 
 app.all("/", (req, res) => {

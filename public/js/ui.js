@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			closeFilter();
 		}
 	});
+
+	document.getElementById("themeToggle").addEventListener("click", () => {
+		document.body.classList.toggle("dark-mode");
+	});
 });
 
 const hideNotice = () => {

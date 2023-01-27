@@ -1,0 +1,144 @@
+:root {
+	--primary: rgb(250, 250, 250);
+	--secondary: rgb(24, 24, 24);
+	--accent: rgb(255, 255, 255);
+	--linkcolor: #485fc7;
+	--linkhover: rgb(240, 240, 240);
+	--navbar: rgb(255, 255, 255);
+	--darktext: rgb(24, 24, 24);
+
+	background-color: var(--primary);
+	color: var(--secondary);
+}
+
+.dark-mode {
+	--primary: rgb(43, 43, 43);
+	--secondary: rgb(243, 243, 243);
+	--accent: rgb(26, 26, 26);
+	--linkcolor: #ccd5ff;
+	--linkhover: rgb(110, 110, 110);
+	--navbar: rgb(0, 0, 0);
+}
+
+html,
+body,
+div.modal-card-body,
+footer.modal-card-foot {
+	background-color: var(--primary);
+	color: var(--secondary);
+}
+
+nav.navbar {
+	background-color: var(--navbar);
+}
+
+label {
+	color: var(--secondary);
+}
+
+a,
+p,
+p.title,
+li,
+a.navbar-item {
+	color: var(--secondary);
+}
+
+div.message-header > p {
+	color: var(--darktext);
+}
+div.message-body > p {
+	color: var(--darktext);
+}
+
+div.notification.is-warning > p {
+	color: var(--darktext);
+}
+
+div.card,
+div.card-content,
+div.box,
+figure.container {
+	background-color: var(--accent);
+}
+
+input.input::placeholder {
+	color: var(--secondary);
+}
+
+button.button,
+input,
+.input {
+	color: var(--secondary);
+	background-color: var(--accent);
+}
+
+a.card-text:hover {
+	background-color: var(--linkcolor);
+}
+
+div.searchResult {
+	cursor: pointer;
+}
+div.searchResult:hover {
+	background-color: var(--linkhover);
+}
+
+.box.accented {
+	background-color: var(--primary);
+}
+
+.box.accented:hover {
+	background-color: var(--linkhover);
+}
+
+hr {
+	background-color: var(--secondary);
+}
+
+table.table,
+.table thead th,
+tr,
+td,
+.table tfoot th,
+.table tfoot td {
+	color: var(--secondary);
+	background-color: var(--accent);
+}
+
+/* progress.progress {
+	color: var(--accent);
+} */
+
+@media screen and (max-width: 768px) {
+	.otherEntry {
+		max-width: 150px !important;
+		cursor: pointer;
+	}
+	.otherEntryContent {
+		padding: 15px !important;
+	}
+	.otherSprite {
+		max-width: 48px;
+		display: inline;
+		vertical-align: middle;
+	}
+	.otherNumber {
+		display: none;
+	}
+}
+@media screen and (min-width: 768px) {
+	.otherEntry {
+		max-width: 150px !important;
+		cursor: pointer;
+	}
+	.otherSprite {
+		height: 40px;
+		display: inline;
+		vertical-align: middle;
+	}
+	.otherNumber {
+		display: inline;
+		vertical-align: middle;
+	}
+}

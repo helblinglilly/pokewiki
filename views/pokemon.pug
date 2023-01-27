@@ -1,46 +1,12 @@
 extends ./header.pug
 block append head
 	script(src="/static/js/pokemon.js")
-	style.
-		@media screen and (max-width: 768px) {
-			.otherEntry {
-				max-width: 150px !important;
-				cursor: pointer;
-			}
-			.otherEntryContent {
-				padding: 15px !important;
-			}
-			.otherSprite {
-				max-width: 48px;
-				display: inline;
-				vertical-align: middle;
-			}
-			.otherNumber {
-				display: none;
-			}
-		}
-		@media screen and (min-width: 768px) {
-			.otherEntry {
-				max-width: 150px !important;
-				cursor: pointer;
-			}
-			.otherSprite {
-				height: 40px;
-				display: inline;
-				vertical-align: middle;
-			}
-			.otherNumber {
-				display: inline;
-				vertical-align: middle;
-			}
-		}
-
 block append body
 	if selectedGames.version_group_name === "all"
-		.notification.is-warning.is-light
+		.notification.is-warning
 			p Select a game from the "Options" section to see its Pokédex entry and Moveset.
 	else if moveset.length === 0
-		.notification.is-warning.is-light
+		.notification.is-warning
 			p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
 
 	//- Navigator
@@ -232,7 +198,7 @@ block append body
 					p Abilities
 				.card-content
 					each ability in abilities
-						.box(
+						.box.accented(
 							onclick=`location.href='${ability.link}' + removeVarieties()`,
 							style="cursor: pointer"
 						)
@@ -321,6 +287,7 @@ block append body
 									th Pkmn Base Stat:
 									td #{ ((baseStats.hp.stat + baseStats.attack.stat + baseStats.defense.stat + baseStats.special_attack.stat + baseStats.special_defense.stat + baseStats.speed.stat) / 6).toFixed(2) }
 									td 70.85
+									td
 
 	//- Pokedex and Other info
 	.columns
@@ -339,8 +306,9 @@ block append body
 							p Height: #{ height }0 cm
 					if pokedex.length > 0
 						each entry in pokedex
-							p.is-capitalized.has-text-weight-bold #{ entry.game }
-							p.pb-2 #{ entry.entry }
+							.box.accented
+								p.is-capitalized.has-text-weight-bold #{ entry.game }
+								p.pb-2 #{ entry.entry }
 					else
 						p Select a game where this Pokémon is featured to see its Pokédex entry.
 		.column.is-flex
@@ -371,14 +339,14 @@ block append body
 					each form in forms
 						.columns.is-mobile
 							.column.has-text-centered.is-flex
-								.box(
+								.box.accented(
 									style="width: 100%; cursor: pointer",
 									onclick=`location.href='${form.url}' + removeVarieties()`
 								)
 									img(src=`${form.sprites.primary}`)
 									p #{ form.name }
 							.column.has-text-centered.is-flex
-								.box(
+								.box.accented(
 									style="width: 100%; cursor: pointer",
 									onclick=`location.href='${form.url}' + removeVarieties()`
 								)

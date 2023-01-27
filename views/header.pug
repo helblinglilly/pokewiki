@@ -12,15 +12,18 @@ head
 	script(src="/static/js/cookies.js")
 	script(src="/static/js/ui.js")
 	style.
+		@import url("/static/styles.css");
+	style.
 		@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 	title Pokéwiki
 
 body(style="min-height: 100vw; display: flex; flex-direction: column")
-	nav.navbar(role="navigation", aria-label="main navigation")
+	nav.navbar.mb-4(role="navigation", aria-label="main navigation")
 		.navbar-brand(href="/")
 			a.navbar-item(href="/")
 				img(src="/static/pokemon.png")
 			a.navbar-item(href="/") Pokémon
+			a#themeToggle.navbar-item Toggle Theme
 
 	.container.is-max-desktop.pl-6.pr-6.pb-6(style="width: 100%")
 		block body
@@ -32,12 +35,7 @@ body(style="min-height: 100vw; display: flex; flex-direction: column")
 							name="term",
 							placeholder="Search for something!"
 						)
-					button.button(
-						onclick="openFilter();",
-						type="button",
-						style="background-color: #f5f5f5"
-					) Options
-
+					button.button(onclick="openFilter();", type="button") Options
 				input#searchSubmit(type="submit", hidden)
 				style.
 					table#statsTable * {

@@ -30,7 +30,6 @@ if (selfFileExtension === "js" && process.env.NODE_ENV !== "production") {
 	app.set("views", `${__dirname}/../views`);
 }
 
-log.debug("VERCEL_ENV", process.env.VERCEL_ENV);
 const buildType =
 	process.env.NODE_ENV === "production"
 		? process.env.VERCEL_ENV === "production"

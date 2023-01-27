@@ -4,7 +4,6 @@ import Types from "./public/pokedata/types.json";
 import Utils from "./utils";
 import { Data } from "./model";
 import {
-	PokemonDetails,
 	APIResponsePokemon,
 	APIResponseEvolution,
 	Collection,
@@ -30,11 +29,7 @@ class Controller {
 		this.secondaryLanguageCode = secLang;
 	}
 
-	getPokemonDetail = async (
-		id: number,
-		varietyId: number,
-		game?: string
-	): Promise<PokemonDetails | void> => {
+	getPokemonDetail = async (id: number, varietyId: number, game?: string) => {
 		const apidata = await data.pokemonData(id, varietyId);
 		const pokemonData = apidata.pokemon;
 		const speciesData = apidata.species;

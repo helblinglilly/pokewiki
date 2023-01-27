@@ -36,7 +36,7 @@ const buildType =
 			? undefined
 			: "Development"
 		: "Local";
-const buildDate = fs.statSync(`./api/app.${selfFileExtension}`).mtime;
+const buildDate = fs.statSync(`./api/app.${selfFileExtension}`).ctime;
 
 export const appSettings = {
 	buildDetails: [buildType, buildDate.toISOString().split("T")[0]].join(" - "),

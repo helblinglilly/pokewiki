@@ -259,10 +259,40 @@ export interface APIResponseForm {
 	sprites: SpriteForm;
 }
 
+export interface APIResponseMachine {
+	id: number;
+	move: {
+		name: string;
+		url: string;
+	};
+	version_group: {
+		name: string;
+	};
+}
+
+export interface APIResponseMove {
+	names: {
+		language: {
+			name: string;
+		};
+		name: string;
+	}[];
+}
 export interface APIResponseItem {
 	name: string;
 	id: number;
 	cost: number;
+	machines: {
+		machine: {
+			url: string;
+		};
+		version_group: {
+			name: string;
+		};
+	}[];
+	attributes: {
+		name: string;
+	}[];
 	names: {
 		language: {
 			name: string;
@@ -276,13 +306,13 @@ export interface APIResponseItem {
 		};
 	}[];
 	flavor_text_entries: {
-		flavor_text: string;
 		language: {
 			name: string;
 		};
 		version: {
 			name: string;
 		};
+		text: string;
 	}[];
 	sprites: {
 		default: string;

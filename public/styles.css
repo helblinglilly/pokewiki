@@ -119,7 +119,9 @@ div.searchResult:hover {
 .box.accented {
 	background-color: var(--primary);
 }
-
+.box.accented.nohover:hover {
+	background-color: var(--primary);
+}
 .box.accented:hover {
 	background-color: var(--linkhover);
 }
@@ -140,6 +142,10 @@ td,
 
 .hidden {
 	display: none;
+}
+
+.otherEntryContent:hover {
+	background-color: var(--linkhover);
 }
 
 @media screen and (max-width: 768px) {

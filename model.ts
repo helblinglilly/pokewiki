@@ -4,6 +4,8 @@ import {
 	APIResponseEvolution,
 	APIResponseForm,
 	APIResponseItem,
+	APIResponseMachine,
+	APIResponseMove,
 	APIResponsePokemon,
 	APIResponseSpecies,
 	GenericEntry,
@@ -41,6 +43,14 @@ interface Cache {
 		id: number;
 		data: APIResponseItem;
 	}[];
+	machines: {
+		id: number;
+		data: APIResponseMachine;
+	}[];
+	moves: {
+		id: number;
+		data: APIResponseMove;
+	}[];
 }
 
 const cache: Cache = {
@@ -50,6 +60,8 @@ const cache: Cache = {
 	evolution_chain: [],
 	abilities: [],
 	items: [],
+	machines: [],
+	moves: [],
 };
 
 export class Data {
@@ -173,6 +185,44 @@ export class Data {
 			data: data.data,
 		});
 		log.info(`Cache - MISS - Item ${id}`);
+		return data.data;
+	};
+
+	getMachine = async (id: number): Promise<APIResponseMachine> => {
+		const cachedData = cache.machines.find(a => a.id === id);
+		if (cachedData) {
+			log.info(`Cache - HIT - TM ${id}`);
+			return cachedData.data;
+		}
+
+		const data = await axios.get(`${this.api}/machine/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.machines.push({
+			id: id,
+			data: data.data,
+		});
+		log.info(`Cache - MISS - TM ${id}`);
+		return data.data;
+	};
+
+	getMove = async (id: number): Promise<APIResponseMove> => {
+		const cachedData = cache.moves.find(a => a.id === id);
+		if (cachedData) {
+			log.info(`Cache - HIT - Move ${id}`);
+			return cachedData.data;
+		}
+
+		const data = await axios.get(`${this.api}/move/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.moves.push({
+			id: id,
+			data: data.data,
+		});
+		log.info(`Cache - MISS - Move ${id}`);
 		return data.data;
 	};
 

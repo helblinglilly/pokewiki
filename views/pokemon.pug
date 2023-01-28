@@ -13,19 +13,14 @@ block append body
 	.columns.is-mobile
 		.column.is-one-third
 			if (id-1 > 0)
-				.card.otherEntry
+				.card.otherEntry.is-pulled-left
 					.card-content.otherEntryContent(
 						onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`
 					)
 						p.otherNumber ##{ id - 1 }
-						if (id - 1) > 905
-							img.otherSprite(
-								src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
-							)
-						else
-							img.otherSprite(
-								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
-							)
+						img.otherSprite(
+							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
+						)
 		.column.has-text-centered(style="display: inline-flex")
 			p.title.is-4(style="margin: auto") ##{ id }
 		.column.is-one-third
@@ -114,7 +109,7 @@ block append body
 												p Use Sweet Apple
 										else
 											.container(
-												onclick=`location.href='${requirement.supplementary}'`,
+												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`,
 												style="cursor: pointer"
 											)
 												p(style="vertical-align: middle; display: inline") Use
@@ -128,7 +123,7 @@ block append body
 											p(style="vertical-align: middle; display: inline") Hold
 											img(
 												src=`${requirement.info}`,
-												onclick=`location.href='${requirement.supplementary}'`,
+												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`,
 												style="cursor: pointer; vertical-align: middle",
 												title=`${requirement.info.split("/")[8].split(".")[0]}`
 											)
@@ -141,7 +136,10 @@ block append body
 									if requirement.type === "daytime"
 										p.is-capitalized #{ requirement.info }
 									if requirement.type === "know_move"
-										p(style="cursor: pointer", onclick=`location.href='${requirement.info}'`) Knows: #{ requirement.supplementary }
+										p(
+											style="cursor: pointer",
+											onclick=`location.href='${requirement.info}' + removeVarieties()`
+										) Knows: #{ requirement.supplementary }
 									if requirement.type === "know_move_type"
 										p Know move of type: #{ requirement.info }
 									if requirement.type === "affection"
@@ -160,14 +158,14 @@ block append body
 											p Trade for
 											p(
 												style="cursor: pointer",
-												onclick=`location.href='${requirement.supplementary}'`
+												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`
 											) #{ requirement.info }
 									if requirement.type === "party_have"
 										.div(style="display: inline")
 											p Party has
 											p(
 												style="cursor: pointer",
-												onclick=`location.href='${requirement.supplementary}'`
+												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`
 											) #{ requirement.info }
 									if requirement.type === "party_type"
 										p #{ requirement.info }

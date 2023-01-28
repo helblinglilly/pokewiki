@@ -48,16 +48,15 @@ const hideNotice = () => {
 const submitSearch = () => {
 	const urlNoParams = document.URL.split("?")[0];
 	const queryParams = document.URL.split("?")[1];
-	const potentialPokemonRoute = urlNoParams.split("/")[urlNoParams.split("/").length - 2];
-	const currentlySelectedPokemon =
-		urlNoParams.split("/")[urlNoParams.split("/").length - 1];
+	const targetRoute = urlNoParams.split("/")[urlNoParams.split("/").length - 2];
+	const currentlySelectedId = urlNoParams.split("/")[urlNoParams.split("/").length - 1];
 
-	if (potentialPokemonRoute === "pokemon") {
+	if (queryParams) {
 		const params = queryParams.split("&");
 		const changedParams = [];
+
 		let currentGame;
 		let selectedGame;
-
 		params.forEach(entry => {
 			let currentSelection;
 			let newSelection;
@@ -83,13 +82,13 @@ const submitSearch = () => {
 			}
 			changedParams.push(currentSelection == newSelection);
 		});
-
-		const search = document.getElementById("search");
 		if (!changedParams.includes(false)) {
+			const search = document.getElementById("search");
 			// If all you changed is the Game, then stay on the current page
-			search.action = `/pokemon/${currentlySelectedPokemon}`;
+			search.action = `/${targetRoute}/${currentlySelectedId}`;
 		}
 	}
+
 	search.submit();
 };
 

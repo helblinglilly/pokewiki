@@ -138,6 +138,10 @@ td,
 	background-color: var(--accent);
 }
 
+.hidden {
+	display: none;
+}
+
 @media screen and (max-width: 768px) {
 	.otherEntry {
 		max-width: 150px !important;

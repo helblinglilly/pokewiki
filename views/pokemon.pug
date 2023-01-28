@@ -28,19 +28,15 @@ block append body
 		.column.has-text-centered(style="display: inline-flex")
 			p.title.is-4(style="margin: auto") ##{ id }
 		.column.is-one-third
-			.card.otherEntry.is-pulled-right
-				.card-content.otherEntryContent(
-					onclick=`location.href='/pokemon/${id + 1}' + removeVarieties()`
-				)
-					if (id + 1) > 905
-						img.otherSprite(
-							src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
-						) 
-					else
+			if (id + 1) <= highestPokedexId
+				.card.otherEntry.is-pulled-right
+					.card-content.otherEntryContent(
+						onclick=`location.href='/pokemon/${id + 1}' + removeVarieties()`
+					)
 						img.otherSprite(
 							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`
 						)
-					p.otherNumber ##{ id + 1 }
+						p.otherNumber ##{ id + 1 }
 
 	//- Sprites and Evolutions
 	.columns

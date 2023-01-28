@@ -1,10 +1,8 @@
+import { appSettings } from "./api/app";
 import log from "./log";
 import { Sprites, Games, SpriteForm, GenericSprites } from "./types";
 
 export default class Utils {
-	static notFoundSprite =
-		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
-
 	static findNameFromLanguageCode = (
 		iterable: { language: { name: string }; name: string }[],
 		langCode: string,
@@ -25,13 +23,15 @@ export default class Utils {
 			sprites = sprites as SpriteForm;
 			if (variation === "default")
 				return {
-					primary: sprites.front_default ? sprites.front_default : Utils.notFoundSprite,
-					secondary: Utils.notFoundSprite,
-					shiny: sprites.front_shiny ? sprites.front_shiny : Utils.notFoundSprite,
+					primary: sprites.front_default
+						? sprites.front_default
+						: appSettings.placeholderImage,
+					secondary: appSettings.placeholderImage,
+					shiny: sprites.front_shiny ? sprites.front_shiny : appSettings.placeholderImage,
 				};
 			return {
 				primary: sprites.front_female,
-				secondary: Utils.notFoundSprite,
+				secondary: appSettings.placeholderImage,
 				shiny: sprites.front_shiny_female,
 			};
 		}
@@ -111,9 +111,9 @@ export default class Utils {
 		if (!shiny) shiny = sprites.front_shiny;
 
 		return {
-			primary: primary ? primary : Utils.notFoundSprite,
-			secondary: secondary ? secondary : Utils.notFoundSprite,
-			shiny: shiny ? shiny : Utils.notFoundSprite,
+			primary: primary ? primary : appSettings.placeholderImage,
+			secondary: secondary ? secondary : appSettings.placeholderImage,
+			shiny: shiny ? shiny : appSettings.placeholderImage,
 		};
 	};
 }

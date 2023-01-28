@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		const newMode = document.body.classList[0];
 		setCookie("theme", newMode);
 	});
+
+	checkAllImages();
 });
 
 const setDarkMode = () => {
@@ -169,4 +171,12 @@ const toggleCardContentVisibility = sender => {
 			else child.removeAttribute("hidden");
 		}
 	});
+};
+
+const checkAllImages = () => {
+	const placeholder = document.getElementById("placeholder").innerHTML;
+	const imgs = document.getElementsByTagName("img");
+	for (let i = 0; i < imgs.length; i++) {
+		imgs[i].onerror = () => (imgs[i].src = placeholder);
+	}
 };

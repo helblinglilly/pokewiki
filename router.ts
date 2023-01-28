@@ -2,7 +2,7 @@ import * as ex from "express";
 import log from "./log";
 import Controller from "./controller";
 import { ErrorMessage } from "./types";
-import { appSettings } from "./api/app";
+import { appSettings, handleServerError } from "./api/app";
 
 class Router {
 	static getSearch = async (req: ex.Request, res: ex.Response) => {
@@ -43,13 +43,14 @@ class Router {
 		try {
 			id = parseInt(req.url.split("/")[2].split("?")[0]);
 			if (!id) throw new Error("No Pokémon ID");
-			if (id < 1 || id > 1008) throw new Error("Invalid Pokémon ID");
+			if (id < 1 || id > appSettings.highestPokedexId)
+				throw new Error("Invalid Pokémon ID");
 		} catch {
 			const err: ErrorMessage = {
 				error: "Invalid Pokémon ID",
 				info: `The Pokémon with the given National Pokédex ID you requested (${
 					id ? id : "None"
-				}) does not exist. Valid IDs range from 1 to 905`,
+				}) does not exist. Valid IDs range from 1 to ${appSettings.highestPokedexId}`,
 			};
 			res.status(400).render("./error", { ...err });
 			return;
@@ -71,10 +72,14 @@ class Router {
 				return;
 			}
 		}
-		const controller = new Controller("en", "de");
-		const details = await controller.getPokemonDetail(id, variety, game);
-		const options = { ...details };
-		res.render("./pokemon", { ...options, ...appSettings });
+		try {
+			const controller = new Controller("en", "de");
+			const details = await controller.getPokemonDetail(id, variety, game);
+			const options = { ...details };
+			res.render("./pokemon", { ...options, ...appSettings });
+		} catch (err: any) {
+			handleServerError(req, { error: "Internal Server Error", info: err }, res);
+		}
 	};
 
 	static getMove = async (req: ex.Request, res: ex.Response) => {

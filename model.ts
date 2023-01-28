@@ -50,8 +50,6 @@ export class Data {
 	searchResults = 10;
 	cacheDir = "./cache";
 	api = "https://pokeapi.co/api/v2";
-	notFoundSprite =
-		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
 
 	getPokemon = async (id: number): Promise<APIResponsePokemon> => {
 		const cachedData = cache.pokemon.find(a => a.id === id);
@@ -157,7 +155,7 @@ export class Data {
 		if (name === "physical") return "/static/assets/attack-types/physical.png";
 		if (name === "special") return "/static/assets/attack-types/special.png";
 		if (name === "status") return "/static/assets/attack-types/status.png";
-		return this.notFoundSprite;
+		return "";
 	};
 
 	typeSprite = (name: string): string => {
@@ -197,7 +195,7 @@ export class Data {
 			return "/static/assets/attack-types/dark.webp";
 		else if (name === "fee" || name === "fairy")
 			return "/static/assets/attack-types/fairy.webp";
-		return this.notFoundSprite;
+		return "";
 	};
 
 	findPokemonNameFromId = (id: number): PokemonName | undefined => {
@@ -371,9 +369,13 @@ export class Data {
 			| Promise<APIResponsePokemon>
 		> = [];
 
-		const evolutionURL = speciesData.evolution_chain.url.split("/");
-		const evolutionId = evolutionURL[evolutionURL.length - 2];
-		promises.push(this.getEvolutionChain(parseInt(evolutionId)));
+		let hasEvolutionChain = false;
+		if (speciesData.evolution_chain) {
+			const evolutionURL = speciesData.evolution_chain?.url.split("/");
+			const evolutionId = evolutionURL[evolutionURL.length - 2];
+			promises.push(this.getEvolutionChain(parseInt(evolutionId)));
+			hasEvolutionChain = true;
+		}
 
 		let abilityCount = 0;
 		pokemonData.abilities.forEach(ability => {
@@ -400,7 +402,11 @@ export class Data {
 		});
 
 		const results = await Promise.all(promises);
-		const evolution = results.splice(0, 1)[0] as APIResponseEvolution;
+
+		let evolution: APIResponseEvolution | undefined = undefined;
+		if (hasEvolutionChain) {
+			evolution = results.splice(0, 1)[0] as APIResponseEvolution;
+		}
 		const abilities = results.splice(0, abilityCount) as APIResponseAbility[];
 		const forms = results.splice(0, formCount) as APIResponseForm[];
 		const varieties = results.splice(0, varietyCount) as APIResponsePokemon[];

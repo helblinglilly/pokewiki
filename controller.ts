@@ -14,15 +14,13 @@ import {
 	VersionGroup,
 	GenericSprites,
 } from "./types";
+import { appSettings } from "./api/app";
 
 const data = new Data();
 
 class Controller {
 	primaryLanguageCode: string;
 	secondaryLanguageCode: string;
-
-	static notFoundSprite =
-		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
 
 	constructor(primLang: string, secLang: string) {
 		this.primaryLanguageCode = primLang;
@@ -77,7 +75,7 @@ class Controller {
 			const lookupType = Types.find(a => a.english_id === pokeType.type.name);
 			types.push({
 				name: lookupType ? lookupType.english : "?",
-				sprite: lookupType ? lookupType.sprite : Controller.notFoundSprite,
+				sprite: lookupType ? lookupType.sprite : appSettings.placeholderImage,
 			});
 		});
 
@@ -239,7 +237,9 @@ class Controller {
 		}
 
 		// Evolution
-		const evolutions: Evolution[] = Controller.getEvolutions(evolutionData);
+		let evolutions: Evolution[] = [];
+		if (evolutionData) evolutions = Controller.getEvolutions(evolutionData);
+
 		if (id === 234 || id === 899) {
 			// Stantler to Wyredeer in Legends
 			evolutions.push({

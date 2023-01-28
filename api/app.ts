@@ -1,5 +1,6 @@
 import express from "express";
 import Router from "../router";
+import { ErrorMessage } from "../types";
 import fs from "fs";
 import log from "../log";
 
@@ -45,6 +46,9 @@ const buildInfo =
 export const appSettings = {
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
+	highestPokedexId: 1008,
+	placeholderImage:
+		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png",
 };
 
 app.use(express.json());
@@ -54,6 +58,14 @@ app.use((req, res, next) => {
 	log.info(`${req.ip} requesting ${req.url}`);
 	next();
 });
+
+export const handleServerError = (req: any, details: ErrorMessage, res: any) => {
+	log.error(details.error, details.info, req);
+	res.status(500).render("error", {
+		error: details.error,
+		info: "Details about your request have been logged.",
+	});
+};
 
 app.get("/", (req, res, next) => {
 	res.render("./index", { ...appSettings });
@@ -67,7 +79,11 @@ app.all("/", (req, res) => {
 });
 
 app.get("/search", (req, res, next) => {
-	Router.getSearch(req, res);
+	try {
+		Router.getSearch(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
 app.all("/search", (req, res) => {
 	res.status(405).render("error", {
@@ -77,8 +93,13 @@ app.all("/search", (req, res) => {
 });
 
 app.get("/pokemon/*", (req, res, next) => {
-	Router.getPokemon(req, res);
+	try {
+		Router.getPokemon(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
+
 app.all("/pokemon/*", (req, res) => {
 	res.status(405).render("error", {
 		error: "Method not allowed",
@@ -87,7 +108,11 @@ app.all("/pokemon/*", (req, res) => {
 });
 
 app.get("/item/*", (req, res, next) => {
-	Router.getItem(req, res);
+	try {
+		Router.getItem(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
 app.all("/item/*", (req, res) => {
 	res.status(405).render("error", {
@@ -97,7 +122,11 @@ app.all("/item/*", (req, res) => {
 });
 
 app.get("/move/*", (req, res, next) => {
-	Router.getMove(req, res);
+	try {
+		Router.getMove(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
 app.all("/move/*", (req, res) => {
 	res.status(405).render("error", {
@@ -107,8 +136,13 @@ app.all("/move/*", (req, res) => {
 });
 
 app.get("/ability/*", (req, res, next) => {
-	Router.getAbility(req, res);
+	try {
+		Router.getAbility(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
+
 app.all("/ability/*", (req, res) => {
 	res.status(405).render("error", {
 		error: "Method not allowed",

@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+	const selectedMode = getCookie("theme");
+	if (selectedMode === "dark-mode") setDarkMode();
+	else setLightMode();
+
 	populateSearchFilters();
 
 	if (isMobile) {
@@ -18,8 +22,22 @@ document.addEventListener("DOMContentLoaded", () => {
 	document.getElementById("themeToggle").addEventListener("click", () => {
 		document.body.classList.toggle("dark-mode");
 		document.body.classList.toggle("light-mode");
+		const newMode = document.body.classList[0];
+		setCookie("theme", newMode);
 	});
 });
+
+const setDarkMode = () => {
+	document.body.classList.add("dark-mode");
+	document.body.classList.remove("light-mode");
+	document.body.setAttribute("style", "display: flex;");
+};
+
+const setLightMode = () => {
+	document.body.classList.add("light-mode");
+	document.body.classList.remove("dark-mode");
+	document.body.setAttribute("style", "display: flex;");
+};
 
 const hideNotice = () => {
 	document.getElementById("notice").setAttribute("hidden", "");

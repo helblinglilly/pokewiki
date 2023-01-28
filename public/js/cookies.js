@@ -39,5 +39,5 @@ const setCookie = (name, value) => {
 	const expires = new Date();
 	expires.setDate(expires.getDate() + 90);
 
-	document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=None; Secure`;
+	document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/;`;
 };

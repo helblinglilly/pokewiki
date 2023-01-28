@@ -1,4 +1,4 @@
-.light-mode {
+body {
 	--primary: rgb(250, 250, 250);
 	--secondary: rgb(24, 24, 24);
 	--accent: rgb(255, 255, 255);
@@ -6,6 +6,7 @@
 	--linkhover: rgb(240, 240, 240);
 	--navbar: rgb(255, 255, 255);
 	--darktext: rgb(24, 24, 24);
+	display: none;
 	background-color: var(--primary);
 	color: var(--secondary);
 }

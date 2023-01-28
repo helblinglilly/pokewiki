@@ -61,9 +61,10 @@ app.use((req, res, next) => {
 
 export const handleServerError = (req: any, details: ErrorMessage, res: any) => {
 	log.error(details.error, details.info, req);
-	res.status(500).render("error", {
+	res.status(500).render("./error", {
 		error: details.error,
 		info: "Details about your request have been logged.",
+		...appSettings,
 	});
 };
 

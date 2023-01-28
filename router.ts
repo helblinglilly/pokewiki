@@ -52,7 +52,7 @@ class Router {
 					id ? id : "None"
 				}) does not exist. Valid IDs range from 1 to ${appSettings.highestPokedexId}`,
 			};
-			res.status(400).render("./error", { ...err });
+			res.status(400).render("./error", { ...err, ...appSettings });
 			return;
 		}
 
@@ -68,7 +68,7 @@ class Router {
 					error: "Invalid query type",
 					info: `You requested a variety of a Pokémon that does not exist. Varieties are not sequential, so please don't modify them as only the UI will lead you to a predictable path.`,
 				};
-				res.status(400).render("./error", { ...err });
+				res.status(400).render("./error", { ...err, ...appSettings });
 				return;
 			}
 		}
@@ -87,7 +87,7 @@ class Router {
 			error: "Not implemented",
 			info: `The page you are trying to view has not been built yet.`,
 		};
-		res.status(501).render("./error", { ...err });
+		res.status(501).render("./error", { ...err, ...appSettings });
 	};
 
 	static getItem = async (req: ex.Request, res: ex.Response) => {
@@ -95,7 +95,7 @@ class Router {
 			error: "Not implemented",
 			info: `The page you are trying to view has not been built yet.`,
 		};
-		res.status(501).render("./error", { ...err });
+		res.status(501).render("./error", { ...err, ...appSettings });
 	};
 
 	static getAbility = async (req: ex.Request, res: ex.Response) => {
@@ -103,7 +103,7 @@ class Router {
 			error: "Not implemented",
 			info: `The page you are trying to view has not been built yet.`,
 		};
-		res.status(501).render("./error", { ...err });
+		res.status(501).render("./error", { ...err, ...appSettings });
 	};
 }
 

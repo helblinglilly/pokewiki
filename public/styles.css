@@ -167,6 +167,11 @@ img.pokemonSprite {
 	cursor: pointer;
 }
 
+table#statsTable * {
+	padding-left: 0;
+	padding-right: 0;
+}
+
 @media screen and (max-width: 768px) {
 	.otherEntry {
 		max-width: 150px !important;

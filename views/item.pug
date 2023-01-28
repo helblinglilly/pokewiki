@@ -8,7 +8,7 @@ block append body
 					.card-content.otherEntryContent.is-flex(
 						onclick=`location.href='/item/${id-1}' + window.location.search`
 					)
-						img.mr-2.otherSprite(src=`${previousItemSprite}`)
+						img.mr-2.itemSprite.is-square(src=`${previousItemSprite}`)
 						p(style="margin: auto") #{ previousItemName }
 		.column.is-1
 		.column.is-two-fifth
@@ -19,7 +19,7 @@ block append body
 						style="display: flex"
 					)
 						p(style="margin: auto; text-align: end") #{ nextItemName }
-						img.ml-2.otherSprite(src=`${nextItemSprite}`) 
+						img.ml-2.itemSprite.is-square(src=`${nextItemSprite}`) 
 	.columns
 		//- Overview
 		.column.is-flex

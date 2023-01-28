@@ -63,6 +63,11 @@ label {
 	color: var(--secondary);
 }
 
+.itemSprite {
+	width: 50px;
+	height: 50px;
+}
+
 a,
 p,
 p.title,
@@ -146,6 +151,20 @@ td,
 
 .otherEntryContent:hover {
 	background-color: var(--linkhover);
+}
+
+img.typeSprite {
+	width: 55px;
+	height: 20px;
+}
+
+img.pokemonSprite {
+	height: auto;
+	width: 100%;
+}
+
+.link {
+	cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {

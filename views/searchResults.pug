@@ -48,16 +48,8 @@ block append body
 				.card.mb-3(onclick=`location.href='${move.link}' + window.location.search`)
 					.card-content.searchResult(style="align-items: center")
 						.container.mr-3(style="display: inline-grid")
-							img.icon.mb-1(
-								src=`${move.type_sprite}`,
-								alt="Type Icon",
-								style="width: 50px; height: 20px"
-							)
-							img.icon(
-								src=`${move.attack_type_sprite}`,
-								style="width: 50px; height: 20px",
-								alt="Move type Icon"
-							)
+							img.icon.mb-1.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
+							img.icon.typeSprite(src=`${move.attack_type_sprite}`, alt="Move type Icon")
 						if move.german === move.english
 							a.card-text #{ move.german }
 						else

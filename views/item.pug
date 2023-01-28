@@ -5,25 +5,21 @@ block append body
 		.column.is-two-fifth
 			if (id - 1 > 0)
 				.card.otherEntry.is-pulled-left(style="min-width: 45%")
-					.card-content.otherEntryContent(
-						onclick=`location.href='/item/${id-1}' + window.location.search`,
-						style="display: flex"
+					.card-content.otherEntryContent.is-flex(
+						onclick=`location.href='/item/${id-1}' + window.location.search`
 					)
-						img.mr-2.otherSprite(
-							src=`${previousItemSprite}`,
-							style="width: 50px; height: 50px"
-						)
+						img.mr-2.otherSprite(src=`${previousItemSprite}`)
 						p(style="margin: auto") #{ previousItemName }
 		.column.is-1
 		.column.is-two-fifth
 			if (id + 1 < highestItemId)
-				.card.otherEntry.is-pulled-right(style="min-width: 45%")
+				.card.otherEntry.is-pulled-right.itemNavigator(style="min-width: 45%")
 					.card-content.otherEntryContent(
 						onclick=`location.href='/item/${id+1}' + window.location.search`,
 						style="display: flex"
 					)
 						p(style="margin: auto; text-align: end") #{ nextItemName }
-						img.ml-2.otherSprite(src=`${nextItemSprite}`, style="width: 50px; height: 50px") 
+						img.ml-2.otherSprite(src=`${nextItemSprite}`) 
 	.columns
 		//- Overview
 		.column.is-flex
@@ -54,9 +50,8 @@ block append body
 								p.pt-2 #{ primaryLangEntry.entry }
 					if secondaryLangEntry.entry
 						if secondaryLangEntry.clickable.state
-							.box.accented(
-								onclick=`location.href='${secondaryLangEntry.clickable.url}' + window.location.search`,
-								style="cursor: pointer"
+							.box.accented.link(
+								onclick=`location.href='${secondaryLangEntry.clickable.url}' + window.location.search`
 							)
 								if secondaryLangEntry.game
 									p.is-capitalized.has-text-weight-bold #{ secondaryLangEntry.game }
@@ -70,9 +65,8 @@ block append body
 		//- Attributes
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.is-justify-content-space-between.collapsable(
-					onclick="toggleCardContentVisibility(this);",
-					style="cursor: pointer"
+				.card-header-title.is-justify-content-space-between.collapsable.link(
+					onclick="toggleCardContentVisibility(this);"
 				)
 					p Attributes
 				.card-content

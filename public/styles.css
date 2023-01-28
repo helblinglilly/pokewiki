@@ -1,4 +1,4 @@
-:root {
+.light-mode {
 	--primary: rgb(250, 250, 250);
 	--secondary: rgb(24, 24, 24);
 	--accent: rgb(255, 255, 255);
@@ -6,7 +6,6 @@
 	--linkhover: rgb(240, 240, 240);
 	--navbar: rgb(255, 255, 255);
 	--darktext: rgb(24, 24, 24);
-
 	background-color: var(--primary);
 	color: var(--secondary);
 }
@@ -18,14 +17,41 @@
 	--linkcolor: #ccd5ff;
 	--linkhover: rgb(110, 110, 110);
 	--navbar: rgb(0, 0, 0);
+	background-color: var(--primary);
+	color: var(--secondary);
 }
 
 html,
 body,
 div.modal-card-body,
-footer.modal-card-foot {
+footer.modal-card-foot,
+div.bodyWrapper,
+footer.flex-child {
 	background-color: var(--primary);
 	color: var(--secondary);
+}
+
+html {
+	height: 100%;
+	background-color: var(--primary);
+	color: var(--secondary);
+}
+body {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+}
+.flex {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+.flex-child {
+	width: 100%;
+	flex: 9;
 }
 
 nav.navbar {
@@ -73,8 +99,13 @@ input,
 	background-color: var(--accent);
 }
 
+a.showAsLink {
+	color: var(--linkcolor);
+}
+
+a:hover,
 a.card-text:hover {
-	background-color: var(--linkcolor);
+	background-color: var(--linkhover);
 }
 
 div.searchResult {
@@ -105,10 +136,6 @@ td,
 	color: var(--secondary);
 	background-color: var(--accent);
 }
-
-/* progress.progress {
-	color: var(--accent);
-} */
 
 @media screen and (max-width: 768px) {
 	.otherEntry {

@@ -46,10 +46,9 @@ const hideNotice = () => {
 };
 
 const submitSearch = () => {
-	const urlNoParams = document.URL.split("?")[0];
-	const queryParams = document.URL.split("?")[1];
-	const targetRoute = urlNoParams.split("/")[urlNoParams.split("/").length - 2];
-	const currentlySelectedId = urlNoParams.split("/")[urlNoParams.split("/").length - 1];
+	const host = window.location.protocol + "//" + window.location.host;
+	const urlNoParams = document.URL.split(host)[1].split("?")[0];
+	const queryParams = document.URL.split(host)[1].split("?")[1];
 
 	if (queryParams) {
 		const params = queryParams.split("&");
@@ -85,7 +84,7 @@ const submitSearch = () => {
 		if (!changedParams.includes(false)) {
 			const search = document.getElementById("search");
 			// If all you changed is the Game, then stay on the current page
-			search.action = `/${targetRoute}/${currentlySelectedId}`;
+			search.action = `${urlNoParams}`;
 		}
 	}
 

@@ -12,19 +12,20 @@ block append body
 	//- Navigator
 	.columns.is-mobile
 		.column.is-one-third
-			.card.otherEntry
-				.card-content.otherEntryContent(
-					onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`
-				)
-					p.otherNumber ##{ id - 1 }
-					if (id - 1) > 905
-						img.otherSprite(
-							src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
-						)
-					else
-						img.otherSprite(
-							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
-						)
+			if (id-1 > 0)
+				.card.otherEntry
+					.card-content.otherEntryContent(
+						onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`
+					)
+						p.otherNumber ##{ id - 1 }
+						if (id - 1) > 905
+							img.otherSprite(
+								src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
+							)
+						else
+							img.otherSprite(
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
+							)
 		.column.has-text-centered(style="display: inline-flex")
 			p.title.is-4(style="margin: auto") ##{ id }
 		.column.is-one-third

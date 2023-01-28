@@ -73,6 +73,24 @@ app.get("/", (req, res, next) => {
 	res.render("./index", { ...appSettings });
 });
 
+app.options("/*", (req, res) => {
+	const allowedURLs = [
+		"https://pokemon.helbling.uk",
+		"https://www.pokemon.helbling.uk",
+		"https://dev.pokemon.helbling.uk",
+		"https://www.dev.pokemon.helbling.uk",
+	];
+
+	if (allowedURLs.includes(req.headers.origin ? req.headers.origin : "no")) {
+		res.set("Access-Control-Allow-Origin", req.headers.origin);
+		res.set("Vary", "Origin");
+		res.sendStatus(200);
+		return;
+	}
+	console.log("Blocked CORS request from", req.headers.origin);
+	res.sendStatus(401);
+});
+
 app.all("/", (req, res) => {
 	res.status(405).render("error", {
 		error: "Method not allowed",

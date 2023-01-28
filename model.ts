@@ -3,6 +3,7 @@ import {
 	APIResponseAbility,
 	APIResponseEvolution,
 	APIResponseForm,
+	APIResponseItem,
 	APIResponsePokemon,
 	APIResponseSpecies,
 	GenericEntry,
@@ -36,6 +37,10 @@ interface Cache {
 		id: number;
 		data: APIResponseAbility;
 	}[];
+	items: {
+		id: number;
+		data: APIResponseItem;
+	}[];
 }
 
 const cache: Cache = {
@@ -44,6 +49,7 @@ const cache: Cache = {
 	pokemon_forms: [],
 	evolution_chain: [],
 	abilities: [],
+	items: [],
 };
 
 export class Data {
@@ -148,6 +154,25 @@ export class Data {
 			data: data.data,
 		});
 		log.info(`Cache - MISS - Ability ${id}`);
+		return data.data;
+	};
+
+	getItem = async (id: number): Promise<APIResponseItem> => {
+		const cachedData = cache.items.find(a => a.id === id);
+		if (cachedData) {
+			log.info(`Cache - HIT - Item ${id}`);
+			return cachedData.data;
+		}
+
+		const data = await axios.get(`${this.api}/item/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.items.push({
+			id: id,
+			data: data.data,
+		});
+		log.info(`Cache - MISS - Item ${id}`);
 		return data.data;
 	};
 

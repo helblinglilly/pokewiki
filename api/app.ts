@@ -47,6 +47,7 @@ export const appSettings = {
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
 	highestPokedexId: 1008,
+	highestItemId: 1658,
 	placeholderImage:
 		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png",
 };

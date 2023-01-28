@@ -91,11 +91,33 @@ class Router {
 	};
 
 	static getItem = async (req: ex.Request, res: ex.Response) => {
-		const err: ErrorMessage = {
-			error: "Not implemented",
-			info: `The page you are trying to view has not been built yet.`,
-		};
-		res.status(501).render("./error", { ...err, ...appSettings });
+		let id = -1;
+		try {
+			id = parseInt(req.url.split("/")[2].split("?")[0]);
+			if (!id) throw new Error("No Item ID");
+			if (id < 1 || id > appSettings.highestItemId) throw new Error("Invalid Item ID");
+		} catch {
+			const err: ErrorMessage = {
+				error: "Invalid Item ID",
+				info: `The Item with the given ID you requested (${
+					id ? id : "None"
+				}) does not exist. Valid IDs range from 1 to ${appSettings.highestItemId}`,
+			};
+			res.status(400).render("./error", { ...err, ...appSettings });
+			return;
+		}
+
+		let game = "";
+		if (typeof req.query.game === "string") game = req.query.game;
+
+		try {
+			const controller = new Controller("en", "de");
+			const details = await controller.getItem(id, game);
+			const options = { ...details };
+			res.render("./item", { ...options, ...appSettings });
+		} catch (err: any) {
+			handleServerError(req, { error: "Internal Server Error", info: err }, res);
+		}
 	};
 
 	static getAbility = async (req: ex.Request, res: ex.Response) => {

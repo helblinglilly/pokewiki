@@ -340,6 +340,12 @@ class Controller {
 		};
 	};
 
+	getItem = async (id: number, game?: string) => {
+		const itemData = await data.getItem(id);
+		console.log(itemData);
+		return {};
+	};
+
 	// TODO should not make this static so that custom languages can be supported
 	static getSearchResults = async (
 		searchTerm: string,

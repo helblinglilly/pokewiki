@@ -259,6 +259,36 @@ export interface APIResponseForm {
 	sprites: SpriteForm;
 }
 
+export interface APIResponseItem {
+	name: string;
+	id: number;
+	cost: number;
+	names: {
+		language: {
+			name: string;
+		};
+		name: string;
+	}[];
+	effect_entries: {
+		short_effect: string;
+		language: {
+			name: string;
+		};
+	}[];
+	flavor_text_entries: {
+		flavor_text: string;
+		language: {
+			name: string;
+		};
+		version: {
+			name: string;
+		};
+	}[];
+	sprites: {
+		default: string;
+	};
+}
+
 export interface SpriteForm {
 	front_default: string;
 	front_shiny: string;

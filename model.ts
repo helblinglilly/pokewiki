@@ -224,7 +224,7 @@ export class Data {
 
 		const results: PokemonName[] = [];
 		Pokemon.forEach(a => {
-			if (results.length === this.searchResults - 1) {
+			if (results.length === this.searchResults) {
 				return;
 			}
 			let german = a.german.toLocaleLowerCase();
@@ -258,7 +258,7 @@ export class Data {
 
 		const results: GenericEntry[] = [];
 		Items.forEach(a => {
-			if (results.length === this.searchResults - 1) {
+			if (results.length === this.searchResults) {
 				return;
 			}
 
@@ -293,7 +293,7 @@ export class Data {
 
 		const results: GenericEntry[] = [];
 		Abilities.forEach(a => {
-			if (results.length === this.searchResults - 1) {
+			if (results.length === this.searchResults) {
 				return;
 			}
 
@@ -327,7 +327,7 @@ export class Data {
 
 		const results: MoveEntry[] = [];
 		Moves.forEach(a => {
-			if (results.length === this.searchResults - 1) {
+			if (results.length === this.searchResults) {
 				return;
 			}
 

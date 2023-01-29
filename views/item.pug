@@ -4,22 +4,28 @@ block append body
 	.columns.is-mobile
 		.column.is-two-fifth
 			if (id - 1 > 0)
-				.card.otherEntry.is-pulled-left(style="min-width: 45%")
+				.card.otherEntry.is-pulled-left(style="min-width: 70%")
 					.card-content.otherEntryContent.is-flex(
 						onclick=`location.href='/item/${id-1}' + window.location.search`
 					)
-						img.mr-2.itemSprite.is-square(src=`${previousItemSprite}`)
-						p(style="margin: auto") #{ previousItemName }
+						#itemNavPrev.columns
+							.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")
+								img.itemSprite.is-square(src=`${previousItemSprite}`)
+							.column.is-three-quarter
+								p(style="word-wrap: anywhere; width: 100%") #{ previousItemName }
 		.column.is-1
 		.column.is-two-fifth
 			if (id + 1 < highestItemId)
-				.card.otherEntry.is-pulled-right.itemNavigator(style="min-width: 45%")
-					.card-content.otherEntryContent(
-						onclick=`location.href='/item/${id+1}' + window.location.search`,
-						style="display: flex"
-					)
-						p(style="margin: auto; text-align: end") #{ nextItemName }
-						img.ml-2.itemSprite.is-square(src=`${nextItemSprite}`) 
+			.card.otherEntry.is-pulled-right(style="min-width: 70%")
+				.card-content.otherEntryContent.is-flex(
+					onclick=`location.href='/item/${id+1}' + window.location.search`
+				)
+					#itemNavPrev.columns
+						.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")
+							img.itemSprite.is-square(src=`${nextItemSprite}`)
+						.column.is-three-quarter
+							p(style="word-wrap: anywhere; width: 100%") #{ nextItemName }
+
 	.columns
 		//- Overview
 		.column.is-flex

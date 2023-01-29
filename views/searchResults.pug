@@ -36,10 +36,10 @@ block append body
 							alt="Item Icon",
 							onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'"
 						)
-						if item.german === item.english
-							a.card-text #{ item.german }
+						if item.english === item.german
+							a.card-text #{ item.english }
 						else
-							a.card-text #{ item.german } - #{ item.english }
+							a.card-text #{ item.english } - #{ item.german }
 
 	if results.Moves.length !== 0
 		p.title.is-4 Moves
@@ -50,10 +50,10 @@ block append body
 						.container.mr-3(style="display: inline-grid")
 							img.icon.mb-1.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
 							img.icon.typeSprite(src=`${move.attack_type_sprite}`, alt="Move type Icon")
-						if move.german === move.english
-							a.card-text #{ move.german }
+						if move.english === move.german
+							a.card-text #{ move.english }
 						else
-							a.card-text #{ move.german } - #{ move.english }
+							a.card-text #{ move.english } - #{ move.german }
 
 	if results.Abilities.length !== 0
 		p.title.is-4 Abilities
@@ -61,7 +61,7 @@ block append body
 			each ability in results.Abilities
 				.card.mb-3(onclick=`location.href='${ability.link}' + window.location.search`)
 					.card-content.searchResult
-						if ability.german === ability.english
-							a.card-text #{ ability.german }
+						if ability.english === ability.german
+							a.card-text #{ ability.english }
 						else
-							a.card-text #{ ability.german } - #{ ability.english }
+							a.card-text #{ ability.english } - #{ ability.german }

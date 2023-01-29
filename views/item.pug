@@ -2,9 +2,9 @@ extends ./header.pug
 
 block append body
 	.columns.is-mobile
-		.column.is-two-fifth
+		.column.is-half.is-flex
 			if (id - 1 > 0)
-				.card.otherEntry.is-pulled-left(style="min-width: 70%")
+				.card.otherEntry.is-pulled-left(style="min-width: 60%")
 					.card-content.otherEntryContent.is-flex(
 						onclick=`location.href='/item/${id-1}' + window.location.search`
 					)
@@ -13,10 +13,10 @@ block append body
 								img.itemSprite.is-square(src=`${previousItemSprite}`)
 							.column.is-three-quarter
 								p(style="word-wrap: anywhere; width: 100%") #{ previousItemName }
-		.column.is-1
-		.column.is-two-fifth
+		//- .column.is-1
+		.column.is-half.is-flex(style="justify-content: end")
 			if (id + 1 < highestItemId)
-			.card.otherEntry.is-pulled-right(style="min-width: 70%")
+			.card.otherEntry.is-pulled-right(style="min-width: 60%")
 				.card-content.otherEntryContent.is-flex(
 					onclick=`location.href='/item/${id+1}' + window.location.search`,
 					style="justify-content: end"

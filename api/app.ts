@@ -1,5 +1,6 @@
 import express from "express";
 import Router from "../router";
+import { ErrorMessage } from "../types";
 import fs from "fs";
 import log from "../log";
 
@@ -10,10 +11,6 @@ export let host = "https://pokemon.helbling.uk";
 if (process.env.NODE_ENV !== "production") {
 	port = 3000;
 	host = "http://127.0.0.1";
-}
-// Settings for when app is deployed in non-production environment
-if (process.env.PUBLIC_VERCEL_ENV !== "production") {
-	log.setDefaultLevel("DEBUG");
 }
 
 const app = express();
@@ -30,7 +27,6 @@ if (selfFileExtension === "js" && process.env.NODE_ENV !== "production") {
 	app.set("views", `${__dirname}/../views`);
 }
 
-log.debug("VERCEL_ENV", process.env.VERCEL_ENV);
 const buildType =
 	process.env.NODE_ENV === "production"
 		? process.env.VERCEL_ENV === "production"
@@ -43,9 +39,17 @@ const buildInfo =
 		? fs.statSync(`./api/app.${selfFileExtension}`).ctime.toISOString().split("T")[0]
 		: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 6);
 
+if (buildType == "Build") {
+	log.setDefaultLevel("WARN");
+}
+
 export const appSettings = {
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
+	highestPokedexId: 1008,
+	highestItemId: 1658,
+	placeholderImage:
+		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png",
 };
 
 app.use(express.json());
@@ -56,8 +60,36 @@ app.use((req, res, next) => {
 	next();
 });
 
+export const handleServerError = (req: any, details: ErrorMessage, res: any) => {
+	log.error(details.error, details.info, req);
+	res.status(500).render("./error", {
+		error: details.error,
+		info: "Details about your request have been logged.",
+		...appSettings,
+	});
+};
+
 app.get("/", (req, res, next) => {
 	res.render("./index", { ...appSettings });
+});
+
+app.options("/*", (req, res) => {
+	const allowedURLs = [
+		"https://pokemon.helbling.uk",
+		"https://www.pokemon.helbling.uk",
+		"https://dev.pokemon.helbling.uk",
+		"https://www.dev.pokemon.helbling.uk",
+	];
+
+	if (allowedURLs.includes(req.headers.origin ? req.headers.origin : "no")) {
+		res.set("Access-Control-Allow-Origin", req.headers.origin);
+		res.set("Vary", "Origin");
+		log.debug("Allowed CORS request from", req.headers.origin);
+		res.sendStatus(200);
+		return;
+	}
+	log.debug("Blocked CORS request from", req.headers.origin);
+	res.sendStatus(401);
 });
 
 app.all("/", (req, res) => {
@@ -68,7 +100,11 @@ app.all("/", (req, res) => {
 });
 
 app.get("/search", (req, res, next) => {
-	Router.getSearch(req, res);
+	try {
+		Router.getSearch(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
 app.all("/search", (req, res) => {
 	res.status(405).render("error", {
@@ -78,8 +114,13 @@ app.all("/search", (req, res) => {
 });
 
 app.get("/pokemon/*", (req, res, next) => {
-	Router.getPokemon(req, res);
+	try {
+		Router.getPokemon(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
+
 app.all("/pokemon/*", (req, res) => {
 	res.status(405).render("error", {
 		error: "Method not allowed",
@@ -88,7 +129,11 @@ app.all("/pokemon/*", (req, res) => {
 });
 
 app.get("/item/*", (req, res, next) => {
-	Router.getItem(req, res);
+	try {
+		Router.getItem(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
 app.all("/item/*", (req, res) => {
 	res.status(405).render("error", {
@@ -98,7 +143,11 @@ app.all("/item/*", (req, res) => {
 });
 
 app.get("/move/*", (req, res, next) => {
-	Router.getMove(req, res);
+	try {
+		Router.getMove(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
 app.all("/move/*", (req, res) => {
 	res.status(405).render("error", {
@@ -108,8 +157,13 @@ app.all("/move/*", (req, res) => {
 });
 
 app.get("/ability/*", (req, res, next) => {
-	Router.getAbility(req, res);
+	try {
+		Router.getAbility(req, res);
+	} catch (err: any) {
+		handleServerError(req, { error: "Internal Server Error", info: err }, res);
+	}
 });
+
 app.all("/ability/*", (req, res) => {
 	res.status(405).render("error", {
 		error: "Method not allowed",

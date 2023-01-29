@@ -1,0 +1,107 @@
+extends ./header.pug
+
+block append body
+	.columns.is-mobile
+		.column.is-two-fifth
+			if (id - 1 > 0)
+				.card.otherEntry.is-pulled-left(style="min-width: 45%")
+					.card-content.otherEntryContent.is-flex(
+						onclick=`location.href='/item/${id-1}' + window.location.search`
+					)
+						img.mr-2.itemSprite.is-square(src=`${previousItemSprite}`)
+						p(style="margin: auto") #{ previousItemName }
+		.column.is-1
+		.column.is-two-fifth
+			if (id + 1 < highestItemId)
+				.card.otherEntry.is-pulled-right.itemNavigator(style="min-width: 45%")
+					.card-content.otherEntryContent(
+						onclick=`location.href='/item/${id+1}' + window.location.search`,
+						style="display: flex"
+					)
+						p(style="margin: auto; text-align: end") #{ nextItemName }
+						img.ml-2.itemSprite.is-square(src=`${nextItemSprite}`) 
+	.columns
+		//- Overview
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.is-justify-content-space-between
+					if (primaryName === secondaryName)
+						p #{ primaryName }
+					else
+						p #{ primaryName } - #{ secondaryName }
+				.card-content
+					.columns.is-mobile
+						.column.has-text-centered.is-one-half
+							img(src=`${itemSprite}`, style="height: 50px; width: 50px") 
+						.column.has-text-centered(style="margin: auto")
+							p Price: ₽ #{ price }
+					if primaryLangEntry.entry
+						if primaryLangEntry.clickable.state
+							.box.accented(
+								onclick=`location.href='${primaryLangEntry.clickable.url}' + window.location.search`
+							)
+								if primaryLangEntry.game
+									p.is-capitalized.has-text-weight-bold #{ primaryLangEntry.game }
+								p.pt-2 #{ primaryLangEntry.entry }
+						else
+							.box.accented.nohover
+								if primaryLangEntry.game
+									p.is-capitalized.has-text-weight-bold #{ primaryLangEntry.game }
+								p.pt-2 #{ primaryLangEntry.entry }
+					if secondaryLangEntry.entry
+						if secondaryLangEntry.clickable.state
+							.box.accented.link(
+								onclick=`location.href='${secondaryLangEntry.clickable.url}' + window.location.search`
+							)
+								if secondaryLangEntry.game
+									p.is-capitalized.has-text-weight-bold #{ secondaryLangEntry.game }
+								p.pt-2 #{ secondaryLangEntry.entry }
+						else
+							.box.accented.nohover
+								if secondaryLangEntry.game
+									p.is-capitalized.has-text-weight-bold #{ secondaryLangEntry.game }
+								p.pt-2 #{ secondaryLangEntry.entry }
+
+		//- Attributes
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.is-justify-content-space-between.collapsable.link(
+					onclick="toggleCardContentVisibility(this);"
+				)
+					p Attributes
+				.card-content
+					table.table.is-bordered.is-narrow(style="width: 100%")
+						thead
+							tr
+								th Attribute
+								th.has-text-centered Yes
+								th.has-text-centered No
+						tbody
+							tr
+								td Holdable
+								td.has-text-centered #{ holdable ? "✓" : "" }
+								td.has-text-centered #{ holdable ? "" : "✓" }
+							tr
+								td Use in battle
+								td.has-text-centered #{ battle ? "✓" : "" }
+								td.has-text-centered #{ battle ? "" : "✓" }
+							tr
+								td Use in overworld
+								td.has-text-centered #{ overworld ? "✓" : "" }
+								td.has-text-centered #{ overworld ? "" : "✓" }
+							tr
+								td Use in underground
+								td.has-text-centered #{ underground ? "✓" : "" }
+								td.has-text-centered #{ underground ? "" : "✓" }
+							tr
+								td Works passively
+								td.has-text-centered #{ holdablePassive ? "✓" : "" }
+								td.has-text-centered #{ holdablePassive ? "" : "✓" }
+							tr
+								td Works actively
+								td.has-text-centered #{ holdableActive ? "✓" : "" }
+								td.has-text-centered #{ holdableActive ? "" : "✓" }
+							tr
+								td Countable
+								td.has-text-centered #{ countable ? "✓" : "" }
+								td.has-text-centered #{ countable ? "" : "✓" }

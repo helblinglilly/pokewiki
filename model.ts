@@ -3,6 +3,9 @@ import {
 	APIResponseAbility,
 	APIResponseEvolution,
 	APIResponseForm,
+	APIResponseItem,
+	APIResponseMachine,
+	APIResponseMove,
 	APIResponsePokemon,
 	APIResponseSpecies,
 	GenericEntry,
@@ -36,6 +39,18 @@ interface Cache {
 		id: number;
 		data: APIResponseAbility;
 	}[];
+	items: {
+		id: number;
+		data: APIResponseItem;
+	}[];
+	machines: {
+		id: number;
+		data: APIResponseMachine;
+	}[];
+	moves: {
+		id: number;
+		data: APIResponseMove;
+	}[];
 }
 
 const cache: Cache = {
@@ -44,14 +59,15 @@ const cache: Cache = {
 	pokemon_forms: [],
 	evolution_chain: [],
 	abilities: [],
+	items: [],
+	machines: [],
+	moves: [],
 };
 
 export class Data {
 	searchResults = 10;
 	cacheDir = "./cache";
 	api = "https://pokeapi.co/api/v2";
-	notFoundSprite =
-		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
 
 	getPokemon = async (id: number): Promise<APIResponsePokemon> => {
 		const cachedData = cache.pokemon.find(a => a.id === id);
@@ -153,11 +169,68 @@ export class Data {
 		return data.data;
 	};
 
+	getItem = async (id: number): Promise<APIResponseItem> => {
+		const cachedData = cache.items.find(a => a.id === id);
+		if (cachedData) {
+			log.info(`Cache - HIT - Item ${id}`);
+			return cachedData.data;
+		}
+
+		const data = await axios.get(`${this.api}/item/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.items.push({
+			id: id,
+			data: data.data,
+		});
+		log.info(`Cache - MISS - Item ${id}`);
+		return data.data;
+	};
+
+	getMachine = async (id: number): Promise<APIResponseMachine> => {
+		const cachedData = cache.machines.find(a => a.id === id);
+		if (cachedData) {
+			log.info(`Cache - HIT - TM ${id}`);
+			return cachedData.data;
+		}
+
+		const data = await axios.get(`${this.api}/machine/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.machines.push({
+			id: id,
+			data: data.data,
+		});
+		log.info(`Cache - MISS - TM ${id}`);
+		return data.data;
+	};
+
+	getMove = async (id: number): Promise<APIResponseMove> => {
+		const cachedData = cache.moves.find(a => a.id === id);
+		if (cachedData) {
+			log.info(`Cache - HIT - Move ${id}`);
+			return cachedData.data;
+		}
+
+		const data = await axios.get(`${this.api}/move/${id}`, {
+			headers: { "Accept-Encoding": "gzip,deflate,compress" },
+		});
+
+		cache.moves.push({
+			id: id,
+			data: data.data,
+		});
+		log.info(`Cache - MISS - Move ${id}`);
+		return data.data;
+	};
+
 	attackSprite = (name: "physical" | "special" | "status"): string => {
 		if (name === "physical") return "/static/assets/attack-types/physical.png";
 		if (name === "special") return "/static/assets/attack-types/special.png";
 		if (name === "status") return "/static/assets/attack-types/status.png";
-		return this.notFoundSprite;
+		return "";
 	};
 
 	typeSprite = (name: string): string => {
@@ -197,7 +270,7 @@ export class Data {
 			return "/static/assets/attack-types/dark.webp";
 		else if (name === "fee" || name === "fairy")
 			return "/static/assets/attack-types/fairy.webp";
-		return this.notFoundSprite;
+		return "";
 	};
 
 	findPokemonNameFromId = (id: number): PokemonName | undefined => {
@@ -224,7 +297,7 @@ export class Data {
 
 		const results: PokemonName[] = [];
 		Pokemon.forEach(a => {
-			if (results.length === this.searchResults - 1) {
+			if (results.length === this.searchResults) {
 				return;
 			}
 			let german = a.german.toLocaleLowerCase();
@@ -258,7 +331,7 @@ export class Data {
 
 		const results: GenericEntry[] = [];
 		Items.forEach(a => {
-			if (results.length === this.searchResults - 1) {
+			if (results.length === this.searchResults) {
 				return;
 			}
 
@@ -293,7 +366,7 @@ export class Data {
 
 		const results: GenericEntry[] = [];
 		Abilities.forEach(a => {
-			if (results.length === this.searchResults - 1) {
+			if (results.length === this.searchResults) {
 				return;
 			}
 
@@ -327,7 +400,7 @@ export class Data {
 
 		const results: MoveEntry[] = [];
 		Moves.forEach(a => {
-			if (results.length === this.searchResults - 1) {
+			if (results.length === this.searchResults) {
 				return;
 			}
 
@@ -371,9 +444,13 @@ export class Data {
 			| Promise<APIResponsePokemon>
 		> = [];
 
-		const evolutionURL = speciesData.evolution_chain.url.split("/");
-		const evolutionId = evolutionURL[evolutionURL.length - 2];
-		promises.push(this.getEvolutionChain(parseInt(evolutionId)));
+		let hasEvolutionChain = false;
+		if (speciesData.evolution_chain) {
+			const evolutionURL = speciesData.evolution_chain?.url.split("/");
+			const evolutionId = evolutionURL[evolutionURL.length - 2];
+			promises.push(this.getEvolutionChain(parseInt(evolutionId)));
+			hasEvolutionChain = true;
+		}
 
 		let abilityCount = 0;
 		pokemonData.abilities.forEach(ability => {
@@ -400,7 +477,11 @@ export class Data {
 		});
 
 		const results = await Promise.all(promises);
-		const evolution = results.splice(0, 1)[0] as APIResponseEvolution;
+
+		let evolution: APIResponseEvolution | undefined = undefined;
+		if (hasEvolutionChain) {
+			evolution = results.splice(0, 1)[0] as APIResponseEvolution;
+		}
 		const abilities = results.splice(0, abilityCount) as APIResponseAbility[];
 		const forms = results.splice(0, formCount) as APIResponseForm[];
 		const varieties = results.splice(0, varietyCount) as APIResponsePokemon[];

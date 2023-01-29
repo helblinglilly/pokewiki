@@ -1,80 +1,38 @@
 extends ./header.pug
 block append head
 	script(src="/static/js/pokemon.js")
-	style.
-		@media screen and (max-width: 768px) {
-			.otherEntry {
-				max-width: 150px !important;
-				cursor: pointer;
-			}
-			.otherEntryContent {
-				padding: 15px !important;
-			}
-			.otherSprite {
-				max-width: 48px;
-				display: inline;
-				vertical-align: middle;
-			}
-			.otherNumber {
-				display: none;
-			}
-		}
-		@media screen and (min-width: 768px) {
-			.otherEntry {
-				max-width: 150px !important;
-				cursor: pointer;
-			}
-			.otherSprite {
-				height: 40px;
-				display: inline;
-				vertical-align: middle;
-			}
-			.otherNumber {
-				display: inline;
-				vertical-align: middle;
-			}
-		}
-
 block append body
 	if selectedGames.version_group_name === "all"
-		.notification.is-warning.is-light
+		.notification.is-warning
 			p Select a game from the "Options" section to see its Pokédex entry and Moveset.
 	else if moveset.length === 0
-		.notification.is-warning.is-light
+		.notification.is-warning
 			p This Pokémon is not in the game you selected. Moveset and Pokédex entries are hidden.
 
 	//- Navigator
 	.columns.is-mobile
 		.column.is-one-third
-			.card.otherEntry
-				.card-content.otherEntryContent(
-					onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`
-				)
-					p.otherNumber ##{ id - 1 }
-					if (id - 1) > 905
-						img.otherSprite(
-							src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
-						)
-					else
+			if (id-1 > 0)
+				.card.otherEntry.is-pulled-left
+					.card-content.otherEntryContent(
+						onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`
+					)
+						p.otherNumber ##{ id - 1 }
 						img.otherSprite(
 							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
 						)
 		.column.has-text-centered(style="display: inline-flex")
 			p.title.is-4(style="margin: auto") ##{ id }
 		.column.is-one-third
-			.card.otherEntry.is-pulled-right
-				.card-content.otherEntryContent(
-					onclick=`location.href='/pokemon/${id + 1}' + removeVarieties()`
-				)
-					if (id + 1) > 905
-						img.otherSprite(
-							src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png"
-						) 
-					else
+			if (id + 1) <= highestPokedexId
+				.card.otherEntry.is-pulled-right
+					.card-content.otherEntryContent(
+						onclick=`location.href='/pokemon/${id + 1}' + removeVarieties()`
+					)
 						img.otherSprite(
 							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`
 						)
-					p.otherNumber ##{ id + 1 }
+						p.otherNumber ##{ id + 1 }
 
 	//- Sprites and Evolutions
 	.columns
@@ -88,24 +46,21 @@ block append body
 
 					div
 						each pType in types
-							img.pl-2(src=`${pType.sprite}`, style="width: 55px; height: 20px")
+							img.pl-2.typeSprite(src=`${pType.sprite}`)
 				.card-content
 					.columns.mb-0.is-mobile
 						.column
 							.has-text-centered
-								img#sprite-front(src=`${sprites.primary}`, style="height: auto; width: 100%")
+								img#sprite-front.pokemonSprite(src=`${sprites.primary}`)
 								p#primarySupportText.is-italic
 						if sprites.primary !== sprites.secondary
 							.column
 								.has-text-centered
-									img#sprite-back(src=`${sprites.secondary}`, style="height: auto; width: 100%")
+									img#sprite-back.pokemonSprite(src=`${sprites.secondary}`)
 									p#secondarySupportText.is-italic
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable(
-					onclick="toggleCardContentVisibility(this);",
-					style="cursor: pointer"
-				)
+				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
 					p Evolution chain
 				.card-content.pt-1
 					if evolutions.length === 0
@@ -113,9 +68,8 @@ block append body
 					each evolution in evolutions
 						.columns.is-vcentered.is-mobile
 							.column.has-text-centered
-								img(
+								img.link(
 									src=`${evolution.sourceSprite}`,
-									style="cursor: pointer",
 									onclick=`location.href='${evolution.sourceURL}' + removeVarieties()`
 								)
 							.column.has-text-centered
@@ -150,9 +104,8 @@ block append body
 											.container
 												p Use Sweet Apple
 										else
-											.container(
-												onclick=`location.href='${requirement.supplementary}'`,
-												style="cursor: pointer"
+											.container.link(
+												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`
 											)
 												p(style="vertical-align: middle; display: inline") Use
 												img(
@@ -163,10 +116,10 @@ block append body
 									if requirement.type === "hold-item"
 										.container
 											p(style="vertical-align: middle; display: inline") Hold
-											img(
+											img.link(
 												src=`${requirement.info}`,
-												onclick=`location.href='${requirement.supplementary}'`,
-												style="cursor: pointer; vertical-align: middle",
+												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`,
+												style="vertical-align: middle",
 												title=`${requirement.info.split("/")[8].split(".")[0]}`
 											)
 									if requirement.type === "friendship"
@@ -178,7 +131,7 @@ block append body
 									if requirement.type === "daytime"
 										p.is-capitalized #{ requirement.info }
 									if requirement.type === "know_move"
-										p(style="cursor: pointer", onclick=`location.href='${requirement.info}'`) Knows: #{ requirement.supplementary }
+										p.link(onclick=`location.href='${requirement.info}' + removeVarieties()`) Knows: #{ requirement.supplementary }
 									if requirement.type === "know_move_type"
 										p Know move of type: #{ requirement.info }
 									if requirement.type === "affection"
@@ -195,16 +148,14 @@ block append body
 									if requirement.type === "trade_for"
 										.div(style="display: inline")
 											p Trade for
-											p(
-												style="cursor: pointer",
-												onclick=`location.href='${requirement.supplementary}'`
+											p.link(
+												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`
 											) #{ requirement.info }
 									if requirement.type === "party_have"
 										.div(style="display: inline")
 											p Party has
-											p(
-												style="cursor: pointer",
-												onclick=`location.href='${requirement.supplementary}'`
+											p.link(
+												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`
 											) #{ requirement.info }
 									if requirement.type === "party_type"
 										p #{ requirement.info }
@@ -215,9 +166,8 @@ block append body
 										p#moreInfo(hidden) #{ requirement.info }
 
 							.column.has-text-centered
-								img(
+								img.link(
 									src=`${evolution.targetSprite}`,
-									style="cursor: pointer",
 									onclick=`location.href='${evolution.targetURL}' + removeVarieties()`
 								)
 
@@ -225,27 +175,18 @@ block append body
 	.columns
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable(
-					onclick="toggleCardContentVisibility(this);",
-					style="cursor: pointer"
-				)
+				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
 					p Abilities
 				.card-content
 					each ability in abilities
-						.box(
-							onclick=`location.href='${ability.link}' + removeVarieties()`,
-							style="cursor: pointer"
-						)
+						.box.accented.link(onclick=`location.href='${ability.link}' + removeVarieties()`)
 							p.has-text-weight-bold #{ ability.name }
 							if ability.isHidden
 								p.is-italic Hidden
 							p #{ ability.effect }
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable(
-					onclick="toggleCardContentVisibility(this);",
-					style="cursor: pointer"
-				)
+				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
 					p Base stats
 				.card-content
 					table#statsTable.table(style="width: 100%")
@@ -321,15 +262,13 @@ block append body
 									th Pkmn Base Stat:
 									td #{ ((baseStats.hp.stat + baseStats.attack.stat + baseStats.defense.stat + baseStats.special_attack.stat + baseStats.special_defense.stat + baseStats.speed.stat) / 6).toFixed(2) }
 									td 70.85
+									td
 
 	//- Pokedex and Other info
 	.columns
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable(
-					onclick="toggleCardContentVisibility(this);",
-					style="cursor: pointer"
-				)
+				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
 					p Pokédex entry
 				.card-content.pt-1
 					.columns
@@ -339,16 +278,14 @@ block append body
 							p Height: #{ height }0 cm
 					if pokedex.length > 0
 						each entry in pokedex
-							p.is-capitalized.has-text-weight-bold #{ entry.game }
-							p.pb-2 #{ entry.entry }
+							.box.accented
+								p.is-capitalized.has-text-weight-bold #{ entry.game }
+								p.pb-2 #{ entry.entry }
 					else
 						p Select a game where this Pokémon is featured to see its Pokédex entry.
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable(
-					onclick="toggleCardContentVisibility(this);",
-					style="cursor: pointer"
-				)
+				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
 					p Other Info
 				.card-content
 					p.title.is-6 Catch rate: #{ captureRate }
@@ -362,24 +299,21 @@ block append body
 	.columns
 		.column
 			.card
-				.card-header-title.collapsable(
-					onclick="toggleCardContentVisibility(this);",
-					style="cursor: pointer"
-				)
+				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
 					p Forms
 				.card-content
 					each form in forms
 						.columns.is-mobile
 							.column.has-text-centered.is-flex
-								.box(
-									style="width: 100%; cursor: pointer",
+								.box.accented.link(
+									style="width: 100%",
 									onclick=`location.href='${form.url}' + removeVarieties()`
 								)
 									img(src=`${form.sprites.primary}`)
 									p #{ form.name }
 							.column.has-text-centered.is-flex
-								.box(
-									style="width: 100%; cursor: pointer",
+								.box.accented.link(
+									style="width: 100%",
 									onclick=`location.href='${form.url}' + removeVarieties()`
 								)
 									img(src=`${form.sprites.shiny}`)
@@ -387,10 +321,7 @@ block append body
 		if moveset.length > 0
 			.column
 				.card
-					.card-header-title.collapsable(
-						onclick="toggleCardContentVisibility(this);",
-						style="cursor: pointer"
-					)
+					.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
 						p Moveset
 					.card-content.pt-1
 						table.table.is-striped.is-hoverable(style="width: 100%")
@@ -401,10 +332,7 @@ block append body
 									th.pl-0 Level
 							tbody(style="width: 100%")
 							each move in moveset
-								tr(
-									onclick=`location.href='${move.link}' + removeVarieties()`,
-									style="cursor: pointer"
-								)
+								tr.link(onclick=`location.href='${move.link}' + removeVarieties()`)
 									td.pl-0(style="width: 70px")
 										.container(style="display: inline-grid")
 											img.icon.tableImage(

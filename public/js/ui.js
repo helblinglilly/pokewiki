@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+	const selectedMode = getCookie("theme");
+	if (selectedMode === "dark-mode") setDarkMode();
+	else setLightMode();
+
 	populateSearchFilters();
 
 	if (isMobile) {
@@ -14,25 +18,44 @@ document.addEventListener("DOMContentLoaded", () => {
 			closeFilter();
 		}
 	});
+
+	document.getElementById("themeToggle").addEventListener("click", () => {
+		document.body.classList.toggle("dark-mode");
+		document.body.classList.toggle("light-mode");
+		const newMode = document.body.classList[0];
+		setCookie("theme", newMode);
+	});
+
+	checkAllImages();
 });
+
+const setDarkMode = () => {
+	document.body.classList.add("dark-mode");
+	document.body.classList.remove("light-mode");
+	document.body.setAttribute("style", "display: flex;");
+};
+
+const setLightMode = () => {
+	document.body.classList.add("light-mode");
+	document.body.classList.remove("dark-mode");
+	document.body.setAttribute("style", "display: flex;");
+};
 
 const hideNotice = () => {
 	document.getElementById("notice").setAttribute("hidden", "");
 };
 
 const submitSearch = () => {
-	const urlNoParams = document.URL.split("?")[0];
-	const queryParams = document.URL.split("?")[1];
-	const potentialPokemonRoute = urlNoParams.split("/")[urlNoParams.split("/").length - 2];
-	const currentlySelectedPokemon =
-		urlNoParams.split("/")[urlNoParams.split("/").length - 1];
+	const host = window.location.protocol + "//" + window.location.host;
+	const urlNoParams = document.URL.split(host)[1].split("?")[0];
+	const queryParams = document.URL.split(host)[1].split("?")[1];
 
-	if (potentialPokemonRoute === "pokemon") {
+	if (queryParams) {
 		const params = queryParams.split("&");
 		const changedParams = [];
+
 		let currentGame;
 		let selectedGame;
-
 		params.forEach(entry => {
 			let currentSelection;
 			let newSelection;
@@ -58,13 +81,13 @@ const submitSearch = () => {
 			}
 			changedParams.push(currentSelection == newSelection);
 		});
-
-		const search = document.getElementById("search");
 		if (!changedParams.includes(false)) {
+			const search = document.getElementById("search");
 			// If all you changed is the Game, then stay on the current page
-			search.action = `/pokemon/${currentlySelectedPokemon}`;
+			search.action = `${urlNoParams}`;
 		}
 	}
+
 	search.submit();
 };
 
@@ -146,4 +169,12 @@ const toggleCardContentVisibility = sender => {
 			else child.removeAttribute("hidden");
 		}
 	});
+};
+
+const checkAllImages = () => {
+	const placeholder = document.getElementById("placeholder").innerHTML;
+	const imgs = document.getElementsByTagName("img");
+	for (let i = 0; i < imgs.length; i++) {
+		imgs[i].onerror = () => (imgs[i].src = placeholder);
+	}
 };

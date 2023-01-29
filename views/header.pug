@@ -12,93 +12,93 @@ head
 	script(src="/static/js/cookies.js")
 	script(src="/static/js/ui.js")
 	style.
+		@import url("/static/styles.css");
+	style.
 		@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 	title Pokéwiki
 
-body(style="min-height: 100vw; display: flex; flex-direction: column")
-	nav.navbar(role="navigation", aria-label="main navigation")
-		.navbar-brand(href="/")
-			a.navbar-item(href="/")
-				img(src="/static/pokemon.png")
-			a.navbar-item(href="/") Pokémon
+body
+	p#placeholder.hidden #{ placeholderImage }
+	.flex
+		nav.flex-child.navbar.mb-4(role="navigation", aria-label="main navigation")
+			.navbar-brand(href="/")
+				a.navbar-item(href="/")
+					img(src="/static/pokemon.png")
+				a.navbar-item(href="/") Pokémon
+				a#themeToggle.navbar-item Toggle Theme
 
-	.container.is-max-desktop.pl-6.pr-6.pb-6(style="width: 100%")
-		block body
-			form#search.pb-3(action="/search", method="get")
-				.field.has-addons
-					.control(style="width: 100%")
-						input#searchBar.input(
-							type="text",
-							name="term",
-							placeholder="Search for something!"
-						)
-					button.button(
-						onclick="openFilter();",
-						type="button",
-						style="background-color: #f5f5f5"
-					) Options
-
-				input#searchSubmit(type="submit", hidden)
-				style.
-					table#statsTable * {
-						padding-left: 0;
-						padding-right: 0;
-					}
-				#filterModal.modal(hidden)
-					.modal-background(onclick="closeFilter();")
-					.modal-card
-						.modal-card-body
-							.box
-								p.title.is-5 Select game
-								.select(form="search", name="game")
-									select#gameSelector(form="search", name="game")
-										option(value="all") Any
-										option(value="scarlet-violet") Scarlet / Violet
-										option(value="legends-arceus") Legends Areceus
-										option(value="brilliant-diamond-and-shining-pearl") Brilliant Diamond / Shining Pearl
-										option(value="sword-shield") Sword / Shield
-										option(value="lets-go-pikachu-lets-go-eevee") Let's Go Pikachu / Eevee
-										option(value="ultra-sun-ultra-moon") Ultra Sun / Ultra Moon
-										option(value="sun-moon") Sun / Moon
-										option(value="omega-ruby-alpha-sapphire") Omega Ruby / Alpha Sapphire
-										option(value="x-y") X / Y
-										option(value="black-2-white-2") Black 2 / White 2
-										option(value="black-white") Black / White
-										option(value="heartgold-soulsilver") Heart Gold / Soul Silver
-										option(value="platinum") Platinum
-										option(value="diamond-pearl") Diamond / Pearl
-										option(value="firered-leafgreen") Firered / Leafgreen
-										option(value="emerald") Emerald
-										option(value="ruby-sapphire") Ruby / Sapphire
-										option(value="crystal") Crystal
-										option(value="gold-silver") Gold / Silver
-										option(value="yellow") Yellow
-										option(value="red-blue") Red / Blue
-							.box
-								p.title.is-5 Types of results
-								.columns
-									.column
-										input#showPokemon.mr-2(type="checkbox", name="pokemon", value="true", checked)
-										label.pr-4(for="showPokemon") Pokémon
-									.column
-										input#showItems.mr-2(type="checkbox", name="items", value="true", checked)
-										label.pr-4(for="showItems") Items
-									.column
-										input#showMoves.mr-2(type="checkbox", name="moves", value="true", checked)
-										label.pr-4(for="showMoves") Moves
-									.column
-										input#showAbilities.mr-2(
-											type="checkbox",
-											name="abilities",
-											value="true",
-											checked
-										)
-										label.pr-4(for="showAbilities") Abilities
-						footer.modal-card-foot
-							button.button.is-info(onclick="submitSearch();", type="button") Search
-							button.button(onclick="closeFilter();", type="button") Close
-	hr
-	footer.m-3.has-text-centered
+		.container.flex-child.is-max-desktop.pl-6.pr-6.pb-6(style="width: 100%")
+			block body
+				form#search.pb-3(action="/search", method="get")
+					.field.has-addons
+						.control(style="width: 100%")
+							input#searchBar.input(
+								type="text",
+								name="term",
+								placeholder="Search for something!"
+							)
+						button.button(onclick="openFilter();", type="button") Options
+					input#searchSubmit(type="submit", hidden)
+					#filterModal.modal(hidden)
+						.modal-background(onclick="closeFilter();")
+						.modal-card
+							.modal-card-body
+								.box
+									p.title.is-5 Select game
+									.select(form="search", name="game")
+										select#gameSelector(form="search", name="game")
+											option(value="all") Any
+											option(value="scarlet-violet") Scarlet / Violet
+											option(value="legends-arceus") Legends Areceus
+											option(value="brilliant-diamond-and-shining-pearl") Brilliant Diamond / Shining Pearl
+											option(value="sword-shield") Sword / Shield
+											option(value="lets-go-pikachu-lets-go-eevee") Let's Go Pikachu / Eevee
+											option(value="ultra-sun-ultra-moon") Ultra Sun / Ultra Moon
+											option(value="sun-moon") Sun / Moon
+											option(value="omega-ruby-alpha-sapphire") Omega Ruby / Alpha Sapphire
+											option(value="x-y") X / Y
+											option(value="black-2-white-2") Black 2 / White 2
+											option(value="black-white") Black / White
+											option(value="heartgold-soulsilver") Heart Gold / Soul Silver
+											option(value="platinum") Platinum
+											option(value="diamond-pearl") Diamond / Pearl
+											option(value="firered-leafgreen") Firered / Leafgreen
+											option(value="emerald") Emerald
+											option(value="ruby-sapphire") Ruby / Sapphire
+											option(value="crystal") Crystal
+											option(value="gold-silver") Gold / Silver
+											option(value="yellow") Yellow
+											option(value="red-blue") Red / Blue
+								.box
+									p.title.is-5 Types of results
+									.columns
+										.column
+											input#showPokemon.mr-2(
+												type="checkbox",
+												name="pokemon",
+												value="true",
+												checked
+											)
+											label.pr-4(for="showPokemon") Pokémon
+										.column
+											input#showItems.mr-2(type="checkbox", name="items", value="true", checked)
+											label.pr-4(for="showItems") Items
+										.column
+											input#showMoves.mr-2(type="checkbox", name="moves", value="true", checked)
+											label.pr-4(for="showMoves") Moves
+										.column
+											input#showAbilities.mr-2(
+												type="checkbox",
+												name="abilities",
+												value="true",
+												checked
+											)
+											label.pr-4(for="showAbilities") Abilities
+							footer.modal-card-foot
+								button.button.is-info(onclick="submitSearch();", type="button") Search
+								button.button(onclick="closeFilter();", type="button") Close
+		hr
+	footer.flex-child.has-text-centered.pb-3.pl-3.pr-3
 		p  #{ buildDetails }
-		p Built at #[a(href="https://github.com/helblingjoel/pokewiki") https://github.com/helblingjoel/pokewiki]
-		p Using data from #[a(href="https://github.com/PokeAPI/pokeapi") https://github.com/PokeAPI/pokeapi]
+		p Built at #[a.showAsLink(href="https://github.com/helblingjoel/pokewiki") https://github.com/helblingjoel/pokewiki]
+		p Using data from #[a.showAsLink(href="https://github.com/PokeAPI/pokeapi") https://github.com/PokeAPI/pokeapi]

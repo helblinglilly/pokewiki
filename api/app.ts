@@ -12,10 +12,6 @@ if (process.env.NODE_ENV !== "production") {
 	port = 3000;
 	host = "http://127.0.0.1";
 }
-// Settings for when app is deployed in non-production environment
-if (process.env.PUBLIC_VERCEL_ENV !== "production") {
-	log.setDefaultLevel("DEBUG");
-}
 
 const app = express();
 
@@ -42,6 +38,10 @@ const buildInfo =
 	buildType === "Local"
 		? fs.statSync(`./api/app.${selfFileExtension}`).ctime.toISOString().split("T")[0]
 		: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 6);
+
+if (buildType == "Build") {
+	log.setDefaultLevel("WARN");
+}
 
 export const appSettings = {
 	buildDetails: [buildType, buildInfo].join(" - "),
@@ -84,10 +84,11 @@ app.options("/*", (req, res) => {
 	if (allowedURLs.includes(req.headers.origin ? req.headers.origin : "no")) {
 		res.set("Access-Control-Allow-Origin", req.headers.origin);
 		res.set("Vary", "Origin");
+		log.debug("Allowed CORS request from", req.headers.origin);
 		res.sendStatus(200);
 		return;
 	}
-	console.log("Blocked CORS request from", req.headers.origin);
+	log.debug("Blocked CORS request from", req.headers.origin);
 	res.sendStatus(401);
 });
 

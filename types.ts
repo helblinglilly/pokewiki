@@ -179,6 +179,7 @@ export interface GenericResult {
 
 export interface ItemResult extends GenericResult {
 	name: string;
+	link: string;
 }
 
 export interface Collection {

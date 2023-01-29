@@ -366,6 +366,7 @@ export class Data {
 				results.push({
 					id: a.id,
 					name: a.name,
+					link: `/item/${a.id}`,
 					primaryLang: primaryName,
 					secondaryLang: secondaryName,
 				});

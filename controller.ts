@@ -414,7 +414,7 @@ class Controller {
 								);
 								secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
 							} else {
-								secondaryEntry.entry = "This item does not exist in the selected game";
+								secondaryEntry.entry = "This item does not exist in this game";
 							}
 						}
 					});

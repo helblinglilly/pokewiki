@@ -18,13 +18,16 @@ block append body
 			if (id + 1 < highestItemId)
 			.card.otherEntry.is-pulled-right(style="min-width: 70%")
 				.card-content.otherEntryContent.is-flex(
-					onclick=`location.href='/item/${id+1}' + window.location.search`
+					onclick=`location.href='/item/${id+1}' + window.location.search`,
+					style="justify-content: end"
 				)
-					#itemNavPrev.columns
-						.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")
-							img.itemSprite.is-square(src=`${nextItemSprite}`)
+					#itemNavNext.columns
 						.column.is-three-quarter
 							p(style="word-wrap: anywhere; width: 100%") #{ nextItemName }
+						.column.is-one-quarter.has-text-centered(
+							style="min-width: 40px; padding: 0; margin: auto"
+						)
+							img.itemSprite.is-square(src=`${nextItemSprite}`)
 
 	.columns
 		//- Overview

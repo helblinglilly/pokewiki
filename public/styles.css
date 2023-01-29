@@ -193,6 +193,8 @@ table#statsTable * {
 	}
 	#itemNavNext {
 		margin: auto;
+		display: flex;
+		flex-direction: column-reverse;
 	}
 }
 @media screen and (min-width: 768px) {

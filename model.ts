@@ -9,6 +9,8 @@ import {
 	APIResponsePokemon,
 	APIResponseSpecies,
 	GenericEntry,
+	GenericResult,
+	ItemResult,
 	MoveEntry,
 	PokemonName,
 } from "./types";
@@ -68,6 +70,13 @@ export class Data {
 	searchResults = 10;
 	cacheDir = "./cache";
 	api = "https://pokeapi.co/api/v2";
+	primaryLangKey: string;
+	secondaryLangKey: string;
+
+	constructor(primLang: string, secLang?: string) {
+		this.primaryLangKey = primLang;
+		this.secondaryLangKey = secLang ? secLang : primLang;
+	}
 
 	getPokemon = async (id: number): Promise<APIResponsePokemon> => {
 		const cachedData = cache.pokemon.find(a => a.id === id);
@@ -277,11 +286,14 @@ export class Data {
 		const result = Pokemon.find(a => a.id === id);
 		if (!result) return undefined;
 
+		return undefined;
+		/*
 		return {
 			...result,
 			link: `/pokemon/${result.id}`,
 			sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${result.id}.png`,
 		};
+		*/
 	};
 
 	findPokemonFromName = (name: string): PokemonName[] => {
@@ -296,29 +308,35 @@ export class Data {
 		);
 
 		const results: PokemonName[] = [];
+
 		Pokemon.forEach(a => {
-			if (results.length === this.searchResults) {
-				return;
-			}
-			let german = a.german.toLocaleLowerCase();
-			german.replace("ä", "a");
-			german.replace("ü", "u");
-			german.replace("ö", "o");
+			let primaryName = "";
+			let secondaryName = "";
+			a.names.forEach(b => {
+				for (const [key, value] of Object.entries(b)) {
+					if (key === this.primaryLangKey) primaryName = value;
+					else if (key === this.secondaryLangKey) secondaryName = value;
+				}
+			});
 
-			const entry = {
-				...a,
-				link: `/pokemon/${a.id}`,
-				sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${a.id}.png`,
-			};
-
-			if (regex.test(german)) results.push(entry);
-			else if (regex.test(a.english)) results.push(entry);
-			else if (a.id.toString() === name) results.push(entry);
+			if (
+				regex.test(primaryName) ||
+				regex.test(secondaryName) ||
+				a.id.toString() === name
+			)
+				results.push({
+					primaryLang: primaryName,
+					secondaryLang: secondaryName,
+					id: a.id,
+					link: `/pokemon/${a.id}`,
+					sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${a.id}.png`,
+				});
 		});
+
 		return results;
 	};
 
-	findItemFromName = (name: string): GenericEntry[] => {
+	findItemFromName = (name: string): ItemResult[] => {
 		name = name.toLocaleLowerCase();
 
 		const regex = new RegExp(
@@ -329,25 +347,28 @@ export class Data {
 			"gi"
 		);
 
-		const results: GenericEntry[] = [];
+		const results: ItemResult[] = [];
 		Items.forEach(a => {
-			if (results.length === this.searchResults) {
-				return;
-			}
+			let primaryName = "";
+			let secondaryName = "";
 
-			let german = a.german.toLocaleLowerCase();
-			german.replace("ä", "a");
-			german.replace("ü", "u");
-			german.replace("ö", "o");
-
-			const entry = {
-				...a,
-				link: `/item/${a.id}`,
-				sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${a.english_id}.png`,
-			};
-
-			if (regex.test(german)) results.push(entry);
-			else if (regex.test(a.english)) results.push(entry);
+			a.names.forEach(b => {
+				for (const [key, value] of Object.entries(b)) {
+					if (key === this.primaryLangKey) primaryName = value;
+					else if (key === this.secondaryLangKey) secondaryName = value;
+				}
+			});
+			if (
+				regex.test(primaryName) ||
+				regex.test(secondaryName) ||
+				a.id.toString() === name
+			)
+				results.push({
+					id: a.id,
+					name: a.name,
+					primaryLang: primaryName,
+					secondaryLang: secondaryName,
+				});
 		});
 
 		return results;

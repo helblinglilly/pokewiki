@@ -23,7 +23,11 @@ class Router {
 			showAbilities = true;
 		}
 
-		const searchResults = await Controller.getSearchResults(
+		const controller = new Controller(
+			appSettings.primaryLanguage,
+			appSettings.secondaryLanguage
+		);
+		const searchResults = await controller.getSearchResults(
 			req.query.term,
 			showPokemon,
 			showItems,
@@ -73,7 +77,10 @@ class Router {
 			}
 		}
 		try {
-			const controller = new Controller("en", "de");
+			const controller = new Controller(
+				appSettings.primaryLanguage,
+				appSettings.secondaryLanguage
+			);
 			const details = await controller.getPokemonDetail(id, variety, game);
 			const options = { ...details };
 			res.render("./pokemon", { ...options, ...appSettings });
@@ -111,7 +118,10 @@ class Router {
 		if (typeof req.query.game === "string") game = req.query.game;
 
 		try {
-			const controller = new Controller("en", "de");
+			const controller = new Controller(
+				appSettings.primaryLanguage,
+				appSettings.secondaryLanguage
+			);
 			const details = await controller.getItem(id, game);
 			const options = { ...details };
 			res.render("./item", { ...options, ...appSettings });

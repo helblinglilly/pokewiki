@@ -2,7 +2,7 @@ const axios = require("axios");
 const fs = require("fs");
 
 const pokemon = async () => {
-	const startFrom = 905;
+	const startFrom = 1;
 	const upTo = 1008;
 
 	const results = [];
@@ -15,28 +15,109 @@ const pokemon = async () => {
 			});
 			console.log(i);
 		} catch (err) {
-			console.log(i, "failed");
+			console.log(i, "failed", err.response.status);
 			continue;
 		}
 
-		let german, english;
+		const names = [];
 		response.data.names.forEach(entry => {
-			if (entry.language.name === "de") {
-				german = entry.name;
-			}
-			if (entry.language.name === "en") {
-				english = entry.name;
-			}
+			const languageCode = entry.language.name;
+			const name = entry.name;
+			names.push({ [languageCode]: name });
 		});
 
 		results.push({
-			german: german ? german : english,
-			english: english,
+			names: names,
 			id: i,
 		});
-		await new Promise(r => setTimeout(r, 200));
+		await new Promise(r => setTimeout(r, 500));
 	}
 	fs.writeFileSync("newPokemon.json", JSON.stringify(results), "utf8");
+};
+
+const items = async () => {
+	const startFrom = 1;
+	const upTo = 2050;
+
+	const results = [];
+	const failures = [];
+	for (let i = startFrom; i <= upTo; i++) {
+		let response;
+		try {
+			response = await axios.get(`https://pokeapi.co/api/v2/item/${i}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
+			console.log(i);
+		} catch (err) {
+			console.log(i, "failed", err.response.status);
+			failures.push(i);
+			continue;
+		}
+
+		const names = [];
+		response.data.names.forEach(entry => {
+			const languageCode = entry.language.name;
+			const name = entry.name;
+			names.push({ [languageCode]: name });
+		});
+
+		results.push({
+			names: names,
+			name: response.data.name,
+			id: i,
+		});
+		await new Promise(r => setTimeout(r, 500));
+	}
+	fs.writeFileSync("newItems1.json", JSON.stringify(results), "utf8");
+	fs.writeFileSync("itemFailures.json", JSON.stringify(failures), "utf-8");
+};
+
+const findBrokenItems = maxItem => {
+	let file = fs.readFileSync("./public/pokedata/items.json", "utf-8");
+	file = JSON.parse(file);
+	const fails = [];
+
+	let i = 1;
+	while (i <= maxItem) {
+		const found = file.find(entry => entry.id === i);
+		if (!found) fails.push(i);
+		i++;
+	}
+
+	fs.writeFileSync("brokenItems.json", JSON.stringify(fails), "utf-8");
+	return fails;
+};
+const fixBrokenItems = async arr => {
+	const failures = [];
+	const results = [];
+	for (let i = 0; i < arr.length; i++) {
+		let response;
+		try {
+			response = await axios.get(`https://pokeapi.co/api/v2/item/${arr[i]}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
+			console.log(arr[i]);
+		} catch (err) {
+			console.log(arr[i], "failed", err.response.status);
+			failures.push(arr[i]);
+			continue;
+		}
+
+		const names = [];
+		response.data.names.forEach(entry => {
+			const languageCode = entry.language.name;
+			const name = entry.name;
+			names.push({ [languageCode]: name });
+		});
+
+		results.push({
+			names: names,
+			id: arr[i],
+		});
+		await new Promise(r => setTimeout(r, 500));
+	}
+	fs.writeFileSync("fixedItems.json", JSON.stringify(results), "utf8");
+	fs.writeFileSync("brokenItems.json", JSON.stringify(failures), "utf-8");
 };
 
 const moves = async () => {
@@ -119,8 +200,14 @@ const addTypeSprites = () => {
 	fs.writeFileSync("moves.json", JSON.stringify(moves), "utf8");
 };
 
-fixMoves();
+// fixMoves();
 // pokemon();
+items().then(() => {
+	const brokenItems = findBrokenItems(2050);
+	fixBrokenItems(brokenItems).then(() => {
+		console.log("done");
+	});
+});
 // addTypeSprites();
 
 // moves();

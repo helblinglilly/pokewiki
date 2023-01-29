@@ -39,10 +39,10 @@ block append body
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title.is-justify-content-space-between
-					if english === german || !german
-						p #{ english }
+					if primaryName === secondaryName || !secondaryName
+						p #{ primaryName }
 					else
-						p #{ english } - #{ german }
+						p #{ primaryName } - #{ secondaryName }
 
 					div
 						each pType in types

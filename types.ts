@@ -146,6 +146,8 @@ export interface ErrorMessage {
 }
 
 export interface GenericEntry {
+	primaryLang?: string;
+	secondaryLang?: string;
 	german: string;
 	english: string;
 	english_id: string;
@@ -162,22 +164,26 @@ export interface MoveEntry extends GenericEntry {
 }
 
 export interface PokemonName {
-	german: string;
-	english: string;
+	primaryLang: string;
+	secondaryLang: string;
 	id: number;
 	link: string;
 	sprite: string;
 }
 
-interface GenericResult {
-	german: string;
-	english: string;
+export interface GenericResult {
+	primaryLang: string;
+	secondaryLang: string;
 	id: number;
+}
+
+export interface ItemResult extends GenericResult {
+	name: string;
 }
 
 export interface Collection {
 	Abilities?: GenericResult[];
-	Items?: GenericResult[];
+	Items?: ItemResult[];
 	Moves?: MoveEntry[];
 	Types?: GenericResult[];
 	Pokemon?: PokemonName[];
@@ -309,7 +315,7 @@ export interface APIResponseItem {
 		language: {
 			name: string;
 		};
-		version: {
+		version_group: {
 			name: string;
 		};
 		text: string;

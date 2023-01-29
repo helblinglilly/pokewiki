@@ -17,19 +17,19 @@ import {
 } from "./types";
 import { appSettings } from "./api/app";
 
-const data = new Data();
-
 class Controller {
 	primaryLanguageCode: string;
 	secondaryLanguageCode: string;
+	data: Data;
 
 	constructor(primLang: string, secLang: string) {
 		this.primaryLanguageCode = primLang;
 		this.secondaryLanguageCode = secLang;
+		this.data = new Data(primLang, secLang);
 	}
 
 	getPokemonDetail = async (id: number, varietyId: number, game?: string) => {
-		const apidata = await data.pokemonData(id, varietyId);
+		const apidata = await this.data.pokemonData(id, varietyId);
 		const pokemonData = apidata.pokemon;
 		const speciesData = apidata.species;
 		const evolutionData = apidata.evolution;
@@ -317,8 +317,8 @@ class Controller {
 		}
 
 		return {
-			english: primName,
-			german: secName,
+			primaryName: primName,
+			secondaryName: secName,
 			id: id,
 			link: `/pokemon/${id}`,
 			sprites: showcaseSprites,
@@ -384,7 +384,7 @@ class Controller {
 		let nextItemSprite = appSettings.placeholderImage;
 
 		try {
-			itemData = await data.getItem(id);
+			itemData = await this.data.getItem(id);
 			primaryLangName = Utils.findNameFromLanguageCode(
 				itemData.names,
 				this.primaryLanguageCode
@@ -407,9 +407,15 @@ class Controller {
 				if (foundGame.version_group_name !== "all") {
 					itemData.flavor_text_entries.forEach(entry => {
 						if (entry.language.name === this.primaryLanguageCode) {
-							secondaryEntry.entry = entry.text;
-							const game = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
-							secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
+							if (foundGame.version_group_name === entry.version_group.name) {
+								secondaryEntry.entry = entry.text;
+								const game = foundGame.consistsOf.map(
+									a => a[0].toUpperCase() + a.slice(1)
+								);
+								secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
+							} else {
+								secondaryEntry.entry = "This item does not exist in the selected game";
+							}
 						}
 					});
 					if (itemData.machines.length > 0) {
@@ -418,9 +424,9 @@ class Controller {
 						);
 						if (correctEntry) {
 							const id = correctEntry.machine.url.split("/")[6];
-							const machineData = await data.getMachine(parseInt(id));
+							const machineData = await this.data.getMachine(parseInt(id));
 							const moveId = machineData.move.url.split("/")[6];
-							const moveData = await data.getMove(parseInt(moveId));
+							const moveData = await this.data.getMove(parseInt(moveId));
 
 							secondaryEntry.entry = Utils.findNameFromLanguageCode(
 								moveData.names,
@@ -468,7 +474,7 @@ class Controller {
 
 		try {
 			if (id - 1 > 0) {
-				previousItemData = await data.getItem(id - 1);
+				previousItemData = await this.data.getItem(id - 1);
 				previousItemName = Utils.findNameFromLanguageCode(
 					previousItemData.names,
 					this.primaryLanguageCode
@@ -481,7 +487,7 @@ class Controller {
 
 		try {
 			if (id + 1 <= appSettings.highestItemId) {
-				nextItemData = await data.getItem(id + 1);
+				nextItemData = await this.data.getItem(id + 1);
 				nextItemName = Utils.findNameFromLanguageCode(
 					nextItemData.names,
 					this.primaryLanguageCode
@@ -516,23 +522,23 @@ class Controller {
 	};
 
 	// TODO should not make this static so that custom languages can be supported
-	static getSearchResults = async (
+	getSearchResults = async (
 		searchTerm: string,
 		pokemon: boolean,
 		items: boolean,
 		moves: boolean,
 		abilities: boolean
 	): Promise<Collection> => {
-		const pkmnResults = pokemon ? data.findPokemonFromName(searchTerm) : [];
-		const itemResults = items ? data.findItemFromName(searchTerm) : [];
-		const moveResults = moves ? data.findMoveFromName(searchTerm) : [];
-		const abilityResults = abilities ? data.findAbilityFromName(searchTerm) : [];
+		const pkmnResults = pokemon ? this.data.findPokemonFromName(searchTerm) : [];
+		const itemResults = items ? this.data.findItemFromName(searchTerm) : [];
+		const moveResults = moves ? this.data.findMoveFromName(searchTerm) : [];
+		const abilityResults = abilities ? this.data.findAbilityFromName(searchTerm) : [];
 
 		return {
-			Pokemon: pkmnResults,
-			Items: itemResults,
+			Pokemon: pkmnResults.slice(0, appSettings.maxSearchResults),
+			Items: itemResults.slice(0, appSettings.maxSearchResults),
 			Moves: moveResults,
-			Abilities: abilityResults,
+			Abilities: [],
 		};
 	};
 

@@ -19,10 +19,10 @@ block append body
 							alt="Pokemon Icon"
 						)
 						//- p.mr-3 
-						if pokemon.german === pokemon.english
-							a.card-text ##{ pokemon.id } #{ pokemon.english }
+						if pokemon.primaryLang === pokemon.secondaryLang
+							a.card-text ##{ pokemon.id } #{ pokemon.primaryLang }
 						else
-							a.card-text ##{ pokemon.id } #{ pokemon.english } - #{ pokemon.german }
+							a.card-text ##{ pokemon.id } #{ pokemon.primaryLang } - #{ pokemon.secondaryLang }
 
 	if results.Items.length !== 0
 		p.title.is-4 Items
@@ -31,15 +31,14 @@ block append body
 				.card.mb-3(onclick=`location.href='${item.link}'  + window.location.search`)
 					.card-content.searchResult(style="display: flex; align-items: center")
 						img.is-48x48.mr-1(
-							src=`${item.sprite}`,
+							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`,
 							style="height: 30px; width: 30px",
-							alt="Item Icon",
-							onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'"
+							alt="Item Icon"
 						)
-						if item.english === item.german
-							a.card-text #{ item.english }
+						if item.primaryLang === item.secondaryLang
+							a.card-text #{ item.primaryLang }
 						else
-							a.card-text #{ item.english } - #{ item.german }
+							a.card-text #{ item.primaryLang } - #{ item.secondaryLang }
 
 	if results.Moves.length !== 0
 		p.title.is-4 Moves

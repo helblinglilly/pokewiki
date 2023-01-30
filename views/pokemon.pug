@@ -305,14 +305,14 @@ block append body
 					each form in forms
 						.columns.is-mobile
 							.column.has-text-centered.is-flex
-								.box.accented.link(
+								.box.accented.link.p-0.pb-3(
 									style="width: 100%",
 									onclick=`location.href='${form.url}' + removeVarieties()`
 								)
 									img(src=`${form.sprites.primary}`)
 									p #{ form.name }
 							.column.has-text-centered.is-flex
-								.box.accented.link(
+								.box.accented.link.p-0.pb-3(
 									style="width: 100%",
 									onclick=`location.href='${form.url}' + removeVarieties()`
 								)

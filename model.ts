@@ -297,8 +297,6 @@ export class Data {
 	};
 
 	findPokemonFromName = (name: string): PokemonName[] => {
-		name = name.toLocaleLowerCase();
-
 		const regex = new RegExp(
 			`${name
 				.split("")
@@ -320,8 +318,8 @@ export class Data {
 			});
 
 			if (
-				regex.test(primaryName) ||
-				regex.test(secondaryName) ||
+				primaryName.match(regex) ||
+				secondaryName.match(regex) ||
 				a.id.toString() === name
 			)
 				results.push({

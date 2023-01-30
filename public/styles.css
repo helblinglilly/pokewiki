@@ -165,8 +165,9 @@ td,
 	display: none;
 }
 
-.otherEntryContent:hover {
-	background-color: var(--linkhover);
+.otherEntry:hover,
+.otherEntry:hover .otherEntryContent {
+	background-color: var(--primary);
 }
 
 img.typeSprite {
@@ -205,9 +206,11 @@ table#statsTable * {
 		display: none;
 	}
 	#itemNavPrev {
+		text-align: center;
 		margin: auto;
 	}
 	#itemNavNext {
+		text-align: center;
 		margin: auto;
 		display: flex;
 		flex-direction: column-reverse;

@@ -15,11 +15,11 @@ block append body
 								p(style="word-wrap: anywhere; min-width: 100%") #{ previousItemName }
 		.column.is-half.is-flex(style="justify-content: end")
 			if (id + 1 < highestItemId)
-			.card.otherEntry.is-pulled-right(style="min-width: 60%; flex: 1 1 0")
-				.card-content.otherEntryContent.is-flex(
-					onclick=`location.href='/item/${id+1}' + window.location.search`,
-					style="justify-content: end"
-				)
+			.card.otherEntry.is-pulled-right(
+				style="min-width: 60%; flex: 1 1 0",
+				onclick=`location.href='/item/${id+1}' + window.location.search;`
+			)
+				.card-content.otherEntryContent.is-flex(style="justify-content: end")
 					#itemNavNext.columns(style="width: 100%")
 						.column.is-three-quarter
 							p(style="word-wrap: anywhere; min-width: 100%") #{ nextItemName }

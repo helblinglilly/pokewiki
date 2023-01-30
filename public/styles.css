@@ -45,6 +45,22 @@ body {
 	display: flex;
 	flex-direction: column;
 }
+
+#navbarMenu {
+	background-color: var(--navbar);
+	color: var(--secondary);
+}
+
+#burgerIcon {
+	height: 35px;
+	width: auto;
+	/* margin: 10px; */
+}
+
+a.navbar-item:hover {
+	background-color: var(--primary);
+}
+
 .flex {
 	flex: 1;
 	display: flex;
@@ -197,6 +213,7 @@ table#statsTable * {
 		flex-direction: column-reverse;
 	}
 }
+
 @media screen and (min-width: 768px) {
 	.otherEntry {
 		max-width: 150px !important;

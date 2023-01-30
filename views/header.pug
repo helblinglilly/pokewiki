@@ -24,8 +24,15 @@ body
 			.navbar-brand(href="/")
 				a.navbar-item(href="/")
 					img(src="/static/pokemon.png")
-				a.navbar-item(href="/") Pokémon
-				a#themeToggle.navbar-item Toggle Theme
+				a.navbar-item(href="/") Pokécompanion
+				#navbarBurger.navbar-burger
+					img#burgerIcon(
+						src="https://archives.bulbagarden.net/media/upload/7/72/FRLG_Items_pocket_M.png",
+						style="margin: 10px"
+					)
+			#navbarMenu.navbar-menu
+				.navbar-end
+					a#themeToggle.navbar-item Toggle Theme
 
 		.container.flex-child.is-max-desktop.pl-6.pr-6.pb-6(style="width: 100%")
 			block body

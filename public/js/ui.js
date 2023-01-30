@@ -26,6 +26,23 @@ document.addEventListener("DOMContentLoaded", () => {
 		setCookie("theme", newMode);
 	});
 
+	document.getElementById("navbarBurger").addEventListener("click", () => {
+		const openSprite =
+			"https://archives.bulbagarden.net/media/upload/9/97/FRLG_Key_Items_pocket_M.png";
+		const closeSprite =
+			"https://archives.bulbagarden.net/media/upload/7/72/FRLG_Items_pocket_M.png";
+
+		const current = document.getElementById("burgerIcon");
+		if (current.currentSrc === openSprite) {
+			current.src = closeSprite;
+		} else {
+			current.src = openSprite;
+		}
+
+		document.getElementById("navbarBurger").classList.toggle("is-active");
+		document.getElementById("navbarMenu").classList.toggle("is-active");
+	});
+
 	checkAllImages();
 });
 

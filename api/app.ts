@@ -46,8 +46,8 @@ if (buildType === "Build") {
 }
 
 export const appSettings = {
-	primaryLanguage: "de",
-	secondaryLanguage: "en",
+	primaryLanguage: "en",
+	secondaryLanguage: "de",
 	maxSearchResults: 10,
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,

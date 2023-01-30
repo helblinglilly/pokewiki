@@ -405,19 +405,32 @@ class Controller {
 			if (game) {
 				const foundGame = Games.findEntry(game);
 				if (foundGame.version_group_name !== "all") {
+					let existsInGame = false;
+					let primaryLangText = "";
+					let secondaryLangText = "";
 					itemData.flavor_text_entries.forEach(entry => {
-						if (entry.language.name === this.primaryLanguageCode) {
-							if (foundGame.version_group_name === entry.version_group.name) {
-								secondaryEntry.entry = entry.text;
-								const game = foundGame.consistsOf.map(
-									a => a[0].toUpperCase() + a.slice(1)
-								);
-								secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
-							} else {
-								secondaryEntry.entry = "This item does not exist in this game";
+						if (foundGame.version_group_name === entry.version_group.name) {
+							existsInGame = true;
+
+							if (entry.language.name === this.primaryLanguageCode) {
+								primaryLangText = entry.text;
+							} else if (entry.language.name === this.secondaryLanguageCode) {
+								secondaryLangText = entry.text;
 							}
+
+							const game = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
+							secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
 						}
 					});
+
+					if ((existsInGame && primaryLangText) || secondaryLangText) {
+						secondaryEntry.entry = primaryLangText ? primaryLangText : secondaryLangText;
+					} else if (existsInGame) {
+						secondaryEntry.entry = "No description found for the selected languages";
+					} else {
+						secondaryEntry.entry = "This item does not exist in this game";
+					}
+
 					if (itemData.machines.length > 0) {
 						const correctEntry = itemData.machines.find(
 							a => a.version_group.name === foundGame.version_group_name

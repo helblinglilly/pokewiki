@@ -105,6 +105,9 @@ const submitSearch = () => {
 		}
 	}
 
+	if (document.getElementById("gameSelector").values !== "all") {
+		search.action = `${urlNoParams}`;
+	}
 	search.submit();
 };
 

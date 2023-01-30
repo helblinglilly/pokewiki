@@ -184,6 +184,18 @@ img.pokemonSprite {
 	cursor: pointer;
 }
 
+.box.accented.noHover:hover {
+	background-color: var(--primary);
+}
+
+img.link:hover {
+	background-color: var(--accent);
+}
+
+a.keepQuery.invisible:hover {
+	background-color: var(--accent);
+}
+
 table#statsTable * {
 	padding-left: 0;
 	padding-right: 0;

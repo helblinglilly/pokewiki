@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	checkAllImages();
+	addQueryrefToAllLinks();
 });
 
 const setDarkMode = () => {
@@ -192,5 +193,17 @@ const checkAllImages = () => {
 	const imgs = document.getElementsByTagName("img");
 	for (let i = 0; i < imgs.length; i++) {
 		imgs[i].onerror = () => (imgs[i].src = placeholder);
+	}
+};
+
+const addQueryrefToAllLinks = () => {
+	const aLinks = document.getElementsByTagName("a");
+
+	for (let i = 0; i < aLinks.length; i++) {
+		if (aLinks[i].classList.contains("keepQuery")) {
+			aLinks[i].onclick = () => {
+				aLinks[i].href = aLinks[i].href + removeVarieties();
+			};
+		}
 	}
 };

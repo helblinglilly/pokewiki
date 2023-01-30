@@ -12,55 +12,58 @@ block append body
 		p.title.is-4 Pokémon
 		#PokemonResults.container
 			each pokemon in results.Pokemon
-				.card.mb-3(onclick=`location.href='${pokemon.link}' + window.location.search`)
-					.card-content.searchResult(style="display: flex; align-items: center")
-						img.is-48x48.mr-1(
-							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-							alt="Pokemon Icon"
-						)
-						//- p.mr-3 
-						if pokemon.primaryLang === pokemon.secondaryLang
-							a.card-text ##{ pokemon.id } #{ pokemon.primaryLang }
-						else
-							a.card-text ##{ pokemon.id } #{ pokemon.primaryLang } - #{ pokemon.secondaryLang }
+				a.keepQuery(href=`${pokemon.link}`)
+					.card.mb-3
+						.card-content.searchResult(style="display: flex; align-items: center")
+							img.is-48x48.mr-1(
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+								alt="Pokemon Icon"
+							)
+							if pokemon.primaryLang === pokemon.secondaryLang
+								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang }
+							else
+								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang } - #{ pokemon.secondaryLang }
 
 	if results.Items.length !== 0
 		p.title.is-4 Items
 		#ItemResults.container
 			each item in results.Items
-				.card.mb-3(onclick=`location.href='${item.link}'  + window.location.search`)
-					.card-content.searchResult(style="display: flex; align-items: center")
-						img.is-48x48.mr-1(
-							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`,
-							style="height: 30px; width: 30px",
-							alt="Item Icon"
-						)
-						if item.primaryLang === item.secondaryLang
-							a.card-text #{ item.primaryLang }
-						else
-							a.card-text #{ item.primaryLang } - #{ item.secondaryLang }
+				a.keepQuery(href=`${item.link}`)
+					.card.mb-3
+						.card-content.searchResult(style="display: flex; align-items: center")
+							img.is-48x48.mr-1(
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`,
+								style="height: 30px; width: 30px",
+								alt="Item Icon"
+							)
+							if item.primaryLang === item.secondaryLang
+								p.card-text #{ item.primaryLang }
+							else
+								p.card-text #{ item.primaryLang } - #{ item.secondaryLang }
 
 	if results.Moves.length !== 0
 		p.title.is-4 Moves
 		#MoveResults.container
 			each move in results.Moves
-				.card.mb-3(onclick=`location.href='${move.link}' + window.location.search`)
-					.card-content.searchResult(style="align-items: center")
-						.container.mr-3(style="display: inline-grid")
-							img.icon.mb-1.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
-							img.icon.typeSprite(src=`${move.attack_type_sprite}`, alt="Move type Icon")
-						if move.english === move.german
-							a.card-text #{ move.english }
-						else
-							a.card-text #{ move.english } - #{ move.german }
+				a.keepQuery(href=`${move.link}`)
+					.card.mb-3
+						.card-content.searchResult(style="align-items: center")
+							.container.mr-3(style="display: inline-grid")
+								img.icon.mb-1.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
+								img.icon.typeSprite(src=`${move.attack_type_sprite}`, alt="Move type Icon")
+							if move.english === move.german
+								p.card-text(style="display: inline") #{ move.english }
+							else
+								p.card-text(style="display: inline") #{ move.english } - #{ move.german }
 
 	if results.Abilities.length !== 0
 		p.title.is-4 Abilities
 		#AbilityResults.container
 			each ability in results.Abilities
-				.card.mb-3(onclick=`location.href='${ability.link}' + window.location.search`)
-					.card-content.searchResult
-						if ability.english === ability.german
-							a.card-text #{ ability.english }
-						else
-							a.card-text #{ ability.english } - #{ ability.german }
+				a.keepQuery(href=`${move.link}`)
+					.card.mb-3
+						.card-content.searchResult
+							if ability.english === ability.german
+								a.card-text #{ ability.english }
+							else
+								a.card-text #{ ability.english } - #{ ability.german }

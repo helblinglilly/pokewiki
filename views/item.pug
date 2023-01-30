@@ -8,7 +8,7 @@ block append body
 					.card-content.otherEntryContent.is-flex(
 						onclick=`location.href='/item/${id-1}' + window.location.search`
 					)
-						#itemNavPrev.columns
+						#itemNavPrev.columns(style="width: 100%")
 							.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")
 								img.itemSprite.is-square(src=`${previousItemSprite}`)
 							.column.is-three-quarter
@@ -20,7 +20,7 @@ block append body
 					onclick=`location.href='/item/${id+1}' + window.location.search`,
 					style="justify-content: end"
 				)
-					#itemNavNext.columns
+					#itemNavNext.columns(style="width: 100%")
 						.column.is-three-quarter
 							p(style="word-wrap: anywhere; min-width: 100%") #{ nextItemName }
 						.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")

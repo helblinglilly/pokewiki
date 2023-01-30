@@ -27,13 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	document.getElementById("navbarBurger").addEventListener("click", () => {
-		const openSprite =
-			"https://archives.bulbagarden.net/media/upload/9/97/FRLG_Key_Items_pocket_M.png";
-		const closeSprite =
-			"https://archives.bulbagarden.net/media/upload/7/72/FRLG_Items_pocket_M.png";
+		const openSprite = "/static/assets/other/bag_open.png";
+		const closeSprite = "/static/assets/other/bag_closed.png";
 
 		const current = document.getElementById("burgerIcon");
-		if (current.currentSrc === openSprite) {
+
+		if (current.currentSrc.includes(openSprite)) {
 			current.src = closeSprite;
 		} else {
 			current.src = openSprite;

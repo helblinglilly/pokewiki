@@ -301,12 +301,12 @@ block append body
 						.columns.is-mobile
 							.column.has-text-centered.is-flex
 								a.keepQuery.invisible(href=`${form.url}`, style="width: 100%")
-									.box.accented.link.p-0.pb-3
+									.box.accented.link.p-0.pb-3(style="height: 100%; width: 100%")
 										img(src=`${form.sprites.primary}`)
 										p #{ form.name }
 							.column.has-text-centered.is-flex
 								a.keepQuery.invisible(href=`${form.url}`, style="width: 100%")
-									.box.accented.link.p-0.pb-3
+									.box.accented.link.p-0.pb-3(style="height: 100%; width: 100%")
 										img(src=`${form.sprites.shiny}`)
 										p Shiny #{ form.name }
 		if moveset.length > 0

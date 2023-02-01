@@ -298,17 +298,29 @@ block append body
 					p Forms
 				.card-content
 					each form in forms
-						.columns.is-mobile
-							.column.has-text-centered.is-flex
-								a.keepQuery.invisible(href=`${form.url}`, style="width: 100%")
-									.box.accented.link.p-0.pb-3(style="height: 100%; width: 100%")
-										img(src=`${form.sprites.primary}`)
-										p #{ form.name }
-							.column.has-text-centered.is-flex
-								a.keepQuery.invisible(href=`${form.url}`, style="width: 100%")
-									.box.accented.link.p-0.pb-3(style="height: 100%; width: 100%")
-										img(src=`${form.sprites.shiny}`)
-										p Shiny #{ form.name }
+						.columns.is-flex
+							a.keepQuery.invisible.column(href=`${form.url}`)
+								.box.accented.is-half(style="text-align: center; height: 100%")
+									img.image.formPrimary.is-128x128(
+										src=`${form.sprites.primary}`,
+										style="margin: auto"
+									)
+									p(style="margin-top: 15px") #{ form.name }
+							a.keepQuery.invisible.column(href=`${form.url}`)
+								.box.accented.is-half(style="text-align: center; height: 100%")
+									img.image.formPrimary.is-128x128(
+										src=`${form.sprites.shiny}`,
+										style="margin: auto"
+									)
+									p(style="margin-top: 15px") Shiny #{ form.name }
+							//- a.column.has-text-centered.keepQuery.invisible.is-flex(href=`${form.url}`)
+								.box.accented.link.p-0.pb-3
+									img.formPrimary(src=`${form.sprites.primary}`)
+									p #{ form.name }
+							//- a.column.has-text-centered.keepQuery.invisible.is-flex(href=`${form.url}`)
+								.box.accented.link.p-0.pb-3
+									img.formSecondary(src=`${form.sprites.shiny}`)
+									p Shiny #{ form.name }
 		if moveset.length > 0
 			.column
 				.card

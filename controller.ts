@@ -39,11 +39,11 @@ class Controller {
 		const pokedexEntries: { game: string; entry: string }[] = [];
 
 		// Names
-		const primName = Utils.findNameFromLanguageCode(
+		let primName = Utils.findNameFromLanguageCode(
 			speciesData.names,
 			this.primaryLanguageCode
 		);
-		const secName = Utils.findNameFromLanguageCode(
+		let secName = Utils.findNameFromLanguageCode(
 			speciesData.names,
 			this.secondaryLanguageCode
 		);
@@ -118,27 +118,26 @@ class Controller {
 			let parts = name.split("-");
 			parts = parts.map(word => word[0].toUpperCase() + word.slice(1));
 			name = parts.join(" ");
-			if (varietyId !== 0 && variety.id === id) {
-				// The whole entry is for a variety, and this is the OG
+
+			if (variety.id !== id && varietyId !== variety.id) {
+				forms.push({
+					name: name,
+					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
+					url: `/pokemon/${id}?variety=${variety.id}`,
+				});
+			} else if (variety.id === id && varietyId !== 0) {
 				forms.push({
 					name: name,
 					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
 					url: `/pokemon/${id}`,
 				});
-			} else if (varietyId !== 0 && variety.id !== varietyId) {
-				// This is a variety and the current entry is for the same one
-				forms.push({
-					name: name,
-					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
-					url: `/pokemon/${id}?variety=${variety.id}`,
-				});
-			} else if (varietyId === 0 && variety.id !== id) {
-				// This is the OG and there's a bunch of varieties - don't double count yourself
-				forms.push({
-					name: name,
-					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
-					url: `/pokemon/${id}?variety=${variety.id}`,
-				});
+			}
+
+			if (variety.id === varietyId) {
+				const form = name.split(" ");
+				form.shift();
+				primName = form.join(" ") + " " + primName;
+				secName = form.join(" ") + " " + secName;
 			}
 		});
 

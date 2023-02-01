@@ -301,26 +301,12 @@ block append body
 						.columns.is-flex
 							a.keepQuery.invisible.column(href=`${form.url}`)
 								.box.accented.is-half(style="text-align: center; height: 100%")
-									img.image.formPrimary.is-128x128(
-										src=`${form.sprites.primary}`,
-										style="margin: auto"
-									)
+									img.image.formPrimary(src=`${form.sprites.primary}`, style="margin: auto")
 									p(style="margin-top: 15px") #{ form.name }
 							a.keepQuery.invisible.column(href=`${form.url}`)
 								.box.accented.is-half(style="text-align: center; height: 100%")
-									img.image.formPrimary.is-128x128(
-										src=`${form.sprites.shiny}`,
-										style="margin: auto"
-									)
+									img.image.formPrimary(src=`${form.sprites.shiny}`, style="margin: auto")
 									p(style="margin-top: 15px") Shiny #{ form.name }
-							//- a.column.has-text-centered.keepQuery.invisible.is-flex(href=`${form.url}`)
-								.box.accented.link.p-0.pb-3
-									img.formPrimary(src=`${form.sprites.primary}`)
-									p #{ form.name }
-							//- a.column.has-text-centered.keepQuery.invisible.is-flex(href=`${form.url}`)
-								.box.accented.link.p-0.pb-3
-									img.formSecondary(src=`${form.sprites.shiny}`)
-									p Shiny #{ form.name }
 		if moveset.length > 0
 			.column
 				.card

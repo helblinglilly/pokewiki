@@ -47,14 +47,13 @@ block append body
 			each move in results.Moves
 				a.keepQuery(href=`${move.link}`)
 					.card.mb-3
-						.card-content.searchResult(style="align-items: center")
-							.container.mr-3(style="display: inline-grid")
-								img.icon.mb-1.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
-								img.icon.typeSprite(src=`${move.attack_type_sprite}`, alt="Move type Icon")
-							if move.english === move.german
-								p.card-text(style="display: inline") #{ move.english }
-							else
-								p.card-text(style="display: inline") #{ move.english } - #{ move.german }
+						.card-content.searchResult
+							.container.mb-1(style="display: inline-flex")
+								img.icon.mr-2.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
+								p.card-text #{ move.english }
+							.container.mb-1(style="display: flex")
+								img.icon.mr-2.typeSprite(src=`${move.attack_type_sprite}`, alt="Type Icon")
+								p.card-text #{ move.german }
 
 	if results.Abilities.length !== 0
 		p.title.is-4 Abilities

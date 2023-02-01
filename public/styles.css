@@ -137,6 +137,10 @@ div.searchResult:hover {
 	background-color: var(--linkhover);
 }
 
+img.typeSprite {
+	margin-top: auto;
+}
+
 .box.accented {
 	background-color: var(--primary);
 }

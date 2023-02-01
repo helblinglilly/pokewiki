@@ -796,6 +796,42 @@ class Controller {
 				) {
 					const moveDetail = Moves.find(a => a.english_id === move.move.name);
 					if (moveDetail !== undefined) {
+						const legacyTypeGenerations = ["i", "ii", "iii"];
+						if (legacyTypeGenerations.includes(foundVersion.generation)) {
+							const physicalTypes = [
+								"normal",
+								"fighting",
+								"poison",
+								"gorund",
+								"flying",
+								"bug",
+								"rock",
+								"ghost",
+								"steel",
+							];
+							const specialTypes = [
+								"fire",
+								"water",
+								"electric",
+								"grass",
+								"ice",
+								"physic",
+								"dragon",
+								"dark",
+							];
+							if (
+								physicalTypes.includes(moveDetail.type) &&
+								!moveDetail.attack_type_sprite.includes("special")
+							) {
+								moveDetail.attack_type_sprite =
+									"/static/assets/attack-types/physical.png";
+							} else if (
+								specialTypes.includes(moveDetail.type) &&
+								!moveDetail.attack_type_sprite.includes("special")
+							) {
+								moveDetail.attack_type_sprite = "/static/assets/attack-types/special.png";
+							}
+						}
 						const move = {
 							...moveDetail,
 							learning_method: version.move_learn_method.name,

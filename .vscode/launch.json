@@ -9,8 +9,9 @@
 			"request": "launch",
 			"name": "Launch Program",
 			"skipFiles": ["<node_internals>/**"],
-			"program": "${workspaceFolder}/api/app.ts",
+			"program": "./api/app.js",
 			"preLaunchTask": "npm: build",
+			"cwd": "${workspaceFolder}/dist",
 			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
 			"internalConsoleOptions": "openOnSessionStart"
 		}

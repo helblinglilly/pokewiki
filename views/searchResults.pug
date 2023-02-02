@@ -59,7 +59,7 @@ block append body
 		p.title.is-4 Abilities
 		#AbilityResults.container
 			each ability in results.Abilities
-				a.keepQuery(href=`/ability/${ability.id}`)
+				a.keepQuery(href=`${ability.link}`)
 					.card.mb-3
 						.card-content.searchResult
 							if ability.primaryLang === ability.secondaryLang

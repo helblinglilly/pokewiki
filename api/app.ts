@@ -46,13 +46,15 @@ if (buildType === "Build") {
 }
 
 export const appSettings = {
-	primaryLanguage: "en",
-	secondaryLanguage: "de",
+	primaryLanguageCode: "en",
+	secondaryLanguageCode: "de",
 	maxSearchResults: 10,
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
 	highestPokedexId: 1008,
 	highestItemId: 1658,
+	highestAbilityId: 298,
+	extraAbilityRange: [10001, 10060],
 	placeholderImage:
 		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png",
 };

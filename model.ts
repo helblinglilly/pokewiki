@@ -19,6 +19,7 @@ import Items from "./public/pokedata/items.json";
 import Moves from "./public/pokedata/moves.json";
 import Abilities from "./public/pokedata/abilities.json";
 import log from "./log";
+import Utils from "./utils";
 
 interface Cache {
 	pokemon: {
@@ -286,14 +287,22 @@ export class Data {
 		const result = Pokemon.find(a => a.id === id);
 		if (!result) return undefined;
 
-		return undefined;
-		/*
+		let primaryName = "";
+		let secondaryName = "";
+		result.names.forEach(b => {
+			for (const [key, value] of Object.entries(b)) {
+				if (key === this.primaryLangKey) primaryName = value;
+				else if (key === this.secondaryLangKey) secondaryName = value;
+			}
+		});
+
 		return {
-			...result,
+			primaryLang: primaryName,
+			secondaryLang: secondaryName,
+			id: result.id,
 			link: `/pokemon/${result.id}`,
 			sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${result.id}.png`,
 		};
-		*/
 	};
 
 	findPokemonFromName = (name: string): PokemonName[] => {

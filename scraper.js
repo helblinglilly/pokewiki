@@ -183,8 +183,8 @@ const fixMoves = () => {
 };
 
 const abilities = async () => {
-	const startFrom = 10001;
-	const upTo = 10012;
+	const startFrom = 10012;
+	const upTo = 10060;
 
 	const results = [];
 

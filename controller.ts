@@ -14,6 +14,7 @@ import {
 	VersionGroup,
 	GenericSprites,
 	APIResponseItem,
+	PokemonName,
 } from "./types";
 import { appSettings } from "./api/app";
 
@@ -535,7 +536,6 @@ class Controller {
 		};
 	};
 
-	// TODO should not make this static so that custom languages can be supported
 	getSearchResults = async (
 		searchTerm: string,
 		pokemon: boolean,
@@ -553,6 +553,81 @@ class Controller {
 			Items: itemResults.slice(0, appSettings.maxSearchResults),
 			Moves: moveResults.slice(0, appSettings.maxSearchResults),
 			Abilities: abilityResults.slice(0, appSettings.maxSearchResults),
+		};
+	};
+
+	getAbility = async (id: number, game?: string) => {
+		const ability = await this.data.getAbility(id);
+
+		const primaryLang = Utils.findNameFromLanguageCode(
+			ability.names,
+			this.primaryLanguageCode
+		);
+		const secondaryLang = Utils.findNameFromLanguageCode(
+			ability.names,
+			this.secondaryLanguageCode
+		);
+
+		let pokemon: PokemonName[] = [];
+		ability.pokemon.forEach(a => {
+			const id = a.pokemon.url.split("/")[6];
+			const details = this.data.findPokemonNameFromId(parseInt(id));
+
+			if (details) {
+				pokemon.push(details);
+			}
+		});
+
+		const primaryFlavorText = ability.flavor_text_entries.filter(
+			a => a.language.name === this.primaryLanguageCode
+		)[0];
+		const secondaryFlavorText = ability.flavor_text_entries.filter(
+			a => a.language.name === this.secondaryLanguageCode
+		)[0];
+
+		const foundGame = Games.findEntry(game ? game : "");
+		const gameParts = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
+		const gameString = gameParts.join(" / ").replace(/-/g, " ");
+
+		let primaryLangEffectEntry = ability.effect_entries.filter(
+			a => a.language.name === this.primaryLanguageCode
+		)[0];
+		let secondaryLangEffectEntry = ability.effect_entries.filter(
+			a => a.language.name === this.secondaryLanguageCode
+		)[0];
+
+		const generationChange: { text: string; altEntryEffect: string }[] = [];
+
+		const selectedId = Games.generationOrder.indexOf(foundGame.generation);
+		ability.effect_changes.forEach(change => {
+			const changeGame = Games.findEntry(change.version_group.name);
+
+			let primary = "";
+			let secondary = "";
+			change.effect_entries.forEach(a => {
+				if (a.language.name === this.primaryLanguageCode) primary = a.effect;
+				else if (a.language.name === this.secondaryLanguageCode) secondary = a.effect;
+			});
+
+			generationChange.push({
+				text: `Effect before generation ${changeGame.generation}:`,
+				altEntryEffect: primary ? primary : secondary,
+			});
+		});
+
+		return {
+			primaryLanguage: primaryLang,
+			secondaryLanguage: secondaryLang,
+			game: gameString,
+			effectEntry: primaryLangEffectEntry
+				? primaryLangEffectEntry.short_effect
+				: secondaryLangEffectEntry.short_effect,
+			flavorText: primaryFlavorText
+				? primaryFlavorText.flavor_text
+				: secondaryFlavorText.flavor_text,
+			introduced: ability.generation.name.split("-")[1],
+			generationChange: generationChange,
+			pokemon: pokemon,
 		};
 	};
 

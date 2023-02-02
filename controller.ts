@@ -58,9 +58,11 @@ class Controller {
 		// Abilities
 		const abilities = abilitiesData.map(entry => {
 			const pkmnAbility = pokemonData.abilities.find(a => a.ability.name === entry.name);
-			const name = Utils.findNameFromLanguageCode(entry.names, "en");
+			const name = Utils.findNameFromLanguageCode(entry.names, this.primaryLanguageCode);
 			const isHidden = pkmnAbility && pkmnAbility.is_hidden ? true : false;
-			const effectEntry = entry.effect_entries.find(a => a.language.name === "en");
+			const effectEntry = entry.effect_entries.find(
+				a => a.language.name === this.primaryLanguageCode
+			);
 
 			return {
 				name: name ? name : entry.name,
@@ -549,8 +551,8 @@ class Controller {
 		return {
 			Pokemon: pkmnResults.slice(0, appSettings.maxSearchResults),
 			Items: itemResults.slice(0, appSettings.maxSearchResults),
-			Moves: moveResults,
-			Abilities: [],
+			Moves: moveResults.slice(0, appSettings.maxSearchResults),
+			Abilities: abilityResults.slice(0, appSettings.maxSearchResults),
 		};
 	};
 

@@ -373,7 +373,7 @@ export class Data {
 		return results;
 	};
 
-	findAbilityFromName = (name: string): GenericEntry[] => {
+	findAbilityFromName = (name: string): GenericResult[] => {
 		name = name.toLocaleLowerCase();
 
 		const regex = new RegExp(
@@ -384,24 +384,25 @@ export class Data {
 			"gi"
 		);
 
-		const results: GenericEntry[] = [];
+		const results: GenericResult[] = [];
 		Abilities.forEach(a => {
-			if (results.length === this.searchResults) {
-				return;
+			let primaryName = "";
+			let secondaryName = "";
+
+			a.names.forEach(b => {
+				for (const [key, value] of Object.entries(b)) {
+					if (key === this.primaryLangKey) primaryName = value;
+					else if (key === this.secondaryLangKey) secondaryName = value;
+				}
+			});
+
+			if (regex.test(primaryName) || regex.test(secondaryName)) {
+				results.push({
+					primaryLang: primaryName,
+					secondaryLang: secondaryName,
+					id: a.id,
+				});
 			}
-
-			let german = a.german.toLocaleLowerCase();
-			german.replace("ä", "a");
-			german.replace("ü", "u");
-			german.replace("ö", "o");
-
-			const entry = {
-				...a,
-				link: `/ability/${a.id}`,
-				sprite: ``,
-			};
-			if (regex.test(german)) results.push(entry);
-			else if (regex.test(a.english)) results.push(entry);
 		});
 
 		return results;

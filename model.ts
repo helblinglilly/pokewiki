@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+	AbilityResult,
 	APIResponseAbility,
 	APIResponseEvolution,
 	APIResponseForm,
@@ -8,7 +9,6 @@ import {
 	APIResponseMove,
 	APIResponsePokemon,
 	APIResponseSpecies,
-	GenericEntry,
 	GenericResult,
 	ItemResult,
 	MoveEntry,
@@ -373,7 +373,7 @@ export class Data {
 		return results;
 	};
 
-	findAbilityFromName = (name: string): GenericResult[] => {
+	findAbilityFromName = (name: string): AbilityResult[] => {
 		name = name.toLocaleLowerCase();
 
 		const regex = new RegExp(
@@ -384,7 +384,7 @@ export class Data {
 			"gi"
 		);
 
-		const results: GenericResult[] = [];
+		const results: AbilityResult[] = [];
 		Abilities.forEach(a => {
 			let primaryName = "";
 			let secondaryName = "";
@@ -401,6 +401,7 @@ export class Data {
 					primaryLang: primaryName,
 					secondaryLang: secondaryName,
 					id: a.id,
+					link: `/ability/${a.id}`,
 				});
 			}
 		});

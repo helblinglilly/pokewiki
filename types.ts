@@ -182,8 +182,11 @@ export interface ItemResult extends GenericResult {
 	link: string;
 }
 
+export interface AbilityResult extends GenericResult {
+	link: string;
+}
 export interface Collection {
-	Abilities?: GenericResult[];
+	Abilities?: AbilityResult[];
 	Items?: ItemResult[];
 	Moves?: MoveEntry[];
 	Types?: GenericResult[];

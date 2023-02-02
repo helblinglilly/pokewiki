@@ -182,6 +182,40 @@ const fixMoves = () => {
 	fs.writeFileSync("fixedMoves.json", JSON.stringify(fixed), "utf-8");
 };
 
+const abilities = async () => {
+	const startFrom = 10001;
+	const upTo = 10012;
+
+	const results = [];
+
+	for (let i = startFrom; i <= upTo; i++) {
+		let response;
+		try {
+			response = await axios.get(`https://pokeapi.co/api/v2/ability/${i}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
+			console.log(i);
+		} catch (err) {
+			console.log(i, "failed", err.response.status);
+			continue;
+		}
+
+		const names = [];
+		response.data.names.forEach(entry => {
+			const languageCode = entry.language.name;
+			const name = entry.name;
+			names.push({ [languageCode]: name });
+		});
+
+		results.push({
+			names: names,
+			id: i,
+		});
+		await new Promise(r => setTimeout(r, 500));
+	}
+	fs.writeFileSync("newAbilities.json", JSON.stringify(results), "utf8");
+};
+
 const addTypeSprites = () => {
 	const types = JSON.parse(fs.readFileSync("./public/pokedata/types.json"));
 	let moves = JSON.parse(fs.readFileSync("./public/pokedata/moves.json"));
@@ -202,12 +236,13 @@ const addTypeSprites = () => {
 
 // fixMoves();
 // pokemon();
-items().then(() => {
-	const brokenItems = findBrokenItems(2050);
-	fixBrokenItems(brokenItems).then(() => {
-		console.log("done");
-	});
-});
+abilities();
+// items().then(() => {
+// 	const brokenItems = findBrokenItems(2050);
+// 	fixBrokenItems(brokenItems).then(() => {
+// 		console.log("done");
+// 	});
+// });
 // addTypeSprites();
 
 // moves();

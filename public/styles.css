@@ -105,6 +105,7 @@ div.notification.is-warning > p {
 
 div.card,
 div.card-content,
+div.card-header-title,
 div.box,
 figure.container {
 	background-color: var(--accent);

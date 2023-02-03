@@ -57,8 +57,8 @@ block append body
 									img#sprite-back.pokemonSprite(src=`${sprites.secondary}`)
 									p#secondarySupportText.is-italic
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Evolution chain
 				.card-content.pt-1
 					if evolutions.length === 0
@@ -168,8 +168,8 @@ block append body
 	//- Abilities and Base Stats
 	.columns
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Abilities
 				.card-content
 					each ability in abilities
@@ -180,8 +180,8 @@ block append body
 									p.is-italic Hidden
 								p #{ ability.effect }
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Base stats
 				.card-content
 					table#statsTable.table(style="width: 100%")
@@ -262,8 +262,8 @@ block append body
 	//- Pokedex and Other info
 	.columns
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Pokédex entry
 				.card-content.pt-1
 					.columns
@@ -279,8 +279,8 @@ block append body
 					else
 						p Select a game where this Pokémon is featured to see its Pokédex entry.
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Other Info
 				.card-content
 					p.title.is-6 Catch rate: #{ captureRate }
@@ -293,8 +293,8 @@ block append body
 	//- Forms and Moveset
 	.columns
 		.column
-			.card
-				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible
+				.card-header-title
 					p Forms
 				.card-content
 					each form in forms
@@ -309,8 +309,8 @@ block append body
 									p(style="margin-top: 15px") Shiny #{ form.name }
 		if moveset.length > 0
 			.column
-				.card
-					.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
+				.card.collapsible
+					.card-header-title
 						p Moveset
 					.card-content.pt-1
 						table.table.is-striped.is-hoverable(style="width: 100%")

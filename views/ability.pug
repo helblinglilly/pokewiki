@@ -16,19 +16,19 @@ block append body
 						p.is-capitalized.has-text-weight-bold #{ game }
 						p #{ effectEntry }
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsible(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Info
 				.card-content(style="width: 100%")
 					p.mb-3 Introduced in generation: #{ introduced }
-					each change in generationChange
-						p.mb-3 #{ change.text }
-						.box.accented.nohover
-							p #{ change.altEntryEffect }
+						each change in generationChange
+							p.mb-3 #{ change.text }
+							.box.accented.nohover
+								p #{ change.altEntryEffect }
 	.columns
 		.column
-			.card
-				.card-header-title.collapsible(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible
+				.card-header-title
 					p Pokémon that can have this ability
 				.card-content.m-3
 					each pkmn in pokemon

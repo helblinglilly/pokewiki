@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	if (isMobile) {
 		document.querySelectorAll(".collapsible").forEach(item => {
-			toggleCardContentVisibility(item);
+			collapseCard(item);
 		});
 	}
 
@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	checkAllImages();
 	addQueryrefToAllLinks();
+	makeElementsCollapsible();
 });
 
 const setDarkMode = () => {
@@ -182,13 +183,33 @@ const populateSearchFilters = () => {
 	}
 };
 
-const toggleCardContentVisibility = sender => {
-	sender.parentElement.childNodes.forEach(child => {
-		if (child.classList.contains("card-content")) {
-			if (child.getAttribute("hidden") === null) child.setAttribute("hidden", "");
-			else child.removeAttribute("hidden");
-		}
+const makeElementsCollapsible = () => {
+	document.querySelectorAll(".collapsible").forEach(el => {
+		el.querySelectorAll(".card-header-title").forEach(a => {
+			a.classList.add("link");
+			a.addEventListener("click", () => {
+				collapseCard(el);
+			});
+		});
 	});
+};
+
+const collapseCard = card => {
+	const cardContent = card.querySelector(".card-content");
+
+	if (cardContent.hasAttribute("hidden")) {
+		cardContent.removeAttribute("hidden");
+		card.style.backgroundColor = "var(--accent)";
+		card.style.height = "100%";
+		card.style.boxShadow =
+			"0 .5em 1em -.125em rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.02)";
+	} else {
+		cardContent.setAttribute("hidden", "");
+		card.querySelector(".card-header-title").style.boxShadow =
+			"0 .5em 1em -.125em rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.02)";
+		card.style.backgroundColor = "transparent";
+		card.style.boxShadow = "none";
+	}
 };
 
 const checkAllImages = () => {

@@ -67,10 +67,8 @@ block append body
 
 		//- Attributes
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.is-justify-content-space-between.collapsible.link(
-					onclick="toggleCardContentVisibility(this);"
-				)
+			.card.collapsible(style="width: 100%")
+				.card-header-title.is-justify-content-space-between
 					p Attributes
 				.card-content
 					table.table.is-bordered.is-narrow(style="width: 100%")

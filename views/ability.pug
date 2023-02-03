@@ -17,7 +17,7 @@ block append body
 						p #{ effectEntry }
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable(onclick="toggleCardContentVisibility(this);")
+				.card-header-title.collapsible(onclick="toggleCardContentVisibility(this);")
 					p Info
 				.card-content(style="width: 100%")
 					p.mb-3 Introduced in generation: #{ introduced }
@@ -28,7 +28,7 @@ block append body
 	.columns
 		.column
 			.card
-				.card-header-title.collapsable(onclick="toggleCardContentVisibility(this);")
+				.card-header-title.collapsible(onclick="toggleCardContentVisibility(this);")
 					p Pokémon that can have this ability
 				.card-content.m-3
 					each pkmn in pokemon

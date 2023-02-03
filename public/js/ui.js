@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	populateSearchFilters();
 
 	if (isMobile) {
-		document.querySelectorAll(".collapsable").forEach(item => {
+		document.querySelectorAll(".collapsible").forEach(item => {
 			toggleCardContentVisibility(item);
 		});
 	}

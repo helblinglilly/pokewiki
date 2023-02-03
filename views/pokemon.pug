@@ -58,7 +58,7 @@ block append body
 									p#secondarySupportText.is-italic
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
 					p Evolution chain
 				.card-content.pt-1
 					if evolutions.length === 0
@@ -169,7 +169,7 @@ block append body
 	.columns
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
 					p Abilities
 				.card-content
 					each ability in abilities
@@ -181,7 +181,7 @@ block append body
 								p #{ ability.effect }
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
 					p Base stats
 				.card-content
 					table#statsTable.table(style="width: 100%")
@@ -263,7 +263,7 @@ block append body
 	.columns
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
 					p Pokédex entry
 				.card-content.pt-1
 					.columns
@@ -280,7 +280,7 @@ block append body
 						p Select a game where this Pokémon is featured to see its Pokédex entry.
 		.column.is-flex
 			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
 					p Other Info
 				.card-content
 					p.title.is-6 Catch rate: #{ captureRate }
@@ -294,7 +294,7 @@ block append body
 	.columns
 		.column
 			.card
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+				.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
 					p Forms
 				.card-content
 					each form in forms
@@ -310,7 +310,7 @@ block append body
 		if moveset.length > 0
 			.column
 				.card
-					.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+					.card-header-title.collapsible.link(onclick="toggleCardContentVisibility(this);")
 						p Moveset
 					.card-content.pt-1
 						table.table.is-striped.is-hoverable(style="width: 100%")

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-	const selectedMode = getCookie("theme");
+	const selectedMode = getItem("theme");
 	if (selectedMode === "dark-mode") setDarkMode();
 	else setLightMode();
 
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.body.classList.toggle("dark-mode");
 		document.body.classList.toggle("light-mode");
 		const newMode = document.body.classList[0];
-		setCookie("theme", newMode);
+		setItem("theme", newMode);
 	});
 
 	document.getElementById("navbarBurger").addEventListener("click", () => {

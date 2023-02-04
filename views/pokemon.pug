@@ -1,6 +1,7 @@
 extends ./header.pug
 block append head
 	script(src="/static/js/pokemon.js")
+	script(src="/static/js/giffer.min.js")
 block append body
 	if selectedGames.version_group_name === "all"
 		.notification.is-warning
@@ -49,12 +50,18 @@ block append body
 					.columns.mb-0.is-mobile
 						.column
 							.has-text-centered
-								img#sprite-front.pokemonSprite(src=`${sprites.primary}`)
+								img#sprite-front.pokemonSprite(
+									src=`${sprites.primary}`,
+									data-gifffer=`${sprites.primary}`
+								)
 								p#primarySupportText.is-italic
 						if sprites.primary !== sprites.secondary
 							.column
 								.has-text-centered
-									img#sprite-back.pokemonSprite(src=`${sprites.secondary}`)
+									img#sprite-back.pokemonSprite(
+										src=`${sprites.secondary}`,
+										data-gifffer=`${sprites.secondary}`
+									)
 									p#secondarySupportText.is-italic
 		.column.is-flex
 			.card.collapsible(style="width: 100%")

@@ -601,6 +601,7 @@ class Controller {
 		const selectedId = Games.generationOrder.indexOf(foundGame.generation);
 		ability.effect_changes.forEach(change => {
 			const changeGame = Games.findEntry(change.version_group.name);
+			const changeGenerationId = Games.generationOrder.indexOf(changeGame.generation);
 
 			let primary = "";
 			let secondary = "";
@@ -609,16 +610,45 @@ class Controller {
 				else if (a.language.name === this.secondaryLanguageCode) secondary = a.effect;
 			});
 
-			generationChange.push({
-				text: `Effect before generation ${changeGame.generation}:`,
-				altEntryEffect: primary ? primary : secondary,
-			});
+			if (selectedId < changeGenerationId) {
+				generationChange.push({
+					text: `Behaviour after generation ${changeGame.generation}`,
+					altEntryEffect: primaryLangEffectEntry.short_effect
+						? primaryLangEffectEntry.short_effect
+						: secondaryLangEffectEntry.short_effect,
+				});
+
+				// Use the old entry
+				primaryLangEffectEntry = change.effect_entries.filter(a => {
+					a.language.name === this.primaryLanguageCode;
+				})[0];
+				secondaryLangEffectEntry = ability.effect_entries.filter(
+					a => a.language.name === this.secondaryLanguageCode
+				)[0];
+			} else {
+				generationChange.push({
+					text: `Effect before generation ${changeGame.generation}:`,
+					altEntryEffect: primary ? primary : secondary,
+				});
+			}
 		});
+
+		const abilitySelectedId = Games.generationOrder.indexOf(
+			ability.generation.name.split("-")[1]
+		);
+
+		if (selectedId >= 0 && selectedId < abilitySelectedId) {
+			primaryLangEffectEntry = {
+				effect: primaryLangEffectEntry.effect,
+				language: { name: this.primaryLanguageCode },
+				short_effect: "This ability did not exist in this game yet",
+			};
+		}
 
 		return {
 			primaryLanguage: primaryLang,
 			secondaryLanguage: secondaryLang,
-			game: gameString,
+			game: gameString === "All" ? "" : gameString,
 			effectEntry: primaryLangEffectEntry
 				? primaryLangEffectEntry.short_effect
 				: secondaryLangEffectEntry.short_effect,

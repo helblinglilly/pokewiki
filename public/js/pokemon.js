@@ -2,8 +2,9 @@ window.onload = () => {
 	var gifs = Gifffer();
 
 	setTimeout(function () {
-		gifs[0].click();
-		gifs[1].click();
+		gifs.forEach(gif => {
+			gif.click();
+		});
 	}, 100);
 };
 
@@ -55,7 +56,10 @@ const initialiseSprites = () => {
 };
 
 const adjustShowcaseSprites = sprite => {
-	const src = sprite.getAttribute("data-gifffer");
+	let src = sprite.getAttribute("data-gifffer");
+	if (!src) {
+		src = sprite.currentSrc;
+	}
 
 	if (src) {
 		if (src.includes("/ultra-sun-ultra-moon")) {
@@ -72,11 +76,13 @@ const adjustShowcaseSprites = sprite => {
 			src.includes("/diamond-pearl/") ||
 			src.includes("/platinum/") ||
 			src.includes("/heartgold-soulsilver/") ||
-			src.includes(".gif") ||
-			src.includes("/x-y/")
+			src.includes("/black-white")
 		) {
 			sprite.setAttribute("style", "height: 70%; width: 70%");
 			sprite.classList.add("is-square");
+		} else if (src.includes("/x-y/")) {
+			sprite.style.width = "50%";
+			sprite.setAttribute("style", "width: 50%");
 		}
 	}
 };

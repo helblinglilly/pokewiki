@@ -50,18 +50,24 @@ block append body
 					.columns.mb-0.is-mobile
 						.column
 							.has-text-centered
-								img#sprite-front.pokemonSprite(
-									src=`${sprites.primary}`,
-									data-gifffer=`${sprites.primary}`
-								)
+								if sprites.primary.includes(".gif")
+									img#sprite-front.pokemonSprite(
+										src=`${sprites.primary}`,
+										data-gifffer=`${sprites.primary}`
+									)
+								else
+									img#sprite-front.pokemonSprite(src=`${sprites.primary}`)
 								p#primarySupportText.is-italic
 						if sprites.primary !== sprites.secondary
 							.column
 								.has-text-centered
-									img#sprite-back.pokemonSprite(
-										src=`${sprites.secondary}`,
-										data-gifffer=`${sprites.secondary}`
-									)
+									if sprites.secondary.includes(".gif")
+										img#sprite-back.pokemonSprite(
+											src=`${sprites.secondary}`,
+											data-gifffer=`${sprites.secondary}`
+										)
+									else
+										img#sprite-back.pokemonSprite(src=`${sprites.secondary}`)
 									p#secondarySupportText.is-italic
 		.column.is-flex
 			.card.collapsible(style="width: 100%")

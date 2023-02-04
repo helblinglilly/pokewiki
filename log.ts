@@ -12,6 +12,6 @@ prefix.apply(log, {
 	},
 });
 
-log.setDefaultLevel("WARN");
+log.setDefaultLevel("INFO");
 
 export default log;

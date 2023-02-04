@@ -40,7 +40,7 @@ const buildInfo =
 		: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 6);
 
 if (buildType === "Build") {
-	log.setDefaultLevel("WARN");
+	log.setDefaultLevel("INFO");
 } else {
 	log.setDefaultLevel("DEBUG");
 }

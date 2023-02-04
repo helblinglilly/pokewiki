@@ -197,7 +197,7 @@ class Controller {
 				if (selectedGames.consistsOf.includes(entry.version.name)) {
 					if (entry.language.name === this.primaryLanguageCode) {
 						pokedexEntries.push({
-							game: entry.version.name,
+							game: entry.version.name.replace(new RegExp("-", "g"), " "),
 							entry: entry.flavor_text,
 						});
 					}

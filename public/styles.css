@@ -45,6 +45,22 @@ body {
 	display: flex;
 	flex-direction: column;
 }
+
+#navbarMenu {
+	background-color: var(--navbar);
+	color: var(--secondary);
+}
+
+#burgerIcon {
+	height: 35px;
+	width: auto;
+	/* margin: 10px; */
+}
+
+a.navbar-item:hover {
+	background-color: var(--primary);
+}
+
 .flex {
 	flex: 1;
 	display: flex;
@@ -64,8 +80,8 @@ label {
 }
 
 .itemSprite {
-	width: 50px;
-	height: 50px;
+	width: 40px;
+	height: 40px;
 }
 
 a,
@@ -89,6 +105,7 @@ div.notification.is-warning > p {
 
 div.card,
 div.card-content,
+div.card-header-title,
 div.box,
 figure.container {
 	background-color: var(--accent);
@@ -121,6 +138,10 @@ div.searchResult:hover {
 	background-color: var(--linkhover);
 }
 
+img.typeSprite {
+	margin-top: auto;
+}
+
 .box.accented {
 	background-color: var(--primary);
 }
@@ -149,8 +170,9 @@ td,
 	display: none;
 }
 
-.otherEntryContent:hover {
-	background-color: var(--linkhover);
+.otherEntry:hover,
+.otherEntry:hover .otherEntryContent {
+	background-color: var(--primary);
 }
 
 img.typeSprite {
@@ -165,6 +187,18 @@ img.pokemonSprite {
 
 .link {
 	cursor: pointer;
+}
+
+.box.accented.noHover:hover {
+	background-color: var(--primary);
+}
+
+img.link:hover {
+	background-color: var(--accent);
+}
+
+a.keepQuery.invisible:hover {
+	background-color: var(--accent);
 }
 
 table#statsTable * {
@@ -188,7 +222,18 @@ table#statsTable * {
 	.otherNumber {
 		display: none;
 	}
+	#itemNavPrev {
+		text-align: center;
+		margin: auto;
+	}
+	#itemNavNext {
+		text-align: center;
+		margin: auto;
+		display: flex;
+		flex-direction: column-reverse;
+	}
 }
+
 @media screen and (min-width: 768px) {
 	.otherEntry {
 		max-width: 150px !important;

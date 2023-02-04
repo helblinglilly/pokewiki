@@ -14,22 +14,23 @@ import {
 	VersionGroup,
 	GenericSprites,
 	APIResponseItem,
+	PokemonName,
 } from "./types";
 import { appSettings } from "./api/app";
-
-const data = new Data();
 
 class Controller {
 	primaryLanguageCode: string;
 	secondaryLanguageCode: string;
+	data: Data;
 
 	constructor(primLang: string, secLang: string) {
 		this.primaryLanguageCode = primLang;
 		this.secondaryLanguageCode = secLang;
+		this.data = new Data(primLang, secLang);
 	}
 
 	getPokemonDetail = async (id: number, varietyId: number, game?: string) => {
-		const apidata = await data.pokemonData(id, varietyId);
+		const apidata = await this.data.pokemonData(id, varietyId);
 		const pokemonData = apidata.pokemon;
 		const speciesData = apidata.species;
 		const evolutionData = apidata.evolution;
@@ -39,11 +40,11 @@ class Controller {
 		const pokedexEntries: { game: string; entry: string }[] = [];
 
 		// Names
-		const primName = Utils.findNameFromLanguageCode(
+		let primName = Utils.findNameFromLanguageCode(
 			speciesData.names,
 			this.primaryLanguageCode
 		);
-		const secName = Utils.findNameFromLanguageCode(
+		let secName = Utils.findNameFromLanguageCode(
 			speciesData.names,
 			this.secondaryLanguageCode
 		);
@@ -58,9 +59,11 @@ class Controller {
 		// Abilities
 		const abilities = abilitiesData.map(entry => {
 			const pkmnAbility = pokemonData.abilities.find(a => a.ability.name === entry.name);
-			const name = Utils.findNameFromLanguageCode(entry.names, "en");
+			const name = Utils.findNameFromLanguageCode(entry.names, this.primaryLanguageCode);
 			const isHidden = pkmnAbility && pkmnAbility.is_hidden ? true : false;
-			const effectEntry = entry.effect_entries.find(a => a.language.name === "en");
+			const effectEntry = entry.effect_entries.find(
+				a => a.language.name === this.primaryLanguageCode
+			);
 
 			return {
 				name: name ? name : entry.name,
@@ -118,27 +121,26 @@ class Controller {
 			let parts = name.split("-");
 			parts = parts.map(word => word[0].toUpperCase() + word.slice(1));
 			name = parts.join(" ");
-			if (varietyId !== 0 && variety.id === id) {
-				// The whole entry is for a variety, and this is the OG
+
+			if (variety.id !== id && varietyId !== variety.id) {
+				forms.push({
+					name: name,
+					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
+					url: `/pokemon/${id}?variety=${variety.id}`,
+				});
+			} else if (variety.id === id && varietyId !== 0) {
 				forms.push({
 					name: name,
 					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
 					url: `/pokemon/${id}`,
 				});
-			} else if (varietyId !== 0 && variety.id !== varietyId) {
-				// This is a variety and the current entry is for the same one
-				forms.push({
-					name: name,
-					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
-					url: `/pokemon/${id}?variety=${variety.id}`,
-				});
-			} else if (varietyId === 0 && variety.id !== id) {
-				// This is the OG and there's a bunch of varieties - don't double count yourself
-				forms.push({
-					name: name,
-					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
-					url: `/pokemon/${id}?variety=${variety.id}`,
-				});
+			}
+
+			if (variety.id === varietyId) {
+				const form = name.split(" ");
+				form.shift();
+				primName = form.join(" ") + " " + primName;
+				secName = form.join(" ") + " " + secName;
 			}
 		});
 
@@ -317,8 +319,8 @@ class Controller {
 		}
 
 		return {
-			english: primName,
-			german: secName,
+			primaryName: primName,
+			secondaryName: secName,
 			id: id,
 			link: `/pokemon/${id}`,
 			sprites: showcaseSprites,
@@ -384,7 +386,7 @@ class Controller {
 		let nextItemSprite = appSettings.placeholderImage;
 
 		try {
-			itemData = await data.getItem(id);
+			itemData = await this.data.getItem(id);
 			primaryLangName = Utils.findNameFromLanguageCode(
 				itemData.names,
 				this.primaryLanguageCode
@@ -405,22 +407,41 @@ class Controller {
 			if (game) {
 				const foundGame = Games.findEntry(game);
 				if (foundGame.version_group_name !== "all") {
+					let existsInGame = false;
+					let primaryLangText = "";
+					let secondaryLangText = "";
 					itemData.flavor_text_entries.forEach(entry => {
-						if (entry.language.name === this.primaryLanguageCode) {
-							secondaryEntry.entry = entry.text;
+						if (foundGame.version_group_name === entry.version_group.name) {
+							existsInGame = true;
+
+							if (entry.language.name === this.primaryLanguageCode) {
+								primaryLangText = entry.text;
+							} else if (entry.language.name === this.secondaryLanguageCode) {
+								secondaryLangText = entry.text;
+							}
+
 							const game = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
 							secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
 						}
 					});
+
+					if ((existsInGame && primaryLangText) || secondaryLangText) {
+						secondaryEntry.entry = primaryLangText ? primaryLangText : secondaryLangText;
+					} else if (existsInGame) {
+						secondaryEntry.entry = "No description found for the selected languages";
+					} else {
+						secondaryEntry.entry = "This item does not exist in this game";
+					}
+
 					if (itemData.machines.length > 0) {
 						const correctEntry = itemData.machines.find(
 							a => a.version_group.name === foundGame.version_group_name
 						);
 						if (correctEntry) {
 							const id = correctEntry.machine.url.split("/")[6];
-							const machineData = await data.getMachine(parseInt(id));
+							const machineData = await this.data.getMachine(parseInt(id));
 							const moveId = machineData.move.url.split("/")[6];
-							const moveData = await data.getMove(parseInt(moveId));
+							const moveData = await this.data.getMove(parseInt(moveId));
 
 							secondaryEntry.entry = Utils.findNameFromLanguageCode(
 								moveData.names,
@@ -468,7 +489,7 @@ class Controller {
 
 		try {
 			if (id - 1 > 0) {
-				previousItemData = await data.getItem(id - 1);
+				previousItemData = await this.data.getItem(id - 1);
 				previousItemName = Utils.findNameFromLanguageCode(
 					previousItemData.names,
 					this.primaryLanguageCode
@@ -481,7 +502,7 @@ class Controller {
 
 		try {
 			if (id + 1 <= appSettings.highestItemId) {
-				nextItemData = await data.getItem(id + 1);
+				nextItemData = await this.data.getItem(id + 1);
 				nextItemName = Utils.findNameFromLanguageCode(
 					nextItemData.names,
 					this.primaryLanguageCode
@@ -515,24 +536,128 @@ class Controller {
 		};
 	};
 
-	// TODO should not make this static so that custom languages can be supported
-	static getSearchResults = async (
+	getSearchResults = async (
 		searchTerm: string,
 		pokemon: boolean,
 		items: boolean,
 		moves: boolean,
 		abilities: boolean
 	): Promise<Collection> => {
-		const pkmnResults = pokemon ? data.findPokemonFromName(searchTerm) : [];
-		const itemResults = items ? data.findItemFromName(searchTerm) : [];
-		const moveResults = moves ? data.findMoveFromName(searchTerm) : [];
-		const abilityResults = abilities ? data.findAbilityFromName(searchTerm) : [];
+		const pkmnResults = pokemon ? this.data.findPokemonFromName(searchTerm) : [];
+		const itemResults = items ? this.data.findItemFromName(searchTerm) : [];
+		const moveResults = moves ? this.data.findMoveFromName(searchTerm) : [];
+		const abilityResults = abilities ? this.data.findAbilityFromName(searchTerm) : [];
 
 		return {
-			Pokemon: pkmnResults,
-			Items: itemResults,
-			Moves: moveResults,
-			Abilities: abilityResults,
+			Pokemon: pkmnResults.slice(0, appSettings.maxSearchResults),
+			Items: itemResults.slice(0, appSettings.maxSearchResults),
+			Moves: moveResults.slice(0, appSettings.maxSearchResults),
+			Abilities: abilityResults.slice(0, appSettings.maxSearchResults),
+		};
+	};
+
+	getAbility = async (id: number, game?: string) => {
+		const ability = await this.data.getAbility(id);
+
+		const primaryLang = Utils.findNameFromLanguageCode(
+			ability.names,
+			this.primaryLanguageCode
+		);
+		const secondaryLang = Utils.findNameFromLanguageCode(
+			ability.names,
+			this.secondaryLanguageCode
+		);
+
+		let pokemon: PokemonName[] = [];
+		ability.pokemon.forEach(a => {
+			const id = a.pokemon.url.split("/")[6];
+			const details = this.data.findPokemonNameFromId(parseInt(id));
+
+			if (details) {
+				pokemon.push(details);
+			}
+		});
+
+		const primaryFlavorText = ability.flavor_text_entries.filter(
+			a => a.language.name === this.primaryLanguageCode
+		)[0];
+		const secondaryFlavorText = ability.flavor_text_entries.filter(
+			a => a.language.name === this.secondaryLanguageCode
+		)[0];
+
+		const foundGame = Games.findEntry(game ? game : "");
+		const gameParts = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
+		const gameString = gameParts.join(" / ").replace(/-/g, " ");
+
+		let primaryLangEffectEntry = ability.effect_entries.filter(
+			a => a.language.name === this.primaryLanguageCode
+		)[0];
+		let secondaryLangEffectEntry = ability.effect_entries.filter(
+			a => a.language.name === this.secondaryLanguageCode
+		)[0];
+
+		const generationChange: { text: string; altEntryEffect: string }[] = [];
+
+		const selectedId = Games.generationOrder.indexOf(foundGame.generation);
+		ability.effect_changes.forEach(change => {
+			const changeGame = Games.findEntry(change.version_group.name);
+			const changeGenerationId = Games.generationOrder.indexOf(changeGame.generation);
+
+			let primary = "";
+			let secondary = "";
+			change.effect_entries.forEach(a => {
+				if (a.language.name === this.primaryLanguageCode) primary = a.effect;
+				else if (a.language.name === this.secondaryLanguageCode) secondary = a.effect;
+			});
+
+			if (selectedId < changeGenerationId) {
+				generationChange.push({
+					text: `Behaviour after generation ${changeGame.generation}`,
+					altEntryEffect: primaryLangEffectEntry.short_effect
+						? primaryLangEffectEntry.short_effect
+						: secondaryLangEffectEntry.short_effect,
+				});
+
+				// Use the old entry
+				primaryLangEffectEntry = change.effect_entries.filter(a => {
+					a.language.name === this.primaryLanguageCode;
+				})[0];
+				secondaryLangEffectEntry = ability.effect_entries.filter(
+					a => a.language.name === this.secondaryLanguageCode
+				)[0];
+			} else {
+				generationChange.push({
+					text: `Effect before generation ${changeGame.generation}:`,
+					altEntryEffect: primary ? primary : secondary,
+				});
+			}
+		});
+
+		const abilitySelectedId = Games.generationOrder.indexOf(
+			ability.generation.name.split("-")[1]
+		);
+
+		if (selectedId >= 0 && selectedId < abilitySelectedId) {
+			primaryLangEffectEntry = {
+				effect: primaryLangEffectEntry.effect,
+				language: { name: this.primaryLanguageCode },
+				short_effect: "This ability did not exist in this game yet",
+			};
+		}
+
+		return {
+			primaryLanguage: primaryLang,
+			secondaryLanguage: secondaryLang,
+			game: gameString === "All" ? "" : gameString,
+			effectEntry: primaryLangEffectEntry
+				? primaryLangEffectEntry.short_effect
+				: secondaryLangEffectEntry.short_effect,
+			flavorText: primaryFlavorText
+				? primaryFlavorText.flavor_text
+				: secondaryFlavorText.flavor_text,
+			introduced: ability.generation.name.split("-")[1],
+			generationChange: generationChange,
+			pokemon: pokemon,
 		};
 	};
 
@@ -777,6 +902,42 @@ class Controller {
 				) {
 					const moveDetail = Moves.find(a => a.english_id === move.move.name);
 					if (moveDetail !== undefined) {
+						const legacyTypeGenerations = ["i", "ii", "iii"];
+						if (legacyTypeGenerations.includes(foundVersion.generation)) {
+							const physicalTypes = [
+								"normal",
+								"fighting",
+								"poison",
+								"gorund",
+								"flying",
+								"bug",
+								"rock",
+								"ghost",
+								"steel",
+							];
+							const specialTypes = [
+								"fire",
+								"water",
+								"electric",
+								"grass",
+								"ice",
+								"physic",
+								"dragon",
+								"dark",
+							];
+							if (
+								physicalTypes.includes(moveDetail.type) &&
+								!moveDetail.attack_type_sprite.includes("special")
+							) {
+								moveDetail.attack_type_sprite =
+									"/static/assets/attack-types/physical.png";
+							} else if (
+								specialTypes.includes(moveDetail.type) &&
+								!moveDetail.attack_type_sprite.includes("special")
+							) {
+								moveDetail.attack_type_sprite = "/static/assets/attack-types/special.png";
+							}
+						}
 						const move = {
 							...moveDetail,
 							learning_method: version.move_learn_method.name,

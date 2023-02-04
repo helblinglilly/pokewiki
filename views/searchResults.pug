@@ -12,56 +12,57 @@ block append body
 		p.title.is-4 Pokémon
 		#PokemonResults.container
 			each pokemon in results.Pokemon
-				.card.mb-3(onclick=`location.href='${pokemon.link}' + window.location.search`)
-					.card-content.searchResult(style="display: flex; align-items: center")
-						img.is-48x48.mr-1(
-							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-							alt="Pokemon Icon"
-						)
-						//- p.mr-3 
-						if pokemon.german === pokemon.english
-							a.card-text ##{ pokemon.id } #{ pokemon.english }
-						else
-							a.card-text ##{ pokemon.id } #{ pokemon.english } - #{ pokemon.german }
+				a.keepQuery(href=`${pokemon.link}`)
+					.card.mb-3
+						.card-content.searchResult(style="display: flex; align-items: center")
+							img.is-48x48.mr-1(
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+								alt="Pokemon Icon"
+							)
+							if pokemon.primaryLang === pokemon.secondaryLang
+								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang }
+							else
+								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang } - #{ pokemon.secondaryLang }
 
 	if results.Items.length !== 0
 		p.title.is-4 Items
 		#ItemResults.container
 			each item in results.Items
-				.card.mb-3(onclick=`location.href='${item.link}'  + window.location.search`)
-					.card-content.searchResult(style="display: flex; align-items: center")
-						img.is-48x48.mr-1(
-							src=`${item.sprite}`,
-							style="height: 30px; width: 30px",
-							alt="Item Icon",
-							onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'"
-						)
-						if item.german === item.english
-							a.card-text #{ item.german }
-						else
-							a.card-text #{ item.german } - #{ item.english }
+				a.keepQuery(href=`${item.link}`)
+					.card.mb-3
+						.card-content.searchResult(style="display: flex; align-items: center")
+							img.is-48x48.mr-1(
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`,
+								style="height: 30px; width: 30px",
+								alt="Item Icon"
+							)
+							if item.primaryLang === item.secondaryLang
+								p.card-text #{ item.primaryLang }
+							else
+								p.card-text #{ item.primaryLang } - #{ item.secondaryLang }
 
 	if results.Moves.length !== 0
 		p.title.is-4 Moves
 		#MoveResults.container
 			each move in results.Moves
-				.card.mb-3(onclick=`location.href='${move.link}' + window.location.search`)
-					.card-content.searchResult(style="align-items: center")
-						.container.mr-3(style="display: inline-grid")
-							img.icon.mb-1.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
-							img.icon.typeSprite(src=`${move.attack_type_sprite}`, alt="Move type Icon")
-						if move.german === move.english
-							a.card-text #{ move.german }
-						else
-							a.card-text #{ move.german } - #{ move.english }
+				a.keepQuery(href=`${move.link}`)
+					.card.mb-3
+						.card-content.searchResult
+							.container.mb-1(style="display: inline-flex")
+								img.icon.mr-2.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
+								p.card-text #{ move.english }
+							.container.mb-1(style="display: flex")
+								img.icon.mr-2.typeSprite(src=`${move.attack_type_sprite}`, alt="Type Icon")
+								p.card-text #{ move.german }
 
 	if results.Abilities.length !== 0
 		p.title.is-4 Abilities
 		#AbilityResults.container
 			each ability in results.Abilities
-				.card.mb-3(onclick=`location.href='${ability.link}' + window.location.search`)
-					.card-content.searchResult
-						if ability.german === ability.english
-							a.card-text #{ ability.german }
-						else
-							a.card-text #{ ability.german } - #{ ability.english }
+				a.keepQuery(href=`${ability.link}`)
+					.card.mb-3
+						.card-content.searchResult
+							if ability.primaryLang === ability.secondaryLang
+								p.card-text #{ ability.primaryLang }
+							else
+								p.card-text #{ ability.primaryLang } - #{ ability.secondaryLang }

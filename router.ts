@@ -2,7 +2,7 @@ import * as ex from "express";
 import log from "./log";
 import Controller from "./controller";
 import { ErrorMessage } from "./types";
-import { appSettings, handleServerError } from "./api/app";
+import app, { appSettings, handleServerError } from "./api/app";
 
 class Router {
 	static getSearch = async (req: ex.Request, res: ex.Response) => {
@@ -23,7 +23,11 @@ class Router {
 			showAbilities = true;
 		}
 
-		const searchResults = await Controller.getSearchResults(
+		const controller = new Controller(
+			appSettings.primaryLanguageCode,
+			appSettings.secondaryLanguageCode
+		);
+		const searchResults = await controller.getSearchResults(
 			req.query.term,
 			showPokemon,
 			showItems,
@@ -73,7 +77,10 @@ class Router {
 			}
 		}
 		try {
-			const controller = new Controller("en", "de");
+			const controller = new Controller(
+				appSettings.primaryLanguageCode,
+				appSettings.secondaryLanguageCode
+			);
 			const details = await controller.getPokemonDetail(id, variety, game);
 			const options = { ...details };
 			res.render("./pokemon", { ...options, ...appSettings });
@@ -111,7 +118,10 @@ class Router {
 		if (typeof req.query.game === "string") game = req.query.game;
 
 		try {
-			const controller = new Controller("en", "de");
+			const controller = new Controller(
+				appSettings.primaryLanguageCode,
+				appSettings.secondaryLanguageCode
+			);
 			const details = await controller.getItem(id, game);
 			const options = { ...details };
 			res.render("./item", { ...options, ...appSettings });
@@ -121,11 +131,42 @@ class Router {
 	};
 
 	static getAbility = async (req: ex.Request, res: ex.Response) => {
-		const err: ErrorMessage = {
-			error: "Not implemented",
-			info: `The page you are trying to view has not been built yet.`,
-		};
-		res.status(501).render("./error", { ...err, ...appSettings });
+		let id = -1;
+		try {
+			id = parseInt(req.url.split("/")[2].split("?")[0]);
+			if (!id) throw new Error("No Ability ID");
+			if (
+				id < 1 ||
+				id > appSettings.extraAbilityRange[1] ||
+				(id > appSettings.highestAbilityId && id < appSettings.extraAbilityRange[0])
+			) {
+				throw new Error("Invalid Ability ID");
+			}
+		} catch {
+			const err: ErrorMessage = {
+				error: "Invalid Ability ID",
+				info: `The Ability with the ID you requested does not exist (${
+					id ? id : "None"
+				}). Valid IDs range from 1 to ${appSettings.highestPokedexId}`,
+			};
+			res.status(400).render("./error", { ...err, ...appSettings });
+			return;
+		}
+
+		let game = "";
+		if (typeof req.query.game === "string") game = req.query.game;
+
+		try {
+			const controller = new Controller(
+				appSettings.primaryLanguageCode,
+				appSettings.secondaryLanguageCode
+			);
+			const details = await controller.getAbility(id, game);
+			const options = { ...details };
+			res.render("./ability", { ...options, ...appSettings });
+		} catch (err: any) {
+			handleServerError(req, { error: "Internal Server Error", info: err }, res);
+		}
 	};
 }
 

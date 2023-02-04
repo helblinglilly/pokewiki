@@ -2,24 +2,27 @@ extends ./header.pug
 
 block append body
 	.columns.is-mobile
-		.column.is-two-fifth
+		.column.is-half.is-flex(style="justify-content: start")
 			if (id - 1 > 0)
-				.card.otherEntry.is-pulled-left(style="min-width: 45%")
-					.card-content.otherEntryContent.is-flex(
-						onclick=`location.href='/item/${id-1}' + window.location.search`
-					)
-						img.mr-2.itemSprite.is-square(src=`${previousItemSprite}`)
-						p(style="margin: auto") #{ previousItemName }
-		.column.is-1
-		.column.is-two-fifth
+				.card.otherEntry.is-pulled-left(style="min-width: 60%; flex: 1 1 0")
+					a.keepQuery.invisible(href=`/item/${id-1}`)
+						.card-content.otherEntryContent.is-flex
+							#itemNavPrev.columns(style="width: 100%")
+								.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")
+									img.itemSprite.is-square(src=`${previousItemSprite}`)
+								.column.is-three-quarter
+									p(style="word-wrap: anywhere; min-width: 100%") #{ previousItemName }
+		.column.is-half.is-flex(style="justify-content: end")
 			if (id + 1 < highestItemId)
-				.card.otherEntry.is-pulled-right.itemNavigator(style="min-width: 45%")
-					.card-content.otherEntryContent(
-						onclick=`location.href='/item/${id+1}' + window.location.search`,
-						style="display: flex"
-					)
-						p(style="margin: auto; text-align: end") #{ nextItemName }
-						img.ml-2.itemSprite.is-square(src=`${nextItemSprite}`) 
+			.card.otherEntry.is-pulled-right(style="min-width: 60%; flex: 1 1 0")
+				a.keepQuery.invisible(href=`/item/${id+1}`)
+					.card-content.otherEntryContent.is-flex(style="justify-content: end")
+						#itemNavNext.columns(style="width: 100%")
+							.column.is-three-quarter
+								p(style="word-wrap: anywhere; min-width: 100%") #{ nextItemName }
+							.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")
+								img.itemSprite.is-square(src=`${nextItemSprite}`)
+
 	.columns
 		//- Overview
 		.column.is-flex
@@ -64,10 +67,8 @@ block append body
 
 		//- Attributes
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.is-justify-content-space-between.collapsable.link(
-					onclick="toggleCardContentVisibility(this);"
-				)
+			.card.collapsible(style="width: 100%")
+				.card-header-title.is-justify-content-space-between
 					p Attributes
 				.card-content
 					table.table.is-bordered.is-narrow(style="width: 100%")

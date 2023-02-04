@@ -14,35 +14,33 @@ block append body
 		.column.is-one-third
 			if (id-1 > 0)
 				.card.otherEntry.is-pulled-left
-					.card-content.otherEntryContent(
-						onclick=`location.href='/pokemon/${id - 1}' + removeVarieties()`
-					)
-						p.otherNumber ##{ id - 1 }
-						img.otherSprite(
-							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
-						)
+					a.keepQuery(href=`/pokemon/${id - 1}`)
+						.card-content.otherEntryContent
+							p.otherNumber ##{ id - 1 }
+							img.otherSprite(
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
+							)
 		.column.has-text-centered(style="display: inline-flex")
 			p.title.is-4(style="margin: auto") ##{ id }
 		.column.is-one-third
 			if (id + 1) <= highestPokedexId
 				.card.otherEntry.is-pulled-right
-					.card-content.otherEntryContent(
-						onclick=`location.href='/pokemon/${id + 1}' + removeVarieties()`
-					)
-						img.otherSprite(
-							src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`
-						)
-						p.otherNumber ##{ id + 1 }
+					a.keepQuery(href=`/pokemon/${id + 1}`)
+						.card-content.otherEntryContent
+							img.otherSprite(
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`
+							)
+							p.otherNumber ##{ id + 1 }
 
 	//- Sprites and Evolutions
 	.columns
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title.is-justify-content-space-between
-					if english === german || !german
-						p #{ english }
+					if primaryName === secondaryName || !secondaryName
+						p #{ primaryName }
 					else
-						p #{ english } - #{ german }
+						p #{ primaryName } - #{ secondaryName }
 
 					div
 						each pType in types
@@ -59,8 +57,8 @@ block append body
 									img#sprite-back.pokemonSprite(src=`${sprites.secondary}`)
 									p#secondarySupportText.is-italic
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Evolution chain
 				.card-content.pt-1
 					if evolutions.length === 0
@@ -68,10 +66,8 @@ block append body
 					each evolution in evolutions
 						.columns.is-vcentered.is-mobile
 							.column.has-text-centered
-								img.link(
-									src=`${evolution.sourceSprite}`,
-									onclick=`location.href='${evolution.sourceURL}' + removeVarieties()`
-								)
+								a.keepQuery.invisible(href=`${evolution.sourceURL}`)
+									img.link(src=`${evolution.sourceSprite}`)
 							.column.has-text-centered
 								if evolution.trigger.includes("Level")
 									p #{ evolution.trigger }
@@ -104,24 +100,23 @@ block append body
 											.container
 												p Use Sweet Apple
 										else
-											.container.link(
-												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`
-											)
-												p(style="vertical-align: middle; display: inline") Use
-												img(
-													src=`${requirement.info}`,
-													title=`${requirement.info.split("/")[8].split(".")[0]}`,
-													style="vertical-align: middle"
-												)
+											a.keepQuery.invisible(href=`${requirement.supplementary}`)
+												.container
+													p(style="vertical-align: middle; display: inline") Use
+													img(
+														src=`${requirement.info}`,
+														title=`${requirement.info.split("/")[8].split(".")[0]}`,
+														style="vertical-align: middle"
+													)
 									if requirement.type === "hold-item"
 										.container
 											p(style="vertical-align: middle; display: inline") Hold
-											img.link(
-												src=`${requirement.info}`,
-												onclick=`location.href='${requirement.supplementary}' + removeVarieties()`,
-												style="vertical-align: middle",
-												title=`${requirement.info.split("/")[8].split(".")[0]}`
-											)
+											a.keepQuery.invisible(href=`${requirement.supplementary}`)
+												img.link(
+													src=`${requirement.info}`,
+													style="vertical-align: middle",
+													title=`${requirement.info.split("/")[8].split(".")[0]}`
+												)
 									if requirement.type === "friendship"
 										p Friendship: #{ requirement.info }
 									if requirement.type === "beauty"
@@ -131,7 +126,8 @@ block append body
 									if requirement.type === "daytime"
 										p.is-capitalized #{ requirement.info }
 									if requirement.type === "know_move"
-										p.link(onclick=`location.href='${requirement.info}' + removeVarieties()`) Knows: #{ requirement.supplementary }
+										a.keepQuery.invisible(href=`${requirement.info}`)
+											p.link Knows: #{ requirement.supplementary }
 									if requirement.type === "know_move_type"
 										p Know move of type: #{ requirement.info }
 									if requirement.type === "affection"
@@ -166,27 +162,26 @@ block append body
 										p#moreInfo(hidden) #{ requirement.info }
 
 							.column.has-text-centered
-								img.link(
-									src=`${evolution.targetSprite}`,
-									onclick=`location.href='${evolution.targetURL}' + removeVarieties()`
-								)
+								a.keepQuery.invisible(href=`${evolution.targetURL}`)
+									img.link(src=`${evolution.targetSprite}`)
 
 	//- Abilities and Base Stats
 	.columns
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Abilities
 				.card-content
 					each ability in abilities
-						.box.accented.link(onclick=`location.href='${ability.link}' + removeVarieties()`)
-							p.has-text-weight-bold #{ ability.name }
-							if ability.isHidden
-								p.is-italic Hidden
-							p #{ ability.effect }
+						.box.accented.link
+							a.keepQuery.invisible(href=`${ability.link}`)
+								p.has-text-weight-bold #{ ability.name }
+								if ability.isHidden
+									p.is-italic Hidden
+								p #{ ability.effect }
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Base stats
 				.card-content
 					table#statsTable.table(style="width: 100%")
@@ -267,8 +262,8 @@ block append body
 	//- Pokedex and Other info
 	.columns
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Pokédex entry
 				.card-content.pt-1
 					.columns
@@ -278,14 +273,14 @@ block append body
 							p Height: #{ height }0 cm
 					if pokedex.length > 0
 						each entry in pokedex
-							.box.accented
+							.box.accented.noHover
 								p.is-capitalized.has-text-weight-bold #{ entry.game }
 								p.pb-2 #{ entry.entry }
 					else
 						p Select a game where this Pokémon is featured to see its Pokédex entry.
 		.column.is-flex
-			.card(style="width: 100%")
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible(style="width: 100%")
+				.card-header-title
 					p Other Info
 				.card-content
 					p.title.is-6 Catch rate: #{ captureRate }
@@ -298,30 +293,24 @@ block append body
 	//- Forms and Moveset
 	.columns
 		.column
-			.card
-				.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+			.card.collapsible
+				.card-header-title
 					p Forms
 				.card-content
 					each form in forms
-						.columns.is-mobile
-							.column.has-text-centered.is-flex
-								.box.accented.link(
-									style="width: 100%",
-									onclick=`location.href='${form.url}' + removeVarieties()`
-								)
-									img(src=`${form.sprites.primary}`)
-									p #{ form.name }
-							.column.has-text-centered.is-flex
-								.box.accented.link(
-									style="width: 100%",
-									onclick=`location.href='${form.url}' + removeVarieties()`
-								)
-									img(src=`${form.sprites.shiny}`)
-									p Shiny #{ form.name }
+						.columns.is-flex
+							a.keepQuery.invisible.column(href=`${form.url}`)
+								.box.accented.is-half(style="text-align: center; height: 100%")
+									img.image.formPrimary(src=`${form.sprites.primary}`, style="margin: auto")
+									p(style="margin-top: 15px") #{ form.name }
+							a.keepQuery.invisible.column(href=`${form.url}`)
+								.box.accented.is-half(style="text-align: center; height: 100%")
+									img.image.formPrimary(src=`${form.sprites.shiny}`, style="margin: auto")
+									p(style="margin-top: 15px") Shiny #{ form.name }
 		if moveset.length > 0
 			.column
-				.card
-					.card-header-title.collapsable.link(onclick="toggleCardContentVisibility(this);")
+				.card.collapsible
+					.card-header-title
 						p Moveset
 					.card-content.pt-1
 						table.table.is-striped.is-hoverable(style="width: 100%")

@@ -39,15 +39,22 @@ const buildInfo =
 		? fs.statSync(`./api/app.${selfFileExtension}`).ctime.toISOString().split("T")[0]
 		: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 6);
 
-if (buildType == "Build") {
+if (buildType === "Build") {
 	log.setDefaultLevel("WARN");
+} else {
+	log.setDefaultLevel("DEBUG");
 }
 
 export const appSettings = {
+	primaryLanguageCode: "en",
+	secondaryLanguageCode: "de",
+	maxSearchResults: 10,
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
 	highestPokedexId: 1008,
 	highestItemId: 1658,
+	highestAbilityId: 298,
+	extraAbilityRange: [10001, 10060],
 	placeholderImage:
 		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png",
 };

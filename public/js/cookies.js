@@ -1,43 +1,46 @@
-const searchHistoryLimit = 5;
-
-document.addEventListener("DOMContentLoaded", event => {});
-
-const addHistory = item => {
-	const history = getCookie("history");
-
-	if (history === undefined) {
-		setCookie("history", item);
-		return;
-	}
-
-	const items = history.split(",");
-	if (items.length > searchHistoryLimit) {
-		items.pop();
-	}
-	items.push(item);
-
-	setCookie("history", items);
-};
-
-const getHistory = () => {
-	const history = getCookie("history");
-	const items = [];
-
-	return items;
-};
-
+/*
+	Below functions are taken from
+	https://javascript.info/cookie
+*/
 const getCookie = name => {
-	const cookies = document.cookie.split(";");
-	for (let i = 0; i < cookies.length; i++) {
-		if (cookies[i].split("=")[0].trim() === name) {
-			return cookies[i].split("=")[1];
-		}
-	}
+	let matches = document.cookie.match(
+		new RegExp(
+			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"
+		)
+	);
+	return matches ? decodeURIComponent(matches[1]) : undefined;
 };
 
-const setCookie = (name, value) => {
+const setCookie = (name, value, options = {}) => {
 	const expires = new Date();
 	expires.setDate(expires.getDate() + 90);
 
-	document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/;`;
+	options = {
+		path: "/",
+		expires: expires,
+		SameSite: "Lax",
+		...options,
+	};
+
+	if (options.expires instanceof Date) {
+		options.expires = options.expires.toUTCString();
+	}
+
+	let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+	for (let optionKey in options) {
+		updatedCookie += "; " + optionKey;
+		let optionValue = options[optionKey];
+		if (optionValue !== true) {
+			updatedCookie += "=" + optionValue;
+		}
+	}
+
+	document.cookie = updatedCookie;
+};
+
+const deleteCookie = name => {
+	setCookie(name, "", {
+		"max-age": -1,
+	});
 };

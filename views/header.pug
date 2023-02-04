@@ -10,6 +10,7 @@ head
 	)
 	script(href="https://use.fontawesome.com/releases/v5.3.1/js/all.js")
 	script(src="/static/js/cookies.js")
+	script(src="/static/js/storage.js")
 	script(src="/static/js/ui.js")
 	style.
 		@import url("/static/styles.css");
@@ -24,8 +25,12 @@ body
 			.navbar-brand(href="/")
 				a.navbar-item(href="/")
 					img(src="/static/pokemon.png")
-				a.navbar-item(href="/") Pokémon
-				a#themeToggle.navbar-item Toggle Theme
+				a.navbar-item(href="/") Pokécompanion
+				#navbarBurger.navbar-burger
+					img#burgerIcon(src="/static/assets/other/bag_closed.png", style="margin: 10px")
+			#navbarMenu.navbar-menu
+				.navbar-end
+					a#themeToggle.navbar-item Toggle Theme
 
 		.container.flex-child.is-max-desktop.pl-6.pr-6.pb-6(style="width: 100%")
 			block body
@@ -47,7 +52,7 @@ body
 									p.title.is-5 Select game
 									.select(form="search", name="game")
 										select#gameSelector(form="search", name="game")
-											option(value="all") Any
+											option(value="all") Generic
 											option(value="scarlet-violet") Scarlet / Violet
 											option(value="legends-arceus") Legends Areceus
 											option(value="brilliant-diamond-and-shining-pearl") Brilliant Diamond / Shining Pearl

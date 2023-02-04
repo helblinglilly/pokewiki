@@ -146,6 +146,8 @@ export interface ErrorMessage {
 }
 
 export interface GenericEntry {
+	primaryLang?: string;
+	secondaryLang?: string;
 	german: string;
 	english: string;
 	english_id: string;
@@ -162,22 +164,30 @@ export interface MoveEntry extends GenericEntry {
 }
 
 export interface PokemonName {
-	german: string;
-	english: string;
+	primaryLang: string;
+	secondaryLang: string;
 	id: number;
 	link: string;
 	sprite: string;
 }
 
-interface GenericResult {
-	german: string;
-	english: string;
+export interface GenericResult {
+	primaryLang: string;
+	secondaryLang: string;
 	id: number;
 }
 
+export interface ItemResult extends GenericResult {
+	name: string;
+	link: string;
+}
+
+export interface AbilityResult extends GenericResult {
+	link: string;
+}
 export interface Collection {
-	Abilities?: GenericResult[];
-	Items?: GenericResult[];
+	Abilities?: AbilityResult[];
+	Items?: ItemResult[];
 	Moves?: MoveEntry[];
 	Types?: GenericResult[];
 	Pokemon?: PokemonName[];
@@ -309,7 +319,7 @@ export interface APIResponseItem {
 		language: {
 			name: string;
 		};
-		version: {
+		version_group: {
 			name: string;
 		};
 		text: string;
@@ -562,11 +572,43 @@ export interface APIResponseAbility {
 		};
 		name: string;
 	}[];
-	id: string;
+	effect_changes: {
+		effect_entries: {
+			effect: string;
+			language: {
+				name: string;
+			};
+			short_effect: string;
+		}[];
+		version_group: {
+			name: string;
+		};
+	}[];
 	effect_entries: {
-		short_effect: string;
+		effect: string;
 		language: {
 			name: string;
+		};
+		short_effect: string;
+	}[];
+	flavor_text_entries: {
+		flavor_text: string;
+		language: {
+			name: string;
+		};
+		version_group: {
+			name: string;
+		};
+	}[];
+	generation: {
+		name: string;
+	};
+	id: number;
+	pokemon: {
+		is_hidden: boolean;
+		pokemon: {
+			name: string;
+			url: string;
 		};
 	}[];
 }

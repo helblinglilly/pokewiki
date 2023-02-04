@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-	const selectedMode = getCookie("theme");
+	const selectedMode = getItem("theme");
 	if (selectedMode === "dark-mode") setDarkMode();
 	else setLightMode();
 
 	populateSearchFilters();
 
 	if (isMobile) {
-		document.querySelectorAll(".collapsable").forEach(item => {
-			toggleCardContentVisibility(item);
+		document.querySelectorAll(".collapsible").forEach(item => {
+			collapseCard(item);
 		});
 	}
 
@@ -23,10 +23,28 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.body.classList.toggle("dark-mode");
 		document.body.classList.toggle("light-mode");
 		const newMode = document.body.classList[0];
-		setCookie("theme", newMode);
+		setItem("theme", newMode);
+	});
+
+	document.getElementById("navbarBurger").addEventListener("click", () => {
+		const openSprite = "/static/assets/other/bag_open.png";
+		const closeSprite = "/static/assets/other/bag_closed.png";
+
+		const current = document.getElementById("burgerIcon");
+
+		if (current.currentSrc.includes(openSprite)) {
+			current.src = closeSprite;
+		} else {
+			current.src = openSprite;
+		}
+
+		document.getElementById("navbarBurger").classList.toggle("is-active");
+		document.getElementById("navbarMenu").classList.toggle("is-active");
 	});
 
 	checkAllImages();
+	addQueryrefToAllLinks();
+	makeElementsCollapsible();
 });
 
 const setDarkMode = () => {
@@ -88,6 +106,9 @@ const submitSearch = () => {
 		}
 	}
 
+	if (document.getElementById("gameSelector").values !== "all") {
+		search.action = `${urlNoParams}`;
+	}
 	search.submit();
 };
 
@@ -162,13 +183,33 @@ const populateSearchFilters = () => {
 	}
 };
 
-const toggleCardContentVisibility = sender => {
-	sender.parentElement.childNodes.forEach(child => {
-		if (child.classList.contains("card-content")) {
-			if (child.getAttribute("hidden") === null) child.setAttribute("hidden", "");
-			else child.removeAttribute("hidden");
-		}
+const makeElementsCollapsible = () => {
+	document.querySelectorAll(".collapsible").forEach(el => {
+		el.querySelectorAll(".card-header-title").forEach(a => {
+			a.classList.add("link");
+			a.addEventListener("click", () => {
+				collapseCard(el);
+			});
+		});
 	});
+};
+
+const collapseCard = card => {
+	const cardContent = card.querySelector(".card-content");
+
+	if (cardContent.hasAttribute("hidden")) {
+		cardContent.removeAttribute("hidden");
+		card.style.backgroundColor = "var(--accent)";
+		card.style.height = "100%";
+		card.style.boxShadow =
+			"0 .5em 1em -.125em rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.02)";
+	} else {
+		cardContent.setAttribute("hidden", "");
+		card.querySelector(".card-header-title").style.boxShadow =
+			"0 .5em 1em -.125em rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.02)";
+		card.style.backgroundColor = "transparent";
+		card.style.boxShadow = "none";
+	}
 };
 
 const checkAllImages = () => {
@@ -176,5 +217,17 @@ const checkAllImages = () => {
 	const imgs = document.getElementsByTagName("img");
 	for (let i = 0; i < imgs.length; i++) {
 		imgs[i].onerror = () => (imgs[i].src = placeholder);
+	}
+};
+
+const addQueryrefToAllLinks = () => {
+	const aLinks = document.getElementsByTagName("a");
+
+	for (let i = 0; i < aLinks.length; i++) {
+		if (aLinks[i].classList.contains("keepQuery")) {
+			aLinks[i].onclick = () => {
+				aLinks[i].href = aLinks[i].href + removeVarieties();
+			};
+		}
 	}
 };

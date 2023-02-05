@@ -312,12 +312,12 @@ block append body
 				.card-content
 					each form in forms
 						.columns.is-flex
-							a.keepQuery.invisible.column(href=`${form.url}`)
-								.box.accented.is-half(style="text-align: center; height: 100%")
+							a.keepQuery.invisible.column(href=`${form.url}`, style="width: 50%")
+								.box.accented(style="text-align: center; height: 100%")
 									img.image.formPrimary(src=`${form.sprites.primary}`, style="margin: auto")
 									p(style="margin-top: 15px") #{ form.name }
-							a.keepQuery.invisible.column(href=`${form.url}`)
-								.box.accented.is-half(style="text-align: center; height: 100%")
+							a.keepQuery.invisible.column(href=`${form.url}`, style="width: 50%")
+								.box.accented(style="text-align: center; height: 100%")
 									img.image.formPrimary(src=`${form.sprites.shiny}`, style="margin: auto")
 									p(style="margin-top: 15px") Shiny #{ form.name }
 		if moveset.length > 0

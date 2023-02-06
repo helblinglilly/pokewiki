@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const template = fs.readFileSync("./public/previews/generic.svg", "utf-8");
+const template = fs.readFileSync("./misc/assets/social_preview.svg", "utf-8");
 const outputLocation = "./public/previews";
 
 if (!fs.existsSync(`${outputLocation}`)) fs.mkdirSync(`${outputLocation}`);

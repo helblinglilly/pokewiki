@@ -1,5 +1,13 @@
 extends ./header.pug
 block append head
+	meta(
+		property="og:image:secure_url",
+		content="https://dev.pokemon.helbling.uk/static/previews/generic.svg"
+	)
+	meta(
+		property="og:description",
+		content="With Pokécompanion you can quickly find the details you need during your playthrough of a mainline Pokémon game - without scrolling past a sea of irrelevant info."
+	)
 	script(src="/static/js/index.js")
 
 block append body

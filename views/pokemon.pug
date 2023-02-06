@@ -1,5 +1,10 @@
 extends ./header.pug
 block append head
+	meta(
+		property="og:image:secure_url",
+		content=`https://dev.pokemon.helbling.uk/static/previews/pokemon/${id}.svg`
+	)
+	meta(property="og:description", content=`${primaryName} on the Pokécompanion`)
 	script(src="/static/js/pokemon.js")
 	script(src="/static/js/giffer.min.js")
 block append body

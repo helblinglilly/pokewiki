@@ -22,7 +22,7 @@ pkmn.forEach(mon => {
 const items = JSON.parse(fs.readFileSync("./public/pokedata/items.json", "utf-8"));
 items.forEach(item => {
 	let entry = template.valueOf();
-	entry = entry.replace("SECTION", "Pokémon");
+	entry = entry.replace("SECTION", "Item");
 	const englishName = item.names.filter(a => Object.keys(a).includes("en"))[0];
 	entry = entry.replace("ENTRY", `${englishName.en}`);
 	fs.writeFileSync(`${outputLocation}/item/${item.id}.svg`, entry, "utf-8");

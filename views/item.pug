@@ -1,4 +1,9 @@
 extends ./header.pug
+	meta(
+		property="og:image:secure_url",
+		content=`https://dev.pokemon.helbling.uk/static/previews/item/${id}.svg`
+	)
+	meta(property="og:description", content=`${primaryName} on the Pokécompanion`)
 
 block append body
 	.columns.is-mobile

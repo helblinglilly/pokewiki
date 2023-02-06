@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1200 720" style="enable-background:new 0 0 1200 720;" xml:space="preserve">
+	 viewBox="0 0 1200 630" style="enable-background:new 0 0 1200 630;" xml:space="preserve">
 <style type="text/css">
 	.st0{display:none;fill:#FFFFFF;stroke:#000000;}
 	.st1{fill:#E03D3D;stroke:#000000;stroke-width:10;}
@@ -19,47 +19,31 @@
 	.st13{fill:#FFFFFF;stroke:#000000;stroke-width:2;}
 	.st14{font-family:'Arial';}
 	.st15{font-size:79.4777px;}
-	.st16{font-family:'Arial'; font-style: italic}
-	.st17{font-family:'Arial'; font-weight: bold}
+	.st16{font-family:'Arial';font-style: italic}
+	.st17{font-family:'Arial';font-weight: bold}
 </style>
-<circle class="st0" cx="672.3" cy="287.7" r="72.3"/>
+<circle class="st0" cx="672.3" cy="242.7" r="72.3"/>
 <g>
-	<defs>
-		<rect id="SVGID_1_" x="102.5" y="50.6" width="309.9" height="309.9"/>
-	</defs>
-	<clipPath id="SVGID_2_">
-		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-	</clipPath>
+	<path class="st1" d="M290.6,242.4h-224c0-61.8,50.1-112,112-112C240.4,130.5,290.6,180.7,290.6,242.4z"/>
+	<path class="st2" d="M290.6,242.4c0,61.8-50.1,112-112,112c-61.8,0-112-50.1-112-112H290.6L290.6,242.4z"/>
+	<path class="st1" d="M290.6,242.4h-224c0-61.8,50.1-112,112-112C240.4,130.5,290.6,180.7,290.6,242.4z"/>
+	<circle class="st2" cx="178.7" cy="242.4" r="25.2"/>
 </g>
 <g>
-	<defs>
-		<rect id="SVGID_3_" x="102.5" y="50.6" width="309.9" height="309.9"/>
-	</defs>
-	<clipPath id="SVGID_4_">
-		<use xlink:href="#SVGID_3_"  style="overflow:visible;"/>
-	</clipPath>
+	<path class="st3" d="M331.4,415.8h-75.1c-3.2,0-5.9-2.6-5.9-5.9V278.1c0-3.2,2.6-5.9,5.9-5.9h75.1c3.2,0,5.9,2.6,5.9,5.9v131.8
+		C337.4,413.1,334.8,415.8,331.4,415.8z"/>
+	<rect x="259.2" y="289.6" class="st4" width="17.4" height="17.4"/>
+	<rect x="285.3" y="289.6" class="st5" width="17.4" height="17.4"/>
+	<rect x="310.6" y="289.6" class="st6" width="17.4" height="17.4"/>
+	<rect x="259.6" y="322.1" class="st7" width="17.4" height="17.4"/>
+	<rect x="285.6" y="322.1" class="st8" width="17.4" height="17.4"/>
+	<rect x="310.9" y="322.1" class="st9" width="17.4" height="17.4"/>
+	<rect x="259.6" y="354.8" class="st10" width="17.4" height="17.4"/>
+	<rect x="285.6" y="354.8" class="st11" width="17.4" height="17.4"/>
+	<rect x="310.9" y="354.8" class="st12" width="17.4" height="17.4"/>
+	<circle class="st13" cx="294.4" cy="398.8" r="9.8"/>
 </g>
-<g>
-	<path class="st1" d="M280.6,288.3h-224c0-61.8,50.1-112,112-112C230.4,176.3,280.6,226.5,280.6,288.3z"/>
-	<path class="st2" d="M280.6,288.3c0,61.8-50.1,112-112,112c-61.8,0-112-50.1-112-112H280.6z"/>
-	<path class="st1" d="M280.6,288.3h-224c0-61.8,50.1-112,112-112C230.4,176.3,280.6,226.5,280.6,288.3z"/>
-	<circle class="st2" cx="168.6" cy="288.3" r="25.2"/>
-</g>
-<g>
-	<path class="st3" d="M321.4,461.6h-75.1c-3.2,0-5.9-2.6-5.9-5.9V323.9c0-3.2,2.6-5.9,5.9-5.9h75.1c3.2,0,5.9,2.6,5.9,5.9v131.8
-		C327.3,459,324.7,461.6,321.4,461.6z"/>
-	<rect x="249.2" y="335.4" class="st4" width="17.4" height="17.4"/>
-	<rect x="275.2" y="335.4" class="st5" width="17.4" height="17.4"/>
-	<rect x="300.5" y="335.4" class="st6" width="17.4" height="17.4"/>
-	<rect x="249.6" y="368" class="st7" width="17.4" height="17.4"/>
-	<rect x="275.6" y="368" class="st8" width="17.4" height="17.4"/>
-	<rect x="300.9" y="368" class="st9" width="17.4" height="17.4"/>
-	<rect x="249.6" y="400.6" class="st10" width="17.4" height="17.4"/>
-	<rect x="275.6" y="400.6" class="st11" width="17.4" height="17.4"/>
-	<rect x="300.9" y="400.6" class="st12" width="17.4" height="17.4"/>
-	<circle class="st13" cx="284.3" cy="444.6" r="9.8"/>
-</g>
-<text transform="matrix(1 0 0 1 384.1968 369.5293)" class="st14 st15">Pokécompanion</text>
-<text transform="matrix(1 0 0 1 384.1968 475.624)" class="st16 st15">#001 Bulbasaur</text>
-<text transform="matrix(1 0 0 1 384.1968 256.0708)" class="st17 st15">Pokémon</text>
+<text transform="matrix(1 0 0 1 414.1968 348.5317)" class="st14 st15">Pokécompanion</text>
+<text transform="matrix(1 0 0 1 414.1968 454.6264)" class="st16 st15">#001 Bulbasaur</text>
+<text transform="matrix(1 0 0 1 414.1968 235.0732)" class="st17 st15">Pokémon</text>
 </svg>

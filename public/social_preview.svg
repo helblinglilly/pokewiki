@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 500.4 281.6" style="enable-background:new 0 0 500.4 281.6;" xml:space="preserve">
+	 viewBox="0 0 1200 720" style="enable-background:new 0 0 1200 720;" xml:space="preserve">
 <style type="text/css">
 	.st0{display:none;fill:#FFFFFF;stroke:#000000;}
-	.st1{fill:#E03D3D;stroke:#000000;stroke-width:4;}
-	.st2{fill:#FFFFFF;stroke:#000000;stroke-width:4;}
+	.st1{fill:#E03D3D;stroke:#000000;stroke-width:10;}
+	.st2{fill:#FFFFFF;stroke:#000000;stroke-width:10;}
 	.st3{fill:#333333;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-	.st4{fill:#DA15FF;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st5{fill:#FFA655;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st6{fill:#7FC7FF;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st7{fill:#FAFF94;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st8{fill:#8AFFC2;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st9{fill:#FFD694;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st10{fill:#FD94FF;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st11{fill:#FF5559;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st12{fill:#DF0000;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
-	.st13{fill:#FFFFFF;stroke:#000000;}
-	.st14{font-family:'RobotoMonoForPowerline-Bold';}
-	.st15{font-size:33.4121px;}
-	.st16{font-family:'RobotoMonoForPowerline-Italic';}
-	.st17{font-family:'RobotoMonoForPowerline-Light';}
+	.st4{fill:#DA15FF;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st5{fill:#FFA655;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st6{fill:#7FC7FF;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st7{fill:#FAFF94;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st8{fill:#8AFFC2;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st9{fill:#FFD694;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st10{fill:#FD94FF;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st11{fill:#FF5559;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st12{fill:#DF0000;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+	.st13{fill:#FFFFFF;stroke:#000000;stroke-width:2;}
+	.st14{font-family:'Arial';}
+	.st15{font-size:79.4777px;}
+	.st16{font-family:'Arial'; font-style: italic}
+	.st17{font-family:'Arial'; font-weight: bold}
 </style>
-<circle class="st0" cx="80.9" cy="76.2" r="72.3"/>
+<circle class="st0" cx="672.3" cy="287.7" r="72.3"/>
 <g>
 	<defs>
-		<rect id="SVGID_1_" width="144.6" height="144.6"/>
+		<rect id="SVGID_1_" x="102.5" y="50.6" width="309.9" height="309.9"/>
 	</defs>
 	<clipPath id="SVGID_2_">
 		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
@@ -33,33 +33,33 @@
 </g>
 <g>
 	<defs>
-		<rect id="SVGID_3_" width="144.6" height="144.6"/>
+		<rect id="SVGID_3_" x="102.5" y="50.6" width="309.9" height="309.9"/>
 	</defs>
 	<clipPath id="SVGID_4_">
 		<use xlink:href="#SVGID_3_"  style="overflow:visible;"/>
 	</clipPath>
 </g>
 <g>
-	<path class="st1" d="M110.4,57.1H5.9c0-28.9,23.4-52.3,52.2-52.3C87,4.8,110.4,28.2,110.4,57.1z"/>
-	<path class="st2" d="M110.4,57.1c0,28.9-23.4,52.2-52.3,52.2C29.3,109.3,5.9,86,5.9,57.1H110.4z"/>
-	<path class="st1" d="M110.4,57.1H5.9c0-28.9,23.4-52.3,52.2-52.3C87,4.8,110.4,28.2,110.4,57.1z"/>
-	<circle class="st2" cx="58.2" cy="57.1" r="11.8"/>
+	<path class="st1" d="M280.6,288.3h-224c0-61.8,50.1-112,112-112C230.4,176.3,280.6,226.5,280.6,288.3z"/>
+	<path class="st2" d="M280.6,288.3c0,61.8-50.1,112-112,112c-61.8,0-112-50.1-112-112H280.6z"/>
+	<path class="st1" d="M280.6,288.3h-224c0-61.8,50.1-112,112-112C230.4,176.3,280.6,226.5,280.6,288.3z"/>
+	<circle class="st2" cx="168.6" cy="288.3" r="25.2"/>
 </g>
 <g>
-	<path class="st3" d="M126.4,137.9H97.6c-3.2,0-5.9-2.6-5.9-5.9V76.8c0-3.2,2.6-5.9,5.9-5.9h28.8c3.2,0,5.9,2.6,5.9,5.9v55.2
-		C132.2,135.3,129.6,137.9,126.4,137.9z"/>
-	<rect x="95.8" y="79.1" class="st4" width="8.1" height="8.1"/>
-	<rect x="107.9" y="79.1" class="st5" width="8.1" height="8.1"/>
-	<rect x="119.7" y="79.1" class="st6" width="8.1" height="8.1"/>
-	<rect x="95.9" y="94.3" class="st7" width="8.1" height="8.1"/>
-	<rect x="108.1" y="94.3" class="st8" width="8.1" height="8.1"/>
-	<rect x="119.9" y="94.3" class="st9" width="8.1" height="8.1"/>
-	<rect x="95.9" y="109.5" class="st10" width="8.1" height="8.1"/>
-	<rect x="108.1" y="109.5" class="st11" width="8.1" height="8.1"/>
-	<rect x="119.9" y="109.5" class="st12" width="8.1" height="8.1"/>
-	<circle class="st13" cx="112.1" cy="130" r="4.6"/>
+	<path class="st3" d="M321.4,461.6h-75.1c-3.2,0-5.9-2.6-5.9-5.9V323.9c0-3.2,2.6-5.9,5.9-5.9h75.1c3.2,0,5.9,2.6,5.9,5.9v131.8
+		C327.3,459,324.7,461.6,321.4,461.6z"/>
+	<rect x="249.2" y="335.4" class="st4" width="17.4" height="17.4"/>
+	<rect x="275.2" y="335.4" class="st5" width="17.4" height="17.4"/>
+	<rect x="300.5" y="335.4" class="st6" width="17.4" height="17.4"/>
+	<rect x="249.6" y="368" class="st7" width="17.4" height="17.4"/>
+	<rect x="275.6" y="368" class="st8" width="17.4" height="17.4"/>
+	<rect x="300.9" y="368" class="st9" width="17.4" height="17.4"/>
+	<rect x="249.6" y="400.6" class="st10" width="17.4" height="17.4"/>
+	<rect x="275.6" y="400.6" class="st11" width="17.4" height="17.4"/>
+	<rect x="300.9" y="400.6" class="st12" width="17.4" height="17.4"/>
+	<circle class="st13" cx="284.3" cy="444.6" r="9.8"/>
 </g>
-<text transform="matrix(1 0 0 1 169.0199 94.2729)" class="st14 st15">Pokécompanion</text>
-<text transform="matrix(1 0 0 1 169.02 182.23)" class="st16 st15">#001 Bulbasaur</text>
-<text transform="matrix(1 0 0 1 169.0201 137.9265)" class="st17 st15">Pokémon</text>
+<text transform="matrix(1 0 0 1 384.1968 369.5293)" class="st14 st15">Pokécompanion</text>
+<text transform="matrix(1 0 0 1 384.1968 475.624)" class="st16 st15">#001 Bulbasaur</text>
+<text transform="matrix(1 0 0 1 384.1968 256.0708)" class="st17 st15">Pokémon</text>
 </svg>

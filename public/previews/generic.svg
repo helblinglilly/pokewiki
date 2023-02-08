@@ -4,7 +4,7 @@
 	 viewBox="0 0 1200 630" style="enable-background:new 0 0 1200 630;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#F9FDFF;}
-	.st1{display:none;fill:#FFFFFF;stroke:#000000;}
+	.st1{fill:#FF4A82;}
 	.st2{fill:#E03D3D;stroke:#000000;stroke-width:10;}
 	.st3{fill:#FFFFFF;stroke:#000000;stroke-width:10;}
 	.st4{fill:#333333;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
@@ -18,30 +18,36 @@
 	.st12{fill:#FF5559;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 	.st13{fill:#DF0000;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 	.st14{fill:#FFFFFF;stroke:#000000;stroke-width:2;}
-	.st15{font-family:'Arial'; font-weight: bold;}
+	.st15{font-family:'Arial-BoldMT';}
 	.st16{font-size:73.4073px;}
+	.st17{fill:none;stroke:#E6E6E6;stroke-width:9;stroke-linecap:round;stroke-miterlimit:10;}
+	.st18{font-family:'ArialMT';}
+	.st19{font-family:'Arial-ItalicMT';}
 </style>
 <rect class="st0" width="1200" height="630"/>
-<circle class="st1" cx="672.3" cy="242.7" r="72.3"/>
+<rect x="-151.7" y="-176.2" transform="matrix(0.9567 -0.2909 0.2909 0.9567 -100.0972 50.1787)" class="st1" width="540.8" height="1075.8"/>
 <g>
-	<path class="st2" d="M327.6,241.5h-224c0-61.8,50.1-112,112-112C277.4,129.6,327.6,179.8,327.6,241.5z"/>
-	<path class="st3" d="M327.6,241.5c0,61.8-50.1,112-112,112c-61.8,0-112-50.1-112-112H327.6L327.6,241.5z"/>
-	<path class="st2" d="M327.6,241.5h-224c0-61.8,50.1-112,112-112C277.4,129.6,327.6,179.8,327.6,241.5z"/>
-	<circle class="st3" cx="215.7" cy="241.5" r="25.2"/>
+	<path class="st2" d="M284.3,240.6h-224c0-61.8,50.1-112,112-112C234.1,128.7,284.3,178.9,284.3,240.6z"/>
+	<path class="st3" d="M284.3,240.6c0,61.8-50.1,112-112,112c-61.8,0-112-50.1-112-112H284.3L284.3,240.6z"/>
+	<path class="st2" d="M284.3,240.6h-224c0-61.8,50.1-112,112-112C234.1,128.7,284.3,178.9,284.3,240.6z"/>
+	<circle class="st3" cx="172.4" cy="240.6" r="25.2"/>
 </g>
 <g>
-	<path class="st4" d="M368.4,414.9h-75.1c-3.2,0-5.9-2.6-5.9-5.9V277.2c0-3.2,2.6-5.9,5.9-5.9h75.1c3.2,0,5.9,2.6,5.9,5.9V409
-		C374.4,412.2,371.8,414.9,368.4,414.9z"/>
-	<rect x="296.2" y="288.7" class="st5" width="17.4" height="17.4"/>
-	<rect x="322.3" y="288.7" class="st6" width="17.4" height="17.4"/>
-	<rect x="347.6" y="288.7" class="st7" width="17.4" height="17.4"/>
-	<rect x="296.6" y="321.2" class="st8" width="17.4" height="17.4"/>
-	<rect x="322.6" y="321.2" class="st9" width="17.4" height="17.4"/>
-	<rect x="347.9" y="321.2" class="st10" width="17.4" height="17.4"/>
-	<rect x="296.6" y="353.9" class="st11" width="17.4" height="17.4"/>
-	<rect x="322.6" y="353.9" class="st12" width="17.4" height="17.4"/>
-	<rect x="347.9" y="353.9" class="st13" width="17.4" height="17.4"/>
-	<circle class="st14" cx="331.4" cy="397.9" r="9.8"/>
+	<path class="st4" d="M325.1,414H250c-3.2,0-5.9-2.6-5.9-5.9V276.3c0-3.2,2.6-5.9,5.9-5.9h75.1c3.2,0,5.9,2.6,5.9,5.9v131.8
+		C331.1,411.3,328.5,414,325.1,414z"/>
+	<rect x="252.9" y="287.8" class="st5" width="17.4" height="17.4"/>
+	<rect x="279" y="287.8" class="st6" width="17.4" height="17.4"/>
+	<rect x="304.3" y="287.8" class="st7" width="17.4" height="17.4"/>
+	<rect x="253.3" y="320.3" class="st8" width="17.4" height="17.4"/>
+	<rect x="279.3" y="320.3" class="st9" width="17.4" height="17.4"/>
+	<rect x="304.6" y="320.3" class="st10" width="17.4" height="17.4"/>
+	<rect x="253.3" y="353" class="st11" width="17.4" height="17.4"/>
+	<rect x="279.3" y="353" class="st12" width="17.4" height="17.4"/>
+	<rect x="304.6" y="353" class="st13" width="17.4" height="17.4"/>
+	<circle class="st14" cx="288.1" cy="397" r="9.8"/>
 </g>
-<text transform="matrix(1 0 0 1 428.1992 286.0039)" class="st15 st16">Pokécompanion</text>
+<text transform="matrix(1 0 0 1 456.2319 281.8804)" class="st15 st16">Pokécompanion</text>
+<line class="st17" x1="518.6" y1="510.2" x2="934.4" y2="510.2"/>
+<text transform="matrix(1 0 0 1 456.2319 379.0753)" class="st18 st16">SECTION</text>
+<text transform="matrix(1 0 0 1 456.232 469.0046)" class="st19 st16">ENTRY</text>
 </svg>

@@ -39,3 +39,6 @@ async function convertGeneric() {
 		height: 315,
 	});
 }
+
+pkmnToSvg();
+pkmnSvgToPng();

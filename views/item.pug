@@ -1,14 +1,14 @@
 extends ./header.pug
 	meta(
 		property="og:image",
-		content=`https://dev.pokemon.helbling.uk/static/previews/pokemon/${id}.svg`
+		content="https://dev.pokemon.helbling.uk/static/previews/generic.png"
 	)
 	meta(
 		name="twitter:image",
-		content=`https://dev.pokemon.helbling.uk/static/previews/item/${id}.svg`
+		content="https://dev.pokemon.helbling.uk/static/previews/generic.png"
 	)
-	meta(property="og:description", content=`${primaryName} on the Pokécompanion`)
-	meta(name="twitter:description", content=`${primaryName} on the Pokécompanion`)
+	meta(property="og:description", content=`Item: ${primaryName} on the Pokécompanion`)
+	meta(name="twitter:description", content=`Item: ${primaryName} on the Pokécompanion`)
 
 block append body
 	.columns.is-mobile

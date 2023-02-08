@@ -9,11 +9,9 @@ if (!fs.existsSync(`${outputLocation}`)) fs.mkdirSync(`${outputLocation}`);
 if (!fs.existsSync(`${outputLocation}/pokemon`))
 	fs.mkdirSync(`${outputLocation}/pokemon`);
 
-if (!fs.existsSync(`${outputLocation}/item`)) fs.mkdirSync(`${outputLocation}/item`);
-
 const pkmn = JSON.parse(fs.readFileSync("./public/pokedata/pokemon.json", "utf-8"));
 
-async function pkmnToPng() {
+async function pkmnSvgToPng() {
 	for (let i = 0; i < pkmn.length; i++) {
 		await convertFile(`${outputLocation}/pokemon/${pkmn[i].id}.svg`, {
 			width: 600,
@@ -24,24 +22,20 @@ async function pkmnToPng() {
 	}
 }
 
-pkmn.forEach(mon => {
-	let entry = template.valueOf();
-	entry = entry.replace("SECTION", "Pokémon");
-	const englishName = mon.names.filter(a => Object.keys(a).includes("en"))[0];
-	entry = entry.replace("ENTRY", `#${mon.id} ${englishName.en}`);
+function pkmnToSvg() {
+	pkmn.forEach((mon, i) => {
+		let entry = template.valueOf();
+		entry = entry.replace("SECTION", "Pokémon");
+		const englishName = mon.names.filter(a => Object.keys(a).includes("en"))[0];
+		entry = entry.replace("ENTRY", `#${mon.id} ${englishName.en}`);
 
-	fs.writeFileSync(`${outputLocation}/pokemon/${mon.id}.svg`, entry, "utf-8");
-});
+		fs.writeFileSync(`${outputLocation}/pokemon/${mon.id}.svg`, entry, "utf-8");
+	});
+}
 
-pkmnToPng();
-
-/*
-const items = JSON.parse(fs.readFileSync("./public/pokedata/items.json", "utf-8"));
-items.forEach(item => {
-	let entry = template.valueOf();
-	entry = entry.replace("SECTION", "Item");
-	const englishName = item.names.filter(a => Object.keys(a).includes("en"))[0];
-	entry = entry.replace("ENTRY", `${englishName.en}`);
-	fs.writeFileSync(`${outputLocation}/item/${item.id}.svg`, entry, "utf-8");
-});
-*/
+async function convertGeneric() {
+	await convertFile(`${outputLocation}/generic.svg`, {
+		width: 600,
+		height: 315,
+	});
+}

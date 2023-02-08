@@ -33,9 +33,7 @@ pkmn.forEach(mon => {
 	fs.writeFileSync(`${outputLocation}/pokemon/${mon.id}.svg`, entry, "utf-8");
 });
 
-if (process.env.NODE_ENV === "production") {
-	pkmnToPng();
-}
+pkmnToPng();
 
 /*
 const items = JSON.parse(fs.readFileSync("./public/pokedata/items.json", "utf-8"));

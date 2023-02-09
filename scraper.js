@@ -87,6 +87,7 @@ const findBrokenItems = maxItem => {
 	fs.writeFileSync("brokenItems.json", JSON.stringify(fails), "utf-8");
 	return fails;
 };
+
 const fixBrokenItems = async arr => {
 	const failures = [];
 	const results = [];
@@ -234,15 +235,27 @@ const addTypeSprites = () => {
 	fs.writeFileSync("moves.json", JSON.stringify(moves), "utf8");
 };
 
+const generateSocialPreviews = () => {
+	const template = fs.readFileSync("./misc/assets/social_preview.svg", "utf-8");
+	const outputLocation = "./public/previews/";
+
+	const pkmn = JSON.parse(fs.readFileSync("./public/pokedata/pokemon.json", "utf-8"));
+	pkmn.forEach(mon => {
+		let entry = template.valueOf();
+		entry = entry.replace("SECTION", "Pokémon");
+		const englishName = mon.names.filter(a => Object.keys(a).includes("en"))[0];
+		entry = entry.replace("ENTRY", `#${mon.id} ${englishName.en}`);
+		fs.writeFileSync(
+			`${outputLocation}pokemon/${mon.id}.svg`,
+			JSON.stringify(entry),
+			"utf-8"
+		);
+	});
+};
+
+generateSocialPreviews();
 // fixMoves();
 // pokemon();
-abilities();
-// items().then(() => {
-// 	const brokenItems = findBrokenItems(2050);
-// 	fixBrokenItems(brokenItems).then(() => {
-// 		console.log("done");
-// 	});
-// });
+// abilities();
 // addTypeSprites();
-
 // moves();

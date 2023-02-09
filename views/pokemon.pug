@@ -1,6 +1,18 @@
 extends ./header.pug
 block append head
+	meta(
+		property="og:image",
+		content=`https://pokemon.helbling.uk/static/previews/pokemon/${id}.png`
+	)
+	meta(
+		name="twitter:image",
+		content=`https://pokemon.helbling.uk/static/previews/pokemon/${id}.png`
+	)
+	meta(property="og:description", content=`${primaryName} on the Pokécompanion`)
+	meta(name="twitter:description", content=`${primaryName} on the Pokécompanion`)
+
 	script(src="/static/js/pokemon.js")
+	script(src="/static/js/giffer.min.js")
 block append body
 	if selectedGames.version_group_name === "all"
 		.notification.is-warning
@@ -49,12 +61,24 @@ block append body
 					.columns.mb-0.is-mobile
 						.column
 							.has-text-centered
-								img#sprite-front.pokemonSprite(src=`${sprites.primary}`)
+								if sprites.primary.includes(".gif")
+									img#sprite-front.pokemonSprite(
+										src=`${sprites.primary}`,
+										data-gifffer=`${sprites.primary}`
+									)
+								else
+									img#sprite-front.pokemonSprite(src=`${sprites.primary}`)
 								p#primarySupportText.is-italic
 						if sprites.primary !== sprites.secondary
 							.column
 								.has-text-centered
-									img#sprite-back.pokemonSprite(src=`${sprites.secondary}`)
+									if sprites.secondary.includes(".gif")
+										img#sprite-back.pokemonSprite(
+											src=`${sprites.secondary}`,
+											data-gifffer=`${sprites.secondary}`
+										)
+									else
+										img#sprite-back.pokemonSprite(src=`${sprites.secondary}`)
 									p#secondarySupportText.is-italic
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
@@ -299,12 +323,12 @@ block append body
 				.card-content
 					each form in forms
 						.columns.is-flex
-							a.keepQuery.invisible.column(href=`${form.url}`)
-								.box.accented.is-half(style="text-align: center; height: 100%")
+							a.keepQuery.invisible.column(href=`${form.url}`, style="width: 50%")
+								.box.accented(style="text-align: center; height: 100%")
 									img.image.formPrimary(src=`${form.sprites.primary}`, style="margin: auto")
 									p(style="margin-top: 15px") #{ form.name }
-							a.keepQuery.invisible.column(href=`${form.url}`)
-								.box.accented.is-half(style="text-align: center; height: 100%")
+							a.keepQuery.invisible.column(href=`${form.url}`, style="width: 50%")
+								.box.accented(style="text-align: center; height: 100%")
 									img.image.formPrimary(src=`${form.sprites.shiny}`, style="margin: auto")
 									p(style="margin-top: 15px") Shiny #{ form.name }
 		if moveset.length > 0

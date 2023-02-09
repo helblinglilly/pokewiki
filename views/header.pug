@@ -3,7 +3,24 @@ doctype html
 head
 	block head
 	meta(name="viewport", content="width=device-width, initial-scale=1")
-	link(rel="icon", type="image/png", href="https://www.helbling.uk/favicon.ico")
+	meta(charset="utf-8")
+	meta(name="keywords", content="Pokémon, Pokécompanion, Pokemon Lookup")
+
+	//- Open Graph Meta tags
+	meta(property="og:title", content="Pokécompanion")
+	meta(property="og:type", content="website")
+	meta(property="og:image:type", content="image/svg+xml")
+	meta(property="og:image:width", content="1200")
+	meta(property="og:image:height", content="630")
+	meta(property="og:url", content="https://pokemon.helbling.uk/")
+
+	//- Twitter Tags
+	meta(name="twitter:card", content="summary_large_image")
+	meta(name="twitter:title", content="Pokécompanion")
+	meta(property="twitter:url", content="https://pokemon.helbling.uk")
+	meta(property="twitter:domain", content="https://pokemon.helbling.uk")
+
+	link(rel="icon", type="image/png", href="/static/favicon.png")
 	link(
 		rel="stylesheet",
 		href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
@@ -16,7 +33,7 @@ head
 		@import url("/static/styles.css");
 	style.
 		@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-	title Pokéwiki
+	title Pokécompanion
 
 body
 	p#placeholder.hidden #{ placeholderImage }
@@ -24,7 +41,7 @@ body
 		nav.flex-child.navbar.mb-4(role="navigation", aria-label="main navigation")
 			.navbar-brand(href="/")
 				a.navbar-item(href="/")
-					img(src="/static/pokemon.png")
+					img(src="/static/favicon.png")
 				a.navbar-item(href="/") Pokécompanion
 				#navbarBurger.navbar-burger
 					img#burgerIcon(src="/static/assets/other/bag_closed.png", style="margin: 10px")
@@ -34,6 +51,8 @@ body
 
 		.container.flex-child.is-max-desktop.pl-6.pr-6.pb-6(style="width: 100%")
 			block body
+				.pb-3
+					a#backLink.is-underlined(hidden) Go Back
 				form#search.pb-3(action="/search", method="get")
 					.field.has-addons
 						.control(style="width: 100%")
@@ -107,3 +126,4 @@ body
 		p  #{ buildDetails }
 		p Built at #[a.showAsLink(href="https://github.com/helblingjoel/pokewiki") https://github.com/helblingjoel/pokewiki]
 		p Using data from #[a.showAsLink(href="https://github.com/PokeAPI/pokeapi") https://github.com/PokeAPI/pokeapi]
+		p Pokémon and Pokémon character names are trademarks of Nintendo.

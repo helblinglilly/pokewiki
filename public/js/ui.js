@@ -42,6 +42,16 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.getElementById("navbarMenu").classList.toggle("is-active");
 	});
 
+	// Should keep a page history in session storage and use that instead
+	// When things we run out of history, hide the button
+	const backButton = document.getElementById("backLink");
+	backButton.addEventListener("click", () => {
+		history.back();
+	});
+	if (window.location.pathname !== "/") {
+		backButton.removeAttribute("hidden");
+	}
+
 	checkAllImages();
 	addQueryrefToAllLinks();
 	makeElementsCollapsible();

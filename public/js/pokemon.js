@@ -1,90 +1,88 @@
+window.onload = () => {
+	var gifs = Gifffer();
+
+	setTimeout(function () {
+		gifs.forEach(gif => {
+			gif.click();
+		});
+	}, 100);
+};
+
 document.addEventListener("DOMContentLoaded", () => {
-	const primarySprite = document.getElementById("sprite-front");
-	const secondarySprite = document.getElementById("sprite-back");
-
-	const primaryLabel = document.getElementById("primarySupportText");
-	const secondaryLabel = document.getElementById("secondarySupportText");
-
-	if (!secondarySprite) {
-		primarySprite.setAttribute("style", "height: 50%; width: 50%");
-		return;
-	}
-
-	const primaryLabels = [];
-	const secondaryLabels = [];
-
-	if (secondarySprite.currentSrc.includes("/shiny/")) {
-		primaryLabels.push("Regular");
-		secondaryLabels.push("Shiny");
-	}
-
-	if (secondarySprite.currentSrc.includes("/female/")) {
-		primaryLabels.push("Male");
-		secondaryLabels.push("Female");
-	}
-
-	if (secondarySprite.currentSrc.includes("/back/")) {
-		primaryLabels.push("Front");
-		secondaryLabels.push("Back");
-	}
-
-	primaryLabel.innerHTML = primaryLabels.join(" ");
-	secondaryLabel.innerHTML = secondaryLabels.join(" ");
-
-	adjustShowcaseSprites(primarySprite);
-	adjustShowcaseSprites(secondarySprite);
-
-	if (
-		primarySprite.currentSrc.includes(".gif") &&
-		secondarySprite.currentSrc.includes(".gif")
-	) {
-		const gifStates = [false, false];
-		primarySprite.addEventListener("load", () => {
-			gifStates[0] = true;
-			reloadGifs(gifStates, [primarySprite, secondarySprite]);
-		});
-
-		secondarySprite.addEventListener("load", () => {
-			gifStates[1] = true;
-			reloadGifs(gifStates, [primarySprite, secondarySprite]);
-		});
-	}
+	const spritesLoaded = [false, false];
+	document.getElementById("sprite-front").addEventListener("load", () => {
+		spritesLoaded[0] = true;
+		if (!spritesLoaded.includes(false)) {
+			initialiseSprites();
+		}
+	});
+	document.getElementById("sprite-back").addEventListener("load", () => {
+		spritesLoaded[1] = true;
+		if (!spritesLoaded.includes(false)) {
+			initialiseSprites();
+		}
+	});
 });
 
-const loadedGifs = [false, false];
-const reloadGifs = (states, all) => {
-	const loaded = states.every(state => state === true);
-	if (loaded) {
-		all.forEach((sprite, i) => {
-			if (loadedGifs[i] === false) {
-				const actualURL = sprite.currentSrc;
-				sprite.src = "";
-				sprite.src = actualURL;
-				loadedGifs[i] = true;
-			}
-		});
+const initialiseSprites = () => {
+	const frontSprite = document.getElementById("sprite-front");
+	const backSprite = document.getElementById("sprite-back");
+	const frontLabel = document.getElementById("primarySupportText");
+	const backLabel = document.getElementById("secondarySupportText");
+
+	const frontLabels = [];
+	const backLabels = [];
+
+	if (backSprite.currentSrc.includes("/shiny/")) {
+		frontLabels.push("Regular");
+		backLabels.push("Shiny");
 	}
+
+	if (backSprite.currentSrc.includes("/female/")) {
+		frontLabels.push("Male");
+		backLabels.push("Female");
+	}
+
+	if (backSprite.currentSrc.includes("/back/")) {
+		frontLabels.push("Front");
+		backLabels.push("Back");
+	}
+
+	frontLabel.innerText = frontLabels.join(" ");
+	backLabel.innerText = backLabels.join(" ");
+
+	adjustShowcaseSprites(frontSprite);
+	adjustShowcaseSprites(backSprite);
 };
 
 const adjustShowcaseSprites = sprite => {
-	if (sprite.currentSrc.includes("/ultra-sun-ultra-moon")) {
-		sprite.setAttribute("style", "height: 85%; width: 85%");
-		sprite.classList.add("is-square");
+	let src = sprite.getAttribute("data-gifffer");
+	if (!src) {
+		src = sprite.currentSrc;
 	}
 
-	if (
-		sprite.currentSrc.includes("/red-blue/") ||
-		sprite.currentSrc.includes("/yellow/") ||
-		sprite.currentSrc.includes("/ruby-sapphire/") ||
-		sprite.currentSrc.includes("/emerald/") ||
-		sprite.currentSrc.includes("/firered-leafgreen/") ||
-		sprite.currentSrc.includes("/diamond-pearl/") ||
-		sprite.currentSrc.includes("/platinum/") ||
-		sprite.currentSrc.includes("/heartgold-soulsilver/") ||
-		sprite.currentSrc.includes(".gif") ||
-		sprite.currentSrc.includes("/x-y/")
-	) {
-		sprite.setAttribute("style", "height: 70%; width: 70%");
-		sprite.classList.add("is-square");
+	if (src) {
+		if (src.includes("/ultra-sun-ultra-moon")) {
+			sprite.setAttribute("style", "height: 85%; width: 85%");
+			sprite.classList.add("is-square");
+		}
+
+		if (
+			src.includes("/red-blue/") ||
+			src.includes("/yellow/") ||
+			src.includes("/ruby-sapphire/") ||
+			src.includes("/emerald/") ||
+			src.includes("/firered-leafgreen/") ||
+			src.includes("/diamond-pearl/") ||
+			src.includes("/platinum/") ||
+			src.includes("/heartgold-soulsilver/") ||
+			src.includes("/black-white")
+		) {
+			sprite.setAttribute("style", "height: 70%; width: 70%");
+			sprite.classList.add("is-square");
+		} else if (src.includes("/x-y/")) {
+			sprite.style.width = "50%";
+			sprite.setAttribute("style", "width: 50%");
+		}
 	}
 };

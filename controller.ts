@@ -536,6 +536,79 @@ class Controller {
 		};
 	};
 
+	getMove = async (id: number, game?: string) => {
+		const moveData = await this.data.getMove(id);
+
+		const primaryLang = Utils.findNameFromLanguageCode(
+			moveData.names,
+			this.primaryLanguageCode
+		);
+		const secondaryLang = Utils.findNameFromLanguageCode(
+			moveData.names,
+			this.secondaryLanguageCode
+		);
+
+		let primaryLangEffect = moveData.effect_entries.filter(
+			a => a.language.name === this.primaryLanguageCode
+		)[0]?.short_effect;
+		let secondaryLangEffect = moveData.effect_entries.filter(
+			a => a.language.name === this.secondaryLanguageCode
+		)[0]?.short_effect;
+
+		if (primaryLangEffect) {
+			primaryLangEffect = primaryLangEffect.replace(
+				"$effect_chance",
+				moveData.effect_chance.toString()
+			);
+		}
+		if (secondaryLangEffect) {
+			secondaryLangEffect = secondaryLangEffect.replace(
+				"$effect_chance",
+				moveData.effect_chance.toString()
+			);
+		}
+
+		let primaryFlavorText = moveData.flavor_text_entries.filter(
+			a => a.language.name === this.primaryLanguageCode
+		)[0];
+		let secondaryFlavorText = moveData.flavor_text_entries.filter(
+			a => a.language.name === this.secondaryLanguageCode
+		)[0];
+
+		let damageClass = "";
+		if (moveData.damage_class.name === "special")
+			damageClass = "/static/assets/attack-types/special.png";
+		else if (moveData.damage_class.name === "physical")
+			damageClass = "/static/assets/attack-types/physical.png";
+		else if (moveData.damage_class.name === "status")
+			damageClass = "/static/assets/attack-types/status.png";
+
+		return {
+			primaryLanguage: primaryLang,
+			secondaryLanguage: secondaryLang,
+			damageClass: damageClass,
+			type: Types.filter(a => a.english_id === moveData.type.name)[0].sprite,
+			effectEntry: primaryLangEffect ? primaryLangEffect : secondaryLangEffect,
+			flavorEntry: primaryFlavorText
+				? primaryFlavorText.flavor_text
+				: secondaryFlavorText.flavor_text,
+			secondaryLangEffect: secondaryLangEffect,
+			accuracy: moveData.accuracy ? moveData.accuracy : "-",
+			power: moveData.power ? moveData.power : "-",
+			pp: moveData.pp ? moveData.pp : "-",
+			/*
+			game: gameString === "All" ? "" : gameString,
+			effectEntry: effectEntry,
+			flavorText: primaryFlavorText
+				? primaryFlavorText.flavor_text
+				: secondaryFlavorText.flavor_text,
+			introduced: ability.generation.name.split("-")[1],
+			generationChange: generationChange,
+			pokemon: pokemon,
+			*/
+		};
+	};
+
 	getSearchResults = async (
 		searchTerm: string,
 		pokemon: boolean,

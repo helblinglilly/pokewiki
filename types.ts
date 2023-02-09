@@ -281,12 +281,37 @@ export interface APIResponseMachine {
 }
 
 export interface APIResponseMove {
+	accuracy: number;
+	effect_chance: number;
+	damage_class: {
+		name: string;
+	};
+	effect_entries: {
+		short_effect: string;
+		language: {
+			name: string;
+		};
+	}[];
+	flavor_text_entries: {
+		language: {
+			name: string;
+		};
+		version_group: {
+			name: string;
+		};
+		flavor_text: string;
+	}[];
 	names: {
 		language: {
 			name: string;
 		};
 		name: string;
 	}[];
+	power: number;
+	pp: number;
+	type: {
+		name: string;
+	};
 }
 export interface APIResponseItem {
 	name: string;

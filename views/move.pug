@@ -1,0 +1,48 @@
+extends ./header.pug
+block append head
+	meta(
+		property="og:image",
+		content="https://pokemon.helbling.uk/static/previews/generic.png"
+	)
+	meta(
+		property="twitter:image",
+		content="https://pokemon.helbling.uk/static/previews/generic.png"
+	)
+	meta(property="og:description", content=`Move: ${primaryName} on the Pokécompanion`)
+	meta(name="twitter:description", content=`Move: ${primaryName} on the Pokécompanion`)
+
+block append body
+	.columns
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.is-justify-content-space-between
+					p #{ primaryLanguage } - #{ secondaryLanguage }
+					div
+						img.pl-2.typeSprite(src=`${type}`)
+						img.pl-2.typeSprite(src=`${damageClass}`)
+
+				.card-content(style="width: 100%")
+					.box.accented.nohover
+						p #{ effectEntry }
+					.box.accented.nohover
+						p #{ flavorEntry }
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title
+					p Basic info
+				.card-content.pt-0(style="width: 100%")
+					table.table(style="width: 100%")
+						thead
+							tr
+								th Entry
+								th.has-text-centered Value
+						tbody
+							tr
+								td Accuracy
+								td.has-text-centered #{ accuracy }
+							tr
+								td Power
+								td.has-text-centered #{ power }
+							tr
+								td Power Points
+								td.has-text-centered #{ pp }

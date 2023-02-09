@@ -1,4 +1,25 @@
 extends ./header.pug
+block append head
+	meta(
+		property="og:image",
+		content="https://dev.pokemon.helbling.uk/static/previews/generic.png"
+	)
+	meta(
+		name="twitter:image",
+		content="https://dev.pokemon.helbling.uk/static/previews/generic.png"
+	)
+	meta(
+		name="description",
+		content="With Pokécompanion you can quickly find the details you need during your playthrough of a mainline Pokémon game - without scrolling past a sea of irrelevant info."
+	)
+	meta(
+		property="og:description",
+		content="With Pokécompanion you can quickly find the details you need during your playthrough of a mainline Pokémon game - without scrolling past a sea of irrelevant info."
+	)
+	meta(
+		name="twitter:description",
+		content="With Pokécompanion you can quickly find the details you need during your playthrough of a mainline Pokémon game - without scrolling past a sea of irrelevant info."
+	)
 
 block append body
 	p.title.is-3 Results for "#{ searchTerm }"

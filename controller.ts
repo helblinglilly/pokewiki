@@ -637,7 +637,7 @@ class Controller {
 			ability.generation.name.split("-")[1]
 		);
 
-		if (selectedId >= 0 && selectedId < abilitySelectedId) {
+		if (selectedId >= 0 && selectedId < abilitySelectedId && primaryLangEffectEntry) {
 			primaryLangEffectEntry = {
 				effect: primaryLangEffectEntry.effect,
 				language: { name: this.primaryLanguageCode },
@@ -645,13 +645,17 @@ class Controller {
 			};
 		}
 
+		let effectEntry = "No entry found";
+		if (primaryLangEffectEntry && primaryLangEffectEntry.short_effect)
+			effectEntry = primaryLangEffectEntry.short_effect;
+		else if (secondaryLangEffectEntry && secondaryLangEffectEntry.short_effect)
+			effectEntry = secondaryLangEffectEntry.short_effect;
+
 		return {
 			primaryLanguage: primaryLang,
 			secondaryLanguage: secondaryLang,
 			game: gameString === "All" ? "" : gameString,
-			effectEntry: primaryLangEffectEntry
-				? primaryLangEffectEntry.short_effect
-				: secondaryLangEffectEntry.short_effect,
+			effectEntry: effectEntry,
 			flavorText: primaryFlavorText
 				? primaryFlavorText.flavor_text
 				: secondaryFlavorText.flavor_text,

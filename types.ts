@@ -271,6 +271,10 @@ export interface APIResponseForm {
 
 export interface APIResponseMachine {
 	id: number;
+	item: {
+		url: string;
+		name: string;
+	};
 	move: {
 		name: string;
 		url: string;
@@ -292,6 +296,10 @@ export interface APIResponseMove {
 			name: string;
 		};
 	}[];
+	learned_by_pokemon: {
+		name: string;
+		url: string;
+	}[];
 	flavor_text_entries: {
 		language: {
 			name: string;
@@ -301,6 +309,17 @@ export interface APIResponseMove {
 		};
 		flavor_text: string;
 	}[];
+	generation: {
+		name: string;
+	};
+	machines: {
+		machine: {
+			url: string;
+		};
+		version_group: {
+			name: string;
+		};
+	}[];
 	names: {
 		language: {
 			name: string;
@@ -309,6 +328,7 @@ export interface APIResponseMove {
 	}[];
 	power: number;
 	pp: number;
+	priority: number;
 	type: {
 		name: string;
 	};

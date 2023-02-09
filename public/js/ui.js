@@ -139,6 +139,10 @@ const removeVarieties = () => {
 	return window.location.search.replace(/\?variety=[0-9]*/g, "");
 };
 
+const overrideGameSearch = game => {
+	return window.location.search.replace(/game=[^\&]*/g, `game=${game}`);
+};
+
 const populateSearchFilters = () => {
 	const params = new URL(document.location).searchParams;
 

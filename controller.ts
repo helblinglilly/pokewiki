@@ -15,6 +15,7 @@ import {
 	GenericSprites,
 	APIResponseItem,
 	PokemonName,
+	APIResponseMachine,
 } from "./types";
 import { appSettings } from "./api/app";
 
@@ -538,6 +539,13 @@ class Controller {
 
 	getMove = async (id: number, game?: string) => {
 		const moveData = await this.data.getMove(id);
+		const machineDataPromises: Promise<APIResponseMachine>[] = [];
+
+		moveData.machines.forEach(a => {
+			const id = a.machine.url.split("/")[6];
+			machineDataPromises.push(this.data.getMachine(parseInt(id)));
+		});
+		const machineData = await Promise.all(machineDataPromises);
 
 		const primaryLang = Utils.findNameFromLanguageCode(
 			moveData.names,
@@ -554,18 +562,21 @@ class Controller {
 		let secondaryLangEffect = moveData.effect_entries.filter(
 			a => a.language.name === this.secondaryLanguageCode
 		)[0]?.short_effect;
-
 		if (primaryLangEffect) {
-			primaryLangEffect = primaryLangEffect.replace(
-				"$effect_chance",
-				moveData.effect_chance.toString()
-			);
+			if (moveData.effect_chance) {
+				primaryLangEffect = primaryLangEffect.replace(
+					"$effect_chance",
+					moveData.effect_chance.toString()
+				);
+			}
 		}
 		if (secondaryLangEffect) {
-			secondaryLangEffect = secondaryLangEffect.replace(
-				"$effect_chance",
-				moveData.effect_chance.toString()
-			);
+			if (moveData.effect_chance) {
+				secondaryLangEffect = secondaryLangEffect.replace(
+					"$effect_chance",
+					moveData.effect_chance.toString()
+				);
+			}
 		}
 
 		let primaryFlavorText = moveData.flavor_text_entries.filter(
@@ -583,6 +594,29 @@ class Controller {
 		else if (moveData.damage_class.name === "status")
 			damageClass = "/static/assets/attack-types/status.png";
 
+		const tmEntries: { game: string; gameDisplay: string; name: string; id: number }[] =
+			[];
+		machineData.forEach(a => {
+			const games = Games.findEntry(a.version_group.name);
+			const gameNames = games.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
+			tmEntries.push({
+				game: games.version_group_name,
+				gameDisplay: gameNames.join(" "),
+				name: a.item.name.toUpperCase(),
+				id: parseInt(a.item.url.split("/")[6]),
+			});
+		});
+
+		const pokemon: PokemonName[] = [];
+		moveData.learned_by_pokemon.forEach(a => {
+			const id = a.url.split("/")[6];
+			const details = this.data.findPokemonNameFromId(parseInt(id));
+
+			if (details) {
+				pokemon.push(details);
+			}
+		});
+
 		return {
 			primaryLanguage: primaryLang,
 			secondaryLanguage: secondaryLang,
@@ -596,6 +630,10 @@ class Controller {
 			accuracy: moveData.accuracy ? moveData.accuracy : "-",
 			power: moveData.power ? moveData.power : "-",
 			pp: moveData.pp ? moveData.pp : "-",
+			priority: moveData.priority,
+			tm: tmEntries,
+			generation: moveData.generation.name.split("-")[1],
+			pokemon: pokemon,
 			/*
 			game: gameString === "All" ? "" : gameString,
 			effectEntry: effectEntry,

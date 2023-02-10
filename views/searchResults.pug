@@ -38,7 +38,7 @@ block append body
 						.card-content.searchResult(style="display: flex; align-items: center")
 							img.is-48x48.mr-1(
 								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-								alt="Pokemon Icon"
+								alt=`${pokemon.primaryLang} sprite`
 							)
 							if pokemon.primaryLang === pokemon.secondaryLang
 								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang }
@@ -55,7 +55,7 @@ block append body
 							img.is-48x48.mr-1(
 								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`,
 								style="height: 30px; width: 30px",
-								alt="Item Icon"
+								alt=`${item.primaryLang} sprite`
 							)
 							if item.primaryLang === item.secondaryLang
 								p.card-text #{ item.primaryLang }
@@ -70,10 +70,16 @@ block append body
 					.card.mb-3
 						.card-content.searchResult
 							.container.mb-1(style="display: inline-flex")
-								img.icon.mr-2.typeSprite(src=`${move.type_sprite}`, alt="Type Icon")
+								img.icon.mr-2.typeSprite(
+									src=`${move.type_sprite}`,
+									alt=`${move.type[0].toUpperCase() + move.type.slice(1)}`
+								)
 								p.card-text #{ move.english }
 							.container.mb-1(style="display: flex")
-								img.icon.mr-2.typeSprite(src=`${move.attack_type_sprite}`, alt="Type Icon")
+								img.icon.mr-2.typeSprite(
+									src=`${move.attack_type_sprite}`,
+									alt=`${move.attack_type_sprite.split("/")[4].split(".")[0]}`
+								)
 								p.card-text #{ move.german }
 
 	if results.Abilities.length !== 0

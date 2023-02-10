@@ -16,6 +16,7 @@ block append head
 		name="twitter:description",
 		content=`Move: ${primaryLanguage ? primaryLanguage : secondaryLanguage} on the Pokécompanion`
 	)
+	script(src="/static/js/extraPokemon.js")
 
 block append body
 	.columns
@@ -24,8 +25,11 @@ block append body
 				.card-header-title.is-justify-content-space-between
 					p #{ primaryLanguage } - #{ secondaryLanguage }
 					div
-						img.pl-2.typeSprite(src=`${type}`)
-						img.pl-2.typeSprite(src=`${damageClass}`)
+						img.pl-2.typeSprite(src=`${typeSprite}`, alt=`The type sprite for '${type}'`)
+						img.pl-2.typeSprite(
+							src=`${damageClassSprite}`,
+							alt=`The type sprite for '${damageClass}'`
+						)
 
 				.card-content(style="width: 100%")
 					.box.accented.nohover
@@ -95,7 +99,7 @@ block append body
 								.box.accented.mb-4.searchResult(style="display: flex; align-items: center")
 									img.is-48x48.mr-1(
 										src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmn.id}.png`,
-										alt="Pokemon Icon"
+										alt=`Sprite for Pokémon: ${pkmn.primaryLang}`
 									)
 									if pkmn.primaryLang === pkmn.secondaryLang
 										p.card-text ##{ pkmn.id } #{ pkmn.primaryLang }

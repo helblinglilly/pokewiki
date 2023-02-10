@@ -26,7 +26,10 @@ block append body
 						.card-content.otherEntryContent.is-flex
 							#itemNavPrev.columns(style="width: 100%")
 								.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")
-									img.itemSprite.is-square(src=`${previousItemSprite}`)
+									img.itemSprite.is-square(
+										src=`${previousItemSprite}`,
+										alt="The sprite for another item."
+									)
 								.column.is-three-quarter
 									p(style="word-wrap: anywhere; min-width: 100%") #{ previousItemName }
 		.column.is-half.is-flex(style="justify-content: end")
@@ -38,7 +41,10 @@ block append body
 							.column.is-three-quarter
 								p(style="word-wrap: anywhere; min-width: 100%") #{ nextItemName }
 							.column.is-one-quarter.has-text-centered(style="min-width: 40px; padding: 0")
-								img.itemSprite.is-square(src=`${nextItemSprite}`)
+								img.itemSprite.is-square(
+									src=`${nextItemSprite}`,
+									alt="The sprite for another item."
+								)
 
 	.columns
 		//- Overview
@@ -52,7 +58,11 @@ block append body
 				.card-content
 					.columns.is-mobile
 						.column.has-text-centered.is-one-half
-							img(src=`${itemSprite}`, style="height: 50px; width: 50px") 
+							img(
+								src=`${itemSprite}`,
+								style="height: 50px; width: 50px",
+								alt=`The sprite for ${primaryName}`
+							) 
 						.column.has-text-centered(style="margin: auto")
 							p Price: ₽ #{ price }
 					if primaryLangEntry.entry

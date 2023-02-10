@@ -586,13 +586,17 @@ class Controller {
 			a => a.language.name === this.secondaryLanguageCode
 		)[0];
 
-		let damageClass = "";
+		const typeSprite = Types.filter(a => a.english_id === moveData.type.name)[0].sprite;
+		const type = typeSprite.split("/")[4].split(".")[0];
+
+		let damageClassSprite = "";
 		if (moveData.damage_class.name === "special")
-			damageClass = "/static/assets/attack-types/special.png";
+			damageClassSprite = "/static/assets/attack-types/special.png";
 		else if (moveData.damage_class.name === "physical")
-			damageClass = "/static/assets/attack-types/physical.png";
+			damageClassSprite = "/static/assets/attack-types/physical.png";
 		else if (moveData.damage_class.name === "status")
-			damageClass = "/static/assets/attack-types/status.png";
+			damageClassSprite = "/static/assets/attack-types/status.png";
+		const damageClass = damageClassSprite.split("/")[4].split(".")[0];
 
 		const tmEntries: { game: string; gameDisplay: string; name: string; id: number }[] =
 			[];
@@ -620,8 +624,10 @@ class Controller {
 		return {
 			primaryLanguage: primaryLang,
 			secondaryLanguage: secondaryLang,
-			damageClass: damageClass,
-			type: Types.filter(a => a.english_id === moveData.type.name)[0].sprite,
+			damageClass: damageClass[0].toUpperCase() + damageClass.slice(1),
+			damageClassSprite: damageClassSprite,
+			type: type[0].toUpperCase() + type.slice(1),
+			typeSprite: typeSprite,
 			effectEntry: primaryLangEffect ? primaryLangEffect : secondaryLangEffect,
 			flavorEntry: primaryFlavorText
 				? primaryFlavorText.flavor_text

@@ -53,7 +53,7 @@ block append body
 							.box.accented.mb-4.searchResult(style="display: flex; align-items: center")
 								img.is-48x48.mr-1(
 									src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmn.id}.png`,
-									alt="Pokemon Icon"
+									alt=`Sprite for Pokémon: ${pkmn.primaryLang}`
 								)
 								if pkmn.primaryLang === pkmn.secondaryLang
 									p.card-text ##{ pkmn.id } #{ pkmn.primaryLang }

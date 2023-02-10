@@ -36,7 +36,8 @@ block append body
 						.card-content.otherEntryContent
 							p.otherNumber ##{ id - 1 }
 							img.otherSprite(
-								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id - 1}.png`,
+								alt="Sprite for the Pokémon with the previous Pokédex entry"
 							)
 		.column.has-text-centered(style="display: inline-flex")
 			p.title.is-4(style="margin: auto") ##{ id }
@@ -46,7 +47,8 @@ block append body
 					a.keepQuery(href=`/pokemon/${id + 1}`)
 						.card-content.otherEntryContent
 							img.otherSprite(
-								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`
+								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`,
+								alt="Sprite for the Pokémon with the next Pokédex entry"
 							)
 							p.otherNumber ##{ id + 1 }
 
@@ -62,7 +64,7 @@ block append body
 
 					div
 						each pType in types
-							img.pl-2.typeSprite(src=`${pType.sprite}`)
+							img.pl-2.typeSprite(src=`${pType.sprite}`, alt=`${pType.name}`)
 				.card-content
 					.columns.mb-0.is-mobile
 						.column
@@ -70,10 +72,14 @@ block append body
 								if sprites.primary.includes(".gif")
 									img#sprite-front.pokemonSprite(
 										src=`${sprites.primary}`,
-										data-gifffer=`${sprites.primary}`
+										data-gifffer=`${sprites.primary}`,
+										alt=`${primaryName} from the front`
 									)
 								else
-									img#sprite-front.pokemonSprite(src=`${sprites.primary}`)
+									img#sprite-front.pokemonSprite(
+										src=`${sprites.primary}`,
+										alt=`${primaryName} from the front`
+									)
 								p#primarySupportText.is-italic
 						if sprites.primary !== sprites.secondary
 							.column
@@ -81,10 +87,14 @@ block append body
 									if sprites.secondary.includes(".gif")
 										img#sprite-back.pokemonSprite(
 											src=`${sprites.secondary}`,
-											data-gifffer=`${sprites.secondary}`
+											data-gifffer=`${sprites.secondary}`,
+											alt=`Alternative ${primaryName} sprite`
 										)
 									else
-										img#sprite-back.pokemonSprite(src=`${sprites.secondary}`)
+										img#sprite-back.pokemonSprite(
+											src=`${sprites.secondary}`,
+											alt=`Alternative ${primaryName} sprite`
+										)
 									p#secondarySupportText.is-italic
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
@@ -97,7 +107,10 @@ block append body
 						.columns.is-vcentered.is-mobile
 							.column.has-text-centered
 								a.keepQuery.invisible(href=`${evolution.sourceURL}`)
-									img.link(src=`${evolution.sourceSprite}`)
+									img.link(
+										src=`${evolution.sourceSprite}`,
+										alt="This evolution line's source Pokémon"
+									)
 							.column.has-text-centered
 								if evolution.trigger.includes("Level")
 									p #{ evolution.trigger }
@@ -136,7 +149,8 @@ block append body
 													img(
 														src=`${requirement.info}`,
 														title=`${requirement.info.split("/")[8].split(".")[0]}`,
-														style="vertical-align: middle"
+														style="vertical-align: middle",
+														alt="Sprite for the item that needs to be used"
 													)
 									if requirement.type === "hold-item"
 										.container
@@ -145,7 +159,8 @@ block append body
 												img.link(
 													src=`${requirement.info}`,
 													style="vertical-align: middle",
-													title=`${requirement.info.split("/")[8].split(".")[0]}`
+													title=`${requirement.info.split("/")[8].split(".")[0]}`,
+													alt="Sprite for the item that this Pokémon needs to hold"
 												)
 									if requirement.type === "friendship"
 										p Friendship: #{ requirement.info }
@@ -193,7 +208,10 @@ block append body
 
 							.column.has-text-centered
 								a.keepQuery.invisible(href=`${evolution.targetURL}`)
-									img.link(src=`${evolution.targetSprite}`)
+									img.link(
+										src=`${evolution.targetSprite}`,
+										alt="This evolution line's target Pokémon"
+									)
 
 	//- Abilities and Base Stats
 	.columns
@@ -331,11 +349,19 @@ block append body
 						.columns.is-flex
 							a.keepQuery.invisible.column(href=`${form.url}`, style="width: 50%")
 								.box.accented(style="text-align: center; height: 100%")
-									img.image.formPrimary(src=`${form.sprites.primary}`, style="margin: auto")
+									img.image.formPrimary(
+										src=`${form.sprites.primary}`,
+										style="margin: auto",
+										alt=`Primary sprite for ${form.name}`
+									)
 									p(style="margin-top: 15px") #{ form.name }
 							a.keepQuery.invisible.column(href=`${form.url}`, style="width: 50%")
 								.box.accented(style="text-align: center; height: 100%")
-									img.image.formPrimary(src=`${form.sprites.shiny}`, style="margin: auto")
+									img.image.formPrimary(
+										src=`${form.sprites.shiny}`,
+										style="margin: auto",
+										alt=`Shiny sprite for ${form.name}`
+									)
 									p(style="margin-top: 15px") Shiny #{ form.name }
 		if moveset.length > 0
 			.column
@@ -357,12 +383,12 @@ block append body
 											img.icon.tableImage(
 												src=`${move.type_sprite}`,
 												style="width: 50px; height: 20px",
-												alt="Move type Icon"
+												alt=`${move.type[0].toUpperCase() + move.type.slice(1)}`
 											)
 											img.icon.tableImage.mt-1(
 												src=`${move.attack_type_sprite}`,
-												alt="Type Icon",
-												style="width: 50px; height: 20px"
+												style="width: 50px; height: 20px",
+												alt=`${move.attack_type_sprite.split("/")[4].split(".")[0]}`
 											)
 									td.pl-0
 										if move.english === move.german || !move.german

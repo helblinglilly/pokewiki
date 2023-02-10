@@ -49,8 +49,21 @@ document.addEventListener("DOMContentLoaded", () => {
 		history.back();
 	});
 	if (window.location.pathname !== "/") {
-		backButton.removeAttribute("hidden");
+		backButton.style.display = "inherit";
 	}
+
+	document.getElementById("loadMorePokemon").addEventListener("click", () => {
+		const all = document.getElementsByClassName("extraPokemon");
+		const hidden = [];
+		for (let i = 0; i < all.length; i++) {
+			if (all[i].style.display === "none") hidden.push(all[i]);
+		}
+		hidden.forEach((a, i) => {
+			if (i < 20) {
+				a.style.display = "inherit";
+			}
+		});
+	});
 
 	checkAllImages();
 	addQueryrefToAllLinks();

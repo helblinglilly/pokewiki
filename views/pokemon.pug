@@ -8,8 +8,14 @@ block append head
 		name="twitter:image",
 		content=`https://pokemon.helbling.uk/static/previews/pokemon/${id}.png`
 	)
-	meta(property="og:description", content=`${primaryName} on the Pokécompanion`)
-	meta(name="twitter:description", content=`${primaryName} on the Pokécompanion`)
+	meta(
+		property="og:description",
+		content=`${primaryName ? primaryName : secondaryName} on the Pokécompanion`
+	)
+	meta(
+		name="twitter:description",
+		content=`${primaryName ? primaryName : secondaryName} on the Pokécompanion`
+	)
 
 	script(src="/static/js/pokemon.js")
 	script(src="/static/js/giffer.min.js")

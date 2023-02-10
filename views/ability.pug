@@ -8,8 +8,14 @@ block append head
 		property="twitter:image",
 		content="https://pokemon.helbling.uk/static/previews/generic.png"
 	)
-	meta(property="og:description", content=`Ability: ${primaryName} on the Pokécompanion`)
-	meta(name="twitter:description", content=`Ability: ${primaryName} on the Pokécompanion`)
+	meta(
+		property="og:description",
+		content=`Ability: ${primaryLanguage ? primaryLanguage : secondaryLanguage} on the Pokécompanion`
+	)
+	meta(
+		name="twitter:description",
+		content=`Ability: ${primaryLanguage ? primaryLanguage : secondaryLanguage} on the Pokécompanion`
+	)
 
 block append body
 	.columns

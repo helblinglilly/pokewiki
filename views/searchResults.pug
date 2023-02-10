@@ -69,14 +69,14 @@ block append body
 				a.keepQuery(href=`${move.link}`)
 					.card.mb-3
 						.card-content.searchResult
-							.container.mb-1(style="display: inline-flex")
-								img.icon.mr-2.typeSprite(
+							.container(style="display: inline-flex")
+								img.icon.pr-2.typeSprite(
 									src=`${move.type_sprite}`,
 									alt=`${move.type[0].toUpperCase() + move.type.slice(1)}`
 								)
 								p.card-text #{ move.english }
-							.container.mb-1(style="display: flex")
-								img.icon.mr-2.typeSprite(
+							.container(style="display: flex")
+								img.icon.pr-2.typeSprite(
 									src=`${move.attack_type_sprite}`,
 									alt=`${move.attack_type_sprite.split("/")[4].split(".")[0]}`
 								)

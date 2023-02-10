@@ -29,40 +29,42 @@ block append body
 			p Notice
 			button.delete(onclick="hideNotice();")
 		.message-body
-			p Generations 8 (BDSP + Legends Arceus) and 9 (Scarlet/Violet) are known to have incomplete datasets and may display false information.
-			p To track progress, check out the #[a(href="https://github.com/PokeAPI/pokeapi/issues?q=is%3Aissue+is%3Aopen+") PokéAPIs Github Page]
+			p Generations 8 (BDSP + Legends Arceus) and 9 (Scarlet/Violet) are known to have incomplete datasets and may display false or inaccurate information. See the #[a(href="https://github.com/PokeAPI/pokeapi/issues?q=is%3Aissue+is%3Aopen+") PokéAPIs Github Page] for more info
 	.box
 		p.title.is-3 Changelog
 		.content
 			p.title.is-5 WIP
 			ul
-				li Move pages now work
+				li Implemented Move pages
+				li Improved alt-tags across site
+
 			p.title.is-5 09 February 2023
 			ul
-				li Update favicon and social media previews
-				li Adjust X / Y sprite sizing
-				li Sprite gifs will play at the same time again
+				li Added social media link previews
+				li Updated favicon
+				li Readjusted X / Y sprite sizing
+				li Synchronised when all gifs on a page will start playing.
 					ul
-						li Also fixes issue with form descriptors not loading
+						li Also fixed an issue where sprite descriptions weren't loading
 			p#extendChangelog Show more...
 			#oldChanges.hidden
 				p.title.is-5 04 February 2023
 				ul
-					li Abilities now supported
+					li Implemented Ability pages
+					li Added description on item page that will state when an Item isn't in the selected game.
+					li Corrected move damage classes for Generations 1-3
 					li Backend support for different languages in certain areas
-					li When viewing an item with a game that doesn't include it, state so.
-					li Move type (Special/Physical/Status) is now correct for Gen 1-3
 				p.title.is-5 29 January 2023
 				ul
-					li Dark theme
-					li Better error handling
-					li Items now supported
+					li Added dark theme support
+					li Implemented Item pages
+					li Improved error handling
 				p.title.is-5 27 January 2023
 				ul
 					li Selecting a game will display Pokémon sprites of that generation
-					li Cache API responses
+					li Caching API responses
 				p.title.is-5 12 January 2023
 				ul
-					li Basic Scarlet/Violet support
-					li Support for different Pokémon forms
-					li Selected game to correctly represent a Pokémon's type
+					li Made Generation 9 entries visible
+					li Added support for different Pokémon forms
+					li Displayed Pokémon type will be correct for the selected game

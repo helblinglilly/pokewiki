@@ -9,7 +9,6 @@ import {
 	APIResponseMove,
 	APIResponsePokemon,
 	APIResponseSpecies,
-	GenericResult,
 	ItemResult,
 	MoveEntry,
 	PokemonName,
@@ -236,15 +235,11 @@ export class Data {
 	};
 
 	attackSprite = (name: string): string => {
-		if (name === "physical") return "/static/assets/attack-types/physical.png";
-		if (name === "special") return "/static/assets/attack-types/special.png";
-		if (name === "status") return "/static/assets/attack-types/status.png";
-		return "";
+		return `/static/assets/attack-types/${name.toLowerCase()}.png`;
 	};
 
 	typeSprite = (name: string): string => {
-		name = name.toLowerCase();
-		return `/static/assets/types/${name}.webp`;
+		return `/static/assets/types/${name.toLowerCase()}.webp`;
 	};
 
 	findPokemonNameFromId = (id: number): PokemonName | undefined => {

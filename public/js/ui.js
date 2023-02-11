@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		backButton.style.display = "inherit";
 	}
 
-	checkAllImages();
+	// checkAllImages();
 	addQueryrefToAllLinks();
 	makeElementsCollapsible();
 });

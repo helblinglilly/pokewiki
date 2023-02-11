@@ -388,14 +388,14 @@ block append body
 											img.icon.tableImage.mt-1(
 												src=`${move.attack_type_sprite}`,
 												style="width: 50px; height: 20px",
-												alt=`${move.attack_type_sprite.split("/")[4].split(".")[0]}`
+												alt=`${move.attack_type}`
 											)
 									td.pl-0
-										if move.english === move.german || !move.german
-											p #{ move.german }
+										if move.primaryLanguage === move.secondaryLanguage || !move.secondaryLanguage
+											p #{ move.primaryLanguage }
 										else
-											p #{ move.english }
-											p #{ move.german }
+											p #{ move.primaryLanguage }
+											p #{ move.secondaryLanguage }
 									td.pl-0
 										if move.learning_method !== "level-up"
 											if move.learning_method === "machine"

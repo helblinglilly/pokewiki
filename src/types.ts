@@ -146,14 +146,12 @@ export interface ErrorMessage {
 }
 
 export interface GenericEntry {
-	primaryLang?: string;
-	secondaryLang?: string;
-	german: string;
-	english: string;
+	primaryLang: string;
+	secondaryLang: string;
 	english_id: string;
 	id: number;
 	link: string;
-	sprite: string;
+	sprite?: string;
 }
 
 export interface MoveEntry extends GenericEntry {
@@ -194,15 +192,17 @@ export interface Collection {
 }
 
 export interface MoveDetails {
-	german: string;
-	english: string;
-	link: string;
+	learning_method: "level-up" | "machine" | "tutor" | "egg";
+	level_learnt: number;
+	names: {}[];
+	id: number;
+	english_id: string;
 	attack_type: string;
 	attack_type_sprite: string;
 	type: string;
 	type_sprite: string;
-	learning_method: "level-up" | "machine" | "tutor" | "egg";
-	level_learnt: number;
+	primaryLanguage: string;
+	secondaryLanguage: string;
 }
 
 export interface Evolution {
@@ -218,8 +218,6 @@ export interface Evolution {
 	targetSprite: string;
 }
 export interface PokemonDetails {
-	german: string;
-	english: string;
 	id: number;
 	link: string;
 	types: {
@@ -279,9 +277,7 @@ export interface APIResponseMachine {
 		name: string;
 		url: string;
 	};
-	version_group: {
-		name: string;
-	};
+	version_group: APIVersionGroupDetails;
 }
 
 export interface APIResponseMove {
@@ -304,9 +300,7 @@ export interface APIResponseMove {
 		language: {
 			name: string;
 		};
-		version_group: {
-			name: string;
-		};
+		version_group: APIVersionGroupDetails;
 		flavor_text: string;
 	}[];
 	generation: {
@@ -316,16 +310,9 @@ export interface APIResponseMove {
 		machine: {
 			url: string;
 		};
-		version_group: {
-			name: string;
-		};
+		version_group: APIVersionGroupDetails;
 	}[];
-	names: {
-		language: {
-			name: string;
-		};
-		name: string;
-	}[];
+	names: APINames[];
 	power: number;
 	pp: number;
 	priority: number;
@@ -341,19 +328,12 @@ export interface APIResponseItem {
 		machine: {
 			url: string;
 		};
-		version_group: {
-			name: string;
-		};
+		version_group: APIVersionGroupDetails;
 	}[];
 	attributes: {
 		name: string;
 	}[];
-	names: {
-		language: {
-			name: string;
-		};
-		name: string;
-	}[];
+	names: APINames[];
 	effect_entries: {
 		short_effect: string;
 		language: {
@@ -364,9 +344,7 @@ export interface APIResponseItem {
 		language: {
 			name: string;
 		};
-		version_group: {
-			name: string;
-		};
+		version_group: APIVersionGroupDetails;
 		text: string;
 	}[];
 	sprites: {
@@ -407,10 +385,7 @@ export interface APIResponsePokemon {
 				name: "level-up" | "machine" | "tutor" | "egg";
 				url: string;
 			};
-			version_group: {
-				name: string;
-				url: string;
-			};
+			version_group: APIVersionGroupDetails;
 		}[];
 	}[];
 	types: {
@@ -611,39 +586,18 @@ export interface GenericSprites {
 }
 export interface APIResponseAbility {
 	name: string;
-	names: {
-		language: {
-			name: string;
-		};
-		name: string;
-	}[];
+	names: APINames[];
 	effect_changes: {
-		effect_entries: {
-			effect: string;
-			language: {
-				name: string;
-			};
-			short_effect: string;
-		}[];
-		version_group: {
-			name: string;
-		};
+		effect_entries: APIEffectEntries[];
+		version_group: APIVersionGroupDetails;
 	}[];
-	effect_entries: {
-		effect: string;
-		language: {
-			name: string;
-		};
-		short_effect: string;
-	}[];
+	effect_entries: APIEffectEntries[];
 	flavor_text_entries: {
 		flavor_text: string;
 		language: {
 			name: string;
 		};
-		version_group: {
-			name: string;
-		};
+		version_group: APIVersionGroupDetails;
 	}[];
 	generation: {
 		name: string;
@@ -666,13 +620,7 @@ export interface APIResponseSpecies {
 	growth_rate: {
 		name: string;
 	};
-	names: {
-		language: {
-			name: string;
-			url: string;
-		};
-		name: string;
-	}[];
+	names: APINames[];
 	flavor_text_entries: {
 		flavor_text: string;
 		language: {
@@ -747,4 +695,25 @@ export interface EvolutionChain {
 }
 export interface APIResponseEvolution {
 	chain: EvolutionChain;
+}
+
+export interface APIVersionGroupDetails {
+	name: string;
+	url: string;
+}
+
+export interface APINames {
+	language: {
+		name: string;
+		url: string;
+	};
+	name: string;
+}
+
+export interface APIEffectEntries {
+	effect: string;
+	language: {
+		name: string;
+	};
+	short_effect: string;
 }

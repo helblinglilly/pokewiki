@@ -8,18 +8,9 @@ block append head
 		name="twitter:image",
 		content="https://pokemon.helbling.uk/static/previews/generic.png"
 	)
-	meta(
-		name="description",
-		content="With Pokécompanion you can quickly find the details you need during your playthrough of a mainline Pokémon game - without scrolling past a sea of irrelevant info."
-	)
-	meta(
-		property="og:description",
-		content="With Pokécompanion you can quickly find the details you need during your playthrough of a mainline Pokémon game - without scrolling past a sea of irrelevant info."
-	)
-	meta(
-		name="twitter:description",
-		content="With Pokécompanion you can quickly find the details you need during your playthrough of a mainline Pokémon game - without scrolling past a sea of irrelevant info."
-	)
+	meta(name="description", content=`Search results for ${searchTerm}`)
+	meta(property="og:description", content=`Search results for ${searchTerm}`)
+	meta(name="twitter:description", content=`Search results for ${searchTerm}`)
 
 block append body
 	p.title.is-3 Results for "#{ searchTerm }"
@@ -74,13 +65,13 @@ block append body
 									src=`${move.type_sprite}`,
 									alt=`${move.type[0].toUpperCase() + move.type.slice(1)}`
 								)
-								p.card-text #{ move.english }
+								p.card-text #{ move.primaryLang }
 							.container(style="display: flex")
 								img.icon.pr-2.typeSprite(
 									src=`${move.attack_type_sprite}`,
 									alt=`${move.attack_type_sprite.split("/")[4].split(".")[0]}`
 								)
-								p.card-text #{ move.german }
+								p.card-text #{ move.secondaryLang }
 
 	if results.Abilities.length !== 0
 		p.title.is-4 Abilities

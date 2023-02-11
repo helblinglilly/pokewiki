@@ -122,10 +122,12 @@ const fixBrokenItems = async arr => {
 };
 
 const moves = async () => {
-	const maxMoves = 826;
+	const startFrom = 1;
+	const upTo = 918;
 
 	const results = [];
-	for (let i = 0; i < maxMoves; i++) {
+
+	for (let i = startFrom; i <= upTo; i++) {
 		let response;
 		try {
 			response = await axios.get(`https://pokeapi.co/api/v2/move/${i}`, {
@@ -133,35 +135,27 @@ const moves = async () => {
 			});
 			console.log(i);
 		} catch (err) {
-			console.log(i, "failed");
+			console.log(i, "failed", err.response.status);
 			continue;
 		}
-		let german, english;
-		response.data.names.forEach(entry => {
-			if (entry.language.name === "de") {
-				german = entry.name;
-			}
-			if (entry.language.name === "en") {
-				english = entry.name;
-			}
-		});
 
-		const english_id = response.data.name;
-		const attack_type = response.data.damage_class.name;
-		const type = response.data.type.name;
+		const names = [];
+		response.data.names.forEach(entry => {
+			const languageCode = entry.language.name;
+			const name = entry.name;
+			names.push({ [languageCode]: name });
+		});
 
 		results.push({
+			names: names,
 			id: i,
-			german: german,
-			english: english,
-			english_id: english_id,
-			attack_type: attack_type,
-			type: type,
+			english_id: response.data.name,
+			attack_type: response.data.damage_class.name,
+			type: response.data.type.name,
 		});
-		// Wait a bit
-		await new Promise(r => setTimeout(r, 200));
+		await new Promise(r => setTimeout(r, 500));
 	}
-	fs.writeFileSync("moves.json", JSON.stringify(results), "utf8");
+	fs.writeFileSync("newMoves.json", JSON.stringify(results), "utf8");
 };
 
 const fixMoves = () => {
@@ -253,9 +247,9 @@ const generateSocialPreviews = () => {
 	});
 };
 
-generateSocialPreviews();
+// generateSocialPreviews();
 // fixMoves();
 // pokemon();
 // abilities();
 // addTypeSprites();
-// moves();
+moves();

@@ -9,17 +9,15 @@ import {
 	APIResponseMove,
 	APIResponsePokemon,
 	APIResponseSpecies,
-	GenericResult,
 	ItemResult,
 	MoveEntry,
 	PokemonName,
 } from "./types";
-import Pokemon from "./public/pokedata/pokemon.json";
-import Items from "./public/pokedata/items.json";
-import Moves from "./public/pokedata/moves.json";
-import Abilities from "./public/pokedata/abilities.json";
+import Pokemon from "./data/pokemon.json";
+import Items from "./data/items.json";
+import Moves from "./data/moves.json";
+import Abilities from "./data/abilities.json";
 import log from "./log";
-import Utils from "./utils";
 
 interface Cache {
 	pokemon: {
@@ -236,51 +234,12 @@ export class Data {
 		return data.data;
 	};
 
-	attackSprite = (name: "physical" | "special" | "status"): string => {
-		if (name === "physical") return "/static/assets/attack-types/physical.png";
-		if (name === "special") return "/static/assets/attack-types/special.png";
-		if (name === "status") return "/static/assets/attack-types/status.png";
-		return "";
+	attackSprite = (name: string): string => {
+		return `/static/assets/attack-types/${name.toLowerCase()}.png`;
 	};
 
 	typeSprite = (name: string): string => {
-		name = name.toLowerCase();
-		if (name === "normal") return "/static/assets/attack-types/normal.webp";
-		else if (name === "kampf" || name === "fight")
-			return "/static/assets/attack-types/fight.webp";
-		else if (name === "flug" || name === "flying")
-			return "/static/assets/attack-types/flying.webp";
-		else if (name === "webpt" || name === "poison")
-			return "/static/assets/attack-types/poison.webp";
-		else if (name === "boden" || name === "ground")
-			return "/static/assets/attack-types/ground.webp";
-		else if (name === "gestein" || name === "rock")
-			return "/static/assets/attack-types/rock.webp";
-		else if (name === "käfer" || name === "bug")
-			return "/static/assets/attack-types/bug.webp";
-		else if (name === "geist" || name === "ghost")
-			return "/static/assets/attack-types/ghost.webp";
-		else if (name === "stahl" || name === "steel")
-			return "/static/assets/attack-types/steel.webp";
-		else if (name === "feuer" || name === "fire")
-			return "/static/assets/attack-types/fire.webp";
-		else if (name === "wasser" || name === "water")
-			return "/static/assets/attack-types/water.webp";
-		else if (name === "pflanze" || name === "grass")
-			return "/static/assets/attack-types/grass.webp";
-		else if (name === "elektro" || name === "electric")
-			return "/static/assets/attack-types/electric.webp";
-		else if (name === "psycho" || name === "psychic")
-			return "/static/assets/attack-types/psychic.webp";
-		else if (name === "eis" || name === "ice")
-			return "/static/assets/attack-types/ice.webp";
-		else if (name === "drache" || name === "dragon")
-			return "/static/assets/attack-types/dragon.webp";
-		else if (name === "unlicht" || name === "dark")
-			return "/static/assets/attack-types/dark.webp";
-		else if (name === "fee" || name === "fairy")
-			return "/static/assets/attack-types/fairy.webp";
-		return "";
+		return `/static/assets/types/${name.toLowerCase()}.webp`;
 	};
 
 	findPokemonNameFromId = (id: number): PokemonName | undefined => {
@@ -431,34 +390,30 @@ export class Data {
 
 		const results: MoveEntry[] = [];
 		Moves.forEach(a => {
-			if (results.length === this.searchResults) {
-				return;
+			let primaryName = "";
+			let secondaryName = "";
+
+			a.names.forEach(b => {
+				for (const [key, value] of Object.entries(b)) {
+					if (key === this.primaryLangKey) primaryName = value;
+					else if (key === this.secondaryLangKey) secondaryName = value;
+				}
+			});
+
+			if (regex.test(primaryName) || regex.test(secondaryName)) {
+				results.push({
+					primaryLang: primaryName,
+					secondaryLang: secondaryName,
+					id: a.id,
+					link: `/move/${a.id}`,
+					attack_type: a.attack_type,
+					attack_type_sprite: this.attackSprite(a.attack_type),
+					type: a.type,
+					type_sprite: this.typeSprite(a.type),
+					english_id: a.english_id,
+				});
 			}
-
-			let german = a.german.toLocaleLowerCase();
-			german.replace("ä", "a");
-			german.replace("ü", "u");
-			german.replace("ö", "o");
-
-			let attackTypeSprite = "";
-			if (a.attack_type === "physical")
-				attackTypeSprite = "/static/assets/attack-types/physical.png";
-			else if (a.attack_type === "special")
-				attackTypeSprite = "/static/assets/attack-types/special.png";
-			else if (a.attack_type === "status")
-				attackTypeSprite = "/static/assets/attack-types/status.png";
-
-			const move: MoveEntry = {
-				...a,
-				link: `/move/${a.id}`,
-				sprite: this.typeSprite(a.type),
-				attack_type_sprite: attackTypeSprite,
-			};
-
-			if (regex.test(german)) results.push(move);
-			else if (regex.test(a.english)) results.push(move);
 		});
-
 		return results;
 	};
 

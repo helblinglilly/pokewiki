@@ -1,6 +1,6 @@
 import log from "./log";
-import Moves from "./public/pokedata/moves.json";
-import Types from "./public/pokedata/types.json";
+import Moves from "./data/moves.json";
+import Types from "./data/types.json";
 import Utils from "./utils";
 import { Data } from "./model";
 import {
@@ -17,7 +17,7 @@ import {
 	PokemonName,
 	APIResponseMachine,
 } from "./types";
-import { appSettings } from "./api/app";
+import { appSettings } from "../api/app";
 
 class Controller {
 	primaryLanguageCode: string;
@@ -80,7 +80,9 @@ class Controller {
 			const lookupType = Types.find(a => a.english_id === pokeType.type.name);
 			types.push({
 				name: lookupType ? lookupType.english : "?",
-				sprite: lookupType ? lookupType.sprite : appSettings.placeholderImage,
+				sprite: lookupType
+					? this.data.typeSprite(lookupType.english_id)
+					: appSettings.placeholderImage,
 			});
 		});
 
@@ -207,7 +209,7 @@ class Controller {
 
 			if (selectedGames !== undefined) {
 				// Moves
-				moveset = Controller.processMoveset(pokemonData.moves, selectedGames);
+				moveset = this.processMoveset(pokemonData.moves, selectedGames);
 
 				// Past Types
 				const selectedGenIndex = Games.generationOrder.findIndex(
@@ -226,7 +228,7 @@ class Controller {
 								if (allType.english_id === oldType.type.name) {
 									oldTypes.push({
 										name: allType.english_id,
-										sprite: allType.sprite,
+										sprite: this.data.typeSprite(allType.english_id),
 									});
 								}
 							});
@@ -640,16 +642,6 @@ class Controller {
 			tm: tmEntries,
 			generation: moveData.generation.name.split("-")[1],
 			pokemon: pokemon,
-			/*
-			game: gameString === "All" ? "" : gameString,
-			effectEntry: effectEntry,
-			flavorText: primaryFlavorText
-				? primaryFlavorText.flavor_text
-				: secondaryFlavorText.flavor_text,
-			introduced: ability.generation.name.split("-")[1],
-			generationChange: generationChange,
-			pokemon: pokemon,
-			*/
 		};
 	};
 
@@ -1006,93 +998,91 @@ class Controller {
 		return results;
 	};
 
-	static processMoveset = (
+	processMoveset = (
 		moves: APIResponsePokemon["moves"],
-		toBeFoundVersionGroup: VersionGroup
+		versionGroup: VersionGroup
 	): MoveDetails[] => {
 		const levelMoves: MoveDetails[] = [];
 		const tmMoves: MoveDetails[] = [];
 		const eggMoves: MoveDetails[] = [];
 		const tutorMoves: MoveDetails[] = [];
+
+		const legacyDamageClassGenerations = ["i", "ii", "iii"];
+		const legacyPhysicalTypes = [
+			"normal",
+			"fighting",
+			"poison",
+			"gorund",
+			"flying",
+			"bug",
+			"rock",
+			"ghost",
+			"steel",
+		];
+		const legacySpecialTypes = [
+			"fire",
+			"water",
+			"electric",
+			"grass",
+			"ice",
+			"physic",
+			"dragon",
+			"dark",
+		];
+
 		moves.forEach(move => {
 			move.version_group_details.forEach(version => {
 				const foundVersion = Games.findEntry(version.version_group.name);
+				if (foundVersion.version_group_name !== versionGroup.version_group_name) return;
+
+				const moveDetail = Moves.find(a => a.english_id === move.move.name);
+				if (!moveDetail) return;
+
+				// Only physical and special types were different in Gen 1-3
 				if (
-					foundVersion !== undefined &&
-					foundVersion.version_group_name === toBeFoundVersionGroup.version_group_name
+					legacyDamageClassGenerations.includes(foundVersion.generation) &&
+					moveDetail.attack_type !== "status"
 				) {
-					const moveDetail = Moves.find(a => a.english_id === move.move.name);
-					if (moveDetail !== undefined) {
-						const legacyTypeGenerations = ["i", "ii", "iii"];
-						if (legacyTypeGenerations.includes(foundVersion.generation)) {
-							const physicalTypes = [
-								"normal",
-								"fighting",
-								"poison",
-								"gorund",
-								"flying",
-								"bug",
-								"rock",
-								"ghost",
-								"steel",
-							];
-							const specialTypes = [
-								"fire",
-								"water",
-								"electric",
-								"grass",
-								"ice",
-								"physic",
-								"dragon",
-								"dark",
-							];
-							if (
-								physicalTypes.includes(moveDetail.type) &&
-								!moveDetail.attack_type_sprite.includes("special")
-							) {
-								moveDetail.attack_type_sprite =
-									"/static/assets/attack-types/physical.png";
-							} else if (
-								specialTypes.includes(moveDetail.type) &&
-								!moveDetail.attack_type_sprite.includes("special")
-							) {
-								moveDetail.attack_type_sprite = "/static/assets/attack-types/special.png";
-							}
-						}
-						const move = {
-							...moveDetail,
-							learning_method: version.move_learn_method.name,
-							level_learnt: version.level_learned_at,
-						};
-
-						if (
-							move.learning_method === "level-up" &&
-							levelMoves.filter(a => a.english === move.english).length === 0
-						) {
-							levelMoves.push(move);
-						}
-
-						if (
-							move.learning_method === "egg" &&
-							eggMoves.filter(a => a.english === move.english).length === 0
-						) {
-							eggMoves.push(move);
-						}
-
-						if (
-							move.learning_method === "machine" &&
-							tmMoves.filter(a => a.english === move.english).length === 0
-						) {
-							tmMoves.push(move);
-						}
-
-						if (
-							move.learning_method === "tutor" &&
-							tutorMoves.filter(a => a.english === move.english).length === 0
-						) {
-							tutorMoves.push(move);
-						}
+					if (legacyPhysicalTypes.includes(moveDetail.type)) {
+						moveDetail.attack_type = "physical";
+					} else if (legacySpecialTypes.includes(moveDetail.type)) {
+						moveDetail.attack_type = "special";
 					}
+				}
+
+				let primaryName = "";
+				let secondaryName = "";
+				moveDetail.names.forEach(b => {
+					for (const [key, value] of Object.entries(b)) {
+						if (key === this.primaryLanguageCode) primaryName = value;
+						else if (key === this.secondaryLanguageCode) secondaryName = value;
+					}
+				});
+
+				const completeMove = {
+					...moveDetail,
+					learning_method: version.move_learn_method.name,
+					level_learnt: version.level_learned_at,
+					type_sprite: this.data.typeSprite(moveDetail.type),
+					attack_type_sprite: this.data.attackSprite(moveDetail.attack_type),
+					primaryLanguage: primaryName,
+					secondaryLanguage: secondaryName,
+				};
+
+				if (completeMove.learning_method === "level-up") {
+					levelMoves.push(completeMove);
+				}
+
+				if (completeMove.learning_method === "egg") {
+					eggMoves.push(completeMove);
+				}
+
+				if (completeMove.learning_method === "machine") {
+					tmMoves.push(completeMove);
+				}
+
+				if (completeMove.learning_method === "tutor") {
+					tutorMoves.push(completeMove);
 				}
 			});
 		});

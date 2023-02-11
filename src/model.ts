@@ -14,12 +14,11 @@ import {
 	MoveEntry,
 	PokemonName,
 } from "./types";
-import Pokemon from "./public/pokedata/pokemon.json";
-import Items from "./public/pokedata/items.json";
-import Moves from "./public/pokedata/moves.json";
-import Abilities from "./public/pokedata/abilities.json";
+import Pokemon from "./data/pokemon.json";
+import Items from "./data/items.json";
+import Moves from "./data/moves.json";
+import Abilities from "./data/abilities.json";
 import log from "./log";
-import Utils from "./utils";
 
 interface Cache {
 	pokemon: {

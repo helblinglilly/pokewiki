@@ -1,5 +1,4 @@
-import { appSettings } from "./api/app";
-import log from "./log";
+import { appSettings } from "../api/app";
 import { Sprites, Games, SpriteForm, GenericSprites } from "./types";
 
 export default class Utils {

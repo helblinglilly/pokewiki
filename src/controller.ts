@@ -1,6 +1,6 @@
 import log from "./log";
-import Moves from "./public/pokedata/moves.json";
-import Types from "./public/pokedata/types.json";
+import Moves from "./data/moves.json";
+import Types from "./data/types.json";
 import Utils from "./utils";
 import { Data } from "./model";
 import {
@@ -17,7 +17,7 @@ import {
 	PokemonName,
 	APIResponseMachine,
 } from "./types";
-import { appSettings } from "./api/app";
+import { appSettings } from "../api/app";
 
 class Controller {
 	primaryLanguageCode: string;

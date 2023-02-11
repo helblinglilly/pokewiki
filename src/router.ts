@@ -2,7 +2,7 @@ import * as ex from "express";
 import log from "./log";
 import Controller from "./controller";
 import { ErrorMessage } from "./types";
-import app, { appSettings, handleServerError } from "./api/app";
+import app, { appSettings, handleServerError } from "../api/app";
 
 class Router {
 	static getSearch = async (req: ex.Request, res: ex.Response) => {

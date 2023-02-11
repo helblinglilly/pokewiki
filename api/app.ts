@@ -1,8 +1,8 @@
 import express from "express";
-import Router from "../router";
-import { ErrorMessage } from "../types";
+import Router from "../src/router";
+import { ErrorMessage } from "../src/types";
 import fs from "fs";
-import log from "../log";
+import log from "../src/log";
 
 export let port = 443;
 export let host = "https://pokemon.helbling.uk";

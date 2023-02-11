@@ -203,6 +203,7 @@ export interface MoveDetails {
 	type_sprite: string;
 	primaryLanguage: string;
 	secondaryLanguage: string;
+	link: string;
 }
 
 export interface Evolution {

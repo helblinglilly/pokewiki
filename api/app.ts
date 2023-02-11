@@ -53,6 +53,7 @@ export const appSettings = {
 	buildDate: buildInfo,
 	highestPokedexId: 1008,
 	highestItemId: 1658,
+	highestMoveId: 918,
 	highestAbilityId: 298,
 	extraAbilityRange: [10001, 10060],
 	placeholderImage:

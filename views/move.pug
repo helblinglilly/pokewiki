@@ -1,0 +1,110 @@
+extends ./header.pug
+block append head
+	meta(
+		property="og:image",
+		content="https://pokemon.helbling.uk/static/previews/generic.png"
+	)
+	meta(
+		property="twitter:image",
+		content="https://pokemon.helbling.uk/static/previews/generic.png"
+	)
+	meta(
+		property="og:description",
+		content=`Move: ${primaryLanguage ? primaryLanguage : secondaryLanguage} on the Pokécompanion`
+	)
+	meta(
+		name="twitter:description",
+		content=`Move: ${primaryLanguage ? primaryLanguage : secondaryLanguage} on the Pokécompanion`
+	)
+	script(src="/static/js/extraPokemon.js")
+
+block append body
+	.columns
+		.column.is-flex
+			.card(style="width: 100%")
+				.card-header-title.is-justify-content-space-between
+					p #{ primaryLanguage } - #{ secondaryLanguage }
+					div
+						img.pl-2.typeSprite(src=`${typeSprite}`, alt=`The type sprite for '${type}'`)
+						img.pl-2.typeSprite(
+							src=`${damageClassSprite}`,
+							alt=`The type sprite for '${damageClass}'`
+						)
+
+				.card-content(style="width: 100%")
+					.box.accented.nohover
+						p #{ effectEntry }
+					.box.accented.nohover
+						p #{ flavorEntry }
+		.column.is-flex
+			.card.collapsible(style="width: 100%")
+				.card-header-title
+					p Basic info
+				.card-content.pt-0(style="width: 100%")
+					table.table(style="width: 100%")
+						thead
+							tr
+								th Entry
+								th.has-text-centered Value
+						tbody
+							tr
+								td Accuracy
+								td.has-text-centered #{ accuracy }
+							tr
+								td Power
+								td.has-text-centered #{ power }
+							tr
+								td Power Points
+								td.has-text-centered #{ pp }
+							tr
+								td Priority
+								td.has-text-centered
+									if priority < 0
+										p Last
+									else if priority === 0
+										p Normal
+									else if priority === 1
+										p High
+									else if priority === 2
+										p Higher
+									else if priority === 3
+										p Highest
+									else if priority === 4
+										p First
+							tr
+								td Introduced in gen
+								td.has-text-centered #{ generation }
+	.columns
+		.column.is-flex
+			.card.collapsible(style="width: 100%")
+				.card-header-title
+					p Learning details
+				.card-content.pt-0(style="width: 100%")
+					if tm.length > 0
+						table.table(style="width: 100%")
+							thead
+								tr
+									th Is a TM in
+									th Name
+							tbody
+								each move in tm
+									tr
+										td #{ move.gameDisplay }
+										td.link(
+											onclick=`location.href='/item/${move.id}' + overrideGameSearch('${move.game}')`
+										) #{ move.name }
+					each pkmn, i in pokemon
+						.extraPokemon(style=`${i > 10 ? "display: none" : ""}`)
+							a.keepQuery(href=`${pkmn.link}`)
+								.box.accented.mb-4.searchResult(style="display: flex; align-items: center")
+									img.is-48x48.mr-1(
+										src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmn.id}.png`,
+										alt=`Sprite for Pokémon: ${pkmn.primaryLang}`
+									)
+									if pkmn.primaryLang === pkmn.secondaryLang
+										p.card-text ##{ pkmn.id } #{ pkmn.primaryLang }
+									else
+										p.card-text ##{ pkmn.id } #{ pkmn.primaryLang } - #{ pkmn.secondaryLang }
+					if pokemon.length > 10
+						.tags.are-medium
+							span#loadMorePokemon.tag.link See more...

@@ -15,6 +15,7 @@ import {
 	GenericSprites,
 	APIResponseItem,
 	PokemonName,
+	APIResponseMachine,
 } from "./types";
 import { appSettings } from "./api/app";
 
@@ -536,6 +537,122 @@ class Controller {
 		};
 	};
 
+	getMove = async (id: number, game?: string) => {
+		const moveData = await this.data.getMove(id);
+		const machineDataPromises: Promise<APIResponseMachine>[] = [];
+
+		moveData.machines.forEach(a => {
+			const id = a.machine.url.split("/")[6];
+			machineDataPromises.push(this.data.getMachine(parseInt(id)));
+		});
+		const machineData = await Promise.all(machineDataPromises);
+
+		const primaryLang = Utils.findNameFromLanguageCode(
+			moveData.names,
+			this.primaryLanguageCode
+		);
+		const secondaryLang = Utils.findNameFromLanguageCode(
+			moveData.names,
+			this.secondaryLanguageCode
+		);
+
+		let primaryLangEffect = moveData.effect_entries.filter(
+			a => a.language.name === this.primaryLanguageCode
+		)[0]?.short_effect;
+		let secondaryLangEffect = moveData.effect_entries.filter(
+			a => a.language.name === this.secondaryLanguageCode
+		)[0]?.short_effect;
+		if (primaryLangEffect) {
+			if (moveData.effect_chance) {
+				primaryLangEffect = primaryLangEffect.replace(
+					"$effect_chance",
+					moveData.effect_chance.toString()
+				);
+			}
+		}
+		if (secondaryLangEffect) {
+			if (moveData.effect_chance) {
+				secondaryLangEffect = secondaryLangEffect.replace(
+					"$effect_chance",
+					moveData.effect_chance.toString()
+				);
+			}
+		}
+
+		let primaryFlavorText = moveData.flavor_text_entries.filter(
+			a => a.language.name === this.primaryLanguageCode
+		)[0];
+		let secondaryFlavorText = moveData.flavor_text_entries.filter(
+			a => a.language.name === this.secondaryLanguageCode
+		)[0];
+
+		const typeSprite = Types.filter(a => a.english_id === moveData.type.name)[0].sprite;
+		const type = typeSprite.split("/")[4].split(".")[0];
+
+		let damageClassSprite = "";
+		if (moveData.damage_class.name === "special")
+			damageClassSprite = "/static/assets/attack-types/special.png";
+		else if (moveData.damage_class.name === "physical")
+			damageClassSprite = "/static/assets/attack-types/physical.png";
+		else if (moveData.damage_class.name === "status")
+			damageClassSprite = "/static/assets/attack-types/status.png";
+		const damageClass = damageClassSprite.split("/")[4].split(".")[0];
+
+		const tmEntries: { game: string; gameDisplay: string; name: string; id: number }[] =
+			[];
+		machineData.forEach(a => {
+			const games = Games.findEntry(a.version_group.name);
+			const gameNames = games.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
+			tmEntries.push({
+				game: games.version_group_name,
+				gameDisplay: gameNames.join(" "),
+				name: a.item.name.toUpperCase(),
+				id: parseInt(a.item.url.split("/")[6]),
+			});
+		});
+
+		const pokemon: PokemonName[] = [];
+		moveData.learned_by_pokemon.forEach(a => {
+			const id = a.url.split("/")[6];
+			const details = this.data.findPokemonNameFromId(parseInt(id));
+
+			if (details) {
+				pokemon.push(details);
+			}
+		});
+
+		return {
+			primaryLanguage: primaryLang,
+			secondaryLanguage: secondaryLang,
+			damageClass: damageClass[0].toUpperCase() + damageClass.slice(1),
+			damageClassSprite: damageClassSprite,
+			type: type[0].toUpperCase() + type.slice(1),
+			typeSprite: typeSprite,
+			effectEntry: primaryLangEffect ? primaryLangEffect : secondaryLangEffect,
+			flavorEntry: primaryFlavorText
+				? primaryFlavorText.flavor_text
+				: secondaryFlavorText.flavor_text,
+			secondaryLangEffect: secondaryLangEffect,
+			accuracy: moveData.accuracy ? moveData.accuracy : "-",
+			power: moveData.power ? moveData.power : "-",
+			pp: moveData.pp ? moveData.pp : "-",
+			priority: moveData.priority,
+			tm: tmEntries,
+			generation: moveData.generation.name.split("-")[1],
+			pokemon: pokemon,
+			/*
+			game: gameString === "All" ? "" : gameString,
+			effectEntry: effectEntry,
+			flavorText: primaryFlavorText
+				? primaryFlavorText.flavor_text
+				: secondaryFlavorText.flavor_text,
+			introduced: ability.generation.name.split("-")[1],
+			generationChange: generationChange,
+			pokemon: pokemon,
+			*/
+		};
+	};
+
 	getSearchResults = async (
 		searchTerm: string,
 		pokemon: boolean,
@@ -637,7 +754,7 @@ class Controller {
 			ability.generation.name.split("-")[1]
 		);
 
-		if (selectedId >= 0 && selectedId < abilitySelectedId) {
+		if (selectedId >= 0 && selectedId < abilitySelectedId && primaryLangEffectEntry) {
 			primaryLangEffectEntry = {
 				effect: primaryLangEffectEntry.effect,
 				language: { name: this.primaryLanguageCode },
@@ -645,13 +762,17 @@ class Controller {
 			};
 		}
 
+		let effectEntry = "No entry found";
+		if (primaryLangEffectEntry && primaryLangEffectEntry.short_effect)
+			effectEntry = primaryLangEffectEntry.short_effect;
+		else if (secondaryLangEffectEntry && secondaryLangEffectEntry.short_effect)
+			effectEntry = secondaryLangEffectEntry.short_effect;
+
 		return {
 			primaryLanguage: primaryLang,
 			secondaryLanguage: secondaryLang,
 			game: gameString === "All" ? "" : gameString,
-			effectEntry: primaryLangEffectEntry
-				? primaryLangEffectEntry.short_effect
-				: secondaryLangEffectEntry.short_effect,
+			effectEntry: effectEntry,
 			flavorText: primaryFlavorText
 				? primaryFlavorText.flavor_text
 				: secondaryFlavorText.flavor_text,

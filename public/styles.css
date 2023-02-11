@@ -166,6 +166,15 @@ td,
 	background-color: var(--accent);
 }
 
+span.tag.accented {
+	color: var(--secondary);
+	background-color: var(--accent);
+}
+span.tag {
+	color: var(--secondary);
+	background-color: var(--primary);
+}
+
 .hidden {
 	display: none;
 }

@@ -34,8 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		if (current.currentSrc.includes(openSprite)) {
 			current.src = closeSprite;
+			current.alt =
+				"A Pokémon Bagpack in its closed state. Indicating that this Hamburger menu is closed";
 		} else {
 			current.src = openSprite;
+			current.alt =
+				"A Pokémon Bagpack in its open state. Indicating that this Hamburger menu is currently open.";
 		}
 
 		document.getElementById("navbarBurger").classList.toggle("is-active");
@@ -49,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		history.back();
 	});
 	if (window.location.pathname !== "/") {
-		backButton.removeAttribute("hidden");
+		backButton.style.display = "inherit";
 	}
 
 	checkAllImages();
@@ -137,6 +141,10 @@ const closeFilter = () => {
 
 const removeVarieties = () => {
 	return window.location.search.replace(/\?variety=[0-9]*/g, "");
+};
+
+const overrideGameSearch = game => {
+	return window.location.search.replace(/game=[^\&]*/g, `game=${game}`);
 };
 
 const populateSearchFilters = () => {

@@ -41,18 +41,25 @@ body
 		nav.flex-child.navbar.mb-4(role="navigation", aria-label="main navigation")
 			.navbar-brand(href="/")
 				a.navbar-item(href="/")
-					img(src="/static/favicon.png")
+					img(
+						src="/static/favicon.png",
+						alt="A Pokéball next to a smart phone which is showing several applications"
+					)
 				a.navbar-item(href="/") Pokécompanion
 				#navbarBurger.navbar-burger
-					img#burgerIcon(src="/static/assets/other/bag_closed.png", style="margin: 10px")
+					img#burgerIcon(
+						src="/static/assets/other/bag_closed.png",
+						style="margin: 10px",
+						alt="A Pokémon Bagpack in its closed state. Indicating that this Hamburger menu is closed"
+					)
 			#navbarMenu.navbar-menu
 				.navbar-end
 					a#themeToggle.navbar-item Toggle Theme
 
 		.container.flex-child.is-max-desktop.pl-6.pr-6.pb-6(style="width: 100%")
 			block body
-				.pb-3
-					a#backLink.is-underlined(hidden) Go Back
+				.tags.are-medium
+					span#backLink.tag.link.accented(style="display: none") Go Back
 				form#search.pb-3(action="/search", method="get")
 					.field.has-addons
 						.control(style="width: 100%")

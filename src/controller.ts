@@ -314,7 +314,7 @@ class Controller {
 			});
 		}
 
-		let growthRate = "Unknown";
+		let growthRate = "No Data";
 		if (speciesData.growth_rate) {
 			growthRate =
 				speciesData.growth_rate.name[0].toUpperCase() +
@@ -630,10 +630,16 @@ class Controller {
 			damageClassSprite: damageClassSprite,
 			type: type[0].toUpperCase() + type.slice(1),
 			typeSprite: typeSprite,
-			effectEntry: primaryLangEffect ? primaryLangEffect : secondaryLangEffect,
+			effectEntry: primaryLangEffect
+				? primaryLangEffect
+				: secondaryLangEffect
+				? secondaryLangEffect
+				: "No Data",
 			flavorEntry: primaryFlavorText
 				? primaryFlavorText.flavor_text
-				: secondaryFlavorText.flavor_text,
+				: secondaryFlavorText
+				? secondaryFlavorText.flavor_text
+				: "No data",
 			secondaryLangEffect: secondaryLangEffect,
 			accuracy: moveData.accuracy ? moveData.accuracy : "-",
 			power: moveData.power ? moveData.power : "-",

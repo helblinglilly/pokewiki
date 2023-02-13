@@ -78,7 +78,7 @@ block append body
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
-					p Learning details
+					p Pokémon that can learn this move
 				.card-content.pt-0(style="width: 100%")
 					if tm.length > 0
 						table.table(style="width: 100%")
@@ -93,6 +93,8 @@ block append body
 										td.link(
 											onclick=`location.href='/item/${move.id}' + overrideGameSearch('${move.game}')`
 										) #{ move.name }
+					else
+						p.pb-2 Cannot be learnt through a TM
 					each pkmn, i in pokemon
 						.extraPokemon(style=`${i > 10 ? "display: none" : ""}`)
 							a.keepQuery(href=`${pkmn.link}`)

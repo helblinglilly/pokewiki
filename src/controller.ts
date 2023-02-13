@@ -1067,6 +1067,7 @@ class Controller {
 					attack_type_sprite: this.data.attackSprite(moveDetail.attack_type),
 					primaryLanguage: primaryName,
 					secondaryLanguage: secondaryName,
+					link: `/move/${moveDetail.id}`,
 				};
 
 				if (completeMove.learning_method === "level-up") {

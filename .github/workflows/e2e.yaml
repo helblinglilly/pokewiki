@@ -3,7 +3,7 @@ name: End to End Tests
 on:
   deployment_status:
 
-  run-e2es:
+  rune2es:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:

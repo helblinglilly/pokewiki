@@ -16,6 +16,7 @@ block append head
 		name="twitter:description",
 		content=`Ability: ${primaryLanguage ? primaryLanguage : secondaryLanguage} on the Pokécompanion`
 	)
+	script(src="/static/js/extraPokemon.js")
 
 block append body
 	.columns
@@ -48,14 +49,18 @@ block append body
 				.card-header-title
 					p Pokémon that can have this ability
 				.card-content.m-3
-					each pkmn in pokemon
-						a.keepQuery(href=`${pkmn.link}`)
-							.box.accented.mb-4.searchResult(style="display: flex; align-items: center")
-								img.is-48x48.mr-1(
-									src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmn.id}.png`,
-									alt=`Sprite for Pokémon: ${pkmn.primaryLang}`
-								)
-								if pkmn.primaryLang === pkmn.secondaryLang
-									p.card-text ##{ pkmn.id } #{ pkmn.primaryLang }
-								else
-									p.card-text ##{ pkmn.id } #{ pkmn.primaryLang } - #{ pkmn.secondaryLang }
+					each pkmn, i in pokemon
+						.extraPokemon(style=`${i > 10 ? "display: none" : ""}`)
+							a.keepQuery(href=`${pkmn.link}`)
+								.box.accented.mb-4.searchResult(style="display: flex; align-items: center")
+									img.is-48x48.mr-1(
+										src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmn.id}.png`,
+										alt=`Sprite for Pokémon: ${pkmn.primaryLang}`
+									)
+									if pkmn.primaryLang === pkmn.secondaryLang
+										p.card-text ##{ pkmn.id } #{ pkmn.primaryLang }
+									else
+										p.card-text ##{ pkmn.id } #{ pkmn.primaryLang } - #{ pkmn.secondaryLang }
+					if pokemon.length > 10
+						.tags.are-medium
+							span#loadMorePokemon.tag.link See more...

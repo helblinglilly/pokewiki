@@ -109,7 +109,9 @@ app.all("/", (req, res) => {
 
 app.get("/search", (req, res, next) => {
 	try {
+		const start = new Date();
 		Router.getSearch(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Search`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -123,7 +125,9 @@ app.all("/search", (req, res) => {
 
 app.get("/pokemon/*", (req, res, next) => {
 	try {
+		const start = new Date();
 		Router.getPokemon(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Pokemon`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -138,7 +142,9 @@ app.all("/pokemon/*", (req, res) => {
 
 app.get("/item/*", (req, res, next) => {
 	try {
+		const start = new Date();
 		Router.getItem(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Item`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -152,7 +158,9 @@ app.all("/item/*", (req, res) => {
 
 app.get("/move/*", (req, res, next) => {
 	try {
+		const start = new Date();
 		Router.getMove(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Move`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -166,7 +174,9 @@ app.all("/move/*", (req, res) => {
 
 app.get("/ability/*", (req, res, next) => {
 	try {
+		const start = new Date();
 		Router.getAbility(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Ability`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}

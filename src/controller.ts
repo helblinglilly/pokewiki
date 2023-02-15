@@ -314,6 +314,132 @@ class Controller {
 			});
 		}
 
+		if (id === 922 || id === 923) {
+			// Pawmo to Pamamo
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/922`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/922.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level up after 1000 steps in Let's Go mode",
+					},
+				],
+				targetURL: `/pokemon/923`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/923.png`,
+			});
+		}
+
+		if (id === 924 || id === 925) {
+			// Tandemaus
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/924`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/924.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level 25 - Free spot in party",
+					},
+				],
+				targetURL: `/pokemon/925`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/925.png`,
+			});
+		}
+
+		if (id === 946 || id === 947) {
+			// Bramblin to Brambleghast
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/946`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/946.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level up after 1000 steps in Let's Go mode",
+					},
+				],
+				targetURL: `/pokemon/947`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/947.png`,
+			});
+		}
+
+		if (id === 963 || id === 964) {
+			// Finizen to Palafin
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/963`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/963.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level 38 + Level up in multiplayer session",
+					},
+				],
+				targetURL: `/pokemon/964`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/964.png`,
+			});
+		}
+
+		if (id === 57 || id === 979) {
+			// Primeape to Annihilape
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/57`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/57.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level 35, Use Rage Fist 20x in a row - No Pokécentre",
+					},
+				],
+				targetURL: `/pokemon/979`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/979.png`,
+			});
+		}
+
+		if (id === 625 || id === 983) {
+			// Bisharp to Kingambit
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/625`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/625.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "First in Party, Find 3x other Bisharp that travel with Pawinards",
+					},
+				],
+				targetURL: `/pokemon/983`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/983.png`,
+			});
+		}
+
+		if (id === 999 || id === 1000) {
+			// Gimmighoul into Gholdengo
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/999`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/999.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level up with 999 Gimmighoul Coins in possession",
+					},
+				],
+				targetURL: `/pokemon/1000`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1000.png`,
+			});
+		}
+
 		let growthRate = "No Data";
 		if (speciesData.growth_rate) {
 			growthRate =

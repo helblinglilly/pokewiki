@@ -52,7 +52,7 @@ export const appSettings = {
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
 	highestPokedexId: 1008,
-	highestItemId: 1658,
+	highestItemId: 2050,
 	highestMoveId: 918,
 	highestAbilityId: 298,
 	extraAbilityRange: [10001, 10060],

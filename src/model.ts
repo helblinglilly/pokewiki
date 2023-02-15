@@ -18,6 +18,7 @@ import Items from "./data/items.json";
 import Moves from "./data/moves.json";
 import Abilities from "./data/abilities.json";
 import log from "./log";
+import { appSettings } from "../api/app";
 
 interface Cache {
 	pokemon: {
@@ -177,7 +178,10 @@ export class Data {
 		return data.data;
 	};
 
-	getItem = async (id: number): Promise<APIResponseItem> => {
+	getItem = async (id: number): Promise<APIResponseItem | undefined> => {
+		if (id <= 0 || id > appSettings.highestItemId) {
+			return undefined;
+		}
 		const cachedData = cache.items.find(a => a.id === id);
 		if (cachedData) {
 			log.info(`Cache - HIT - Item ${id}`);

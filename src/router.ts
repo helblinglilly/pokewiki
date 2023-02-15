@@ -123,6 +123,7 @@ class Router {
 	};
 
 	static getItem = async (req: ex.Request, res: ex.Response) => {
+		const start = new Date();
 		let id = -1;
 		try {
 			id = parseInt(req.url.split("/")[2].split("?")[0]);
@@ -149,6 +150,9 @@ class Router {
 			);
 			const details = await controller.getItem(id, game);
 			const options = { ...details };
+			log.debug(
+				`Finished getting item ${id} in ${new Date().valueOf() - start.valueOf()}ms`
+			);
 			res.render("./item", { ...options, ...appSettings });
 		} catch (err: any) {
 			handleServerError(req, { error: "Internal Server Error", info: err }, res);

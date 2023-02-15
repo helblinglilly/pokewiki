@@ -347,9 +347,12 @@ class Controller {
 	};
 
 	getItem = async (id: number, game?: string) => {
-		let itemData: APIResponseItem | undefined = undefined;
-		let previousItemData: APIResponseItem | undefined = undefined;
-		let nextItemData: APIResponseItem | undefined = undefined;
+		const [itemData, previousItemData, nextItemData] = await Promise.all([
+			this.data.getItem(id),
+			this.data.getItem(id - 1),
+			this.data.getItem(id + 1),
+		]);
+		if (!itemData) return;
 
 		let primaryLangName = "";
 		let secondaryLangName = "";
@@ -388,132 +391,116 @@ class Controller {
 		let previousItemSprite = appSettings.placeholderImage;
 		let nextItemSprite = appSettings.placeholderImage;
 
-		try {
-			itemData = await this.data.getItem(id);
-			primaryLangName = Utils.findNameFromLanguageCode(
-				itemData.names,
+		primaryLangName = Utils.findNameFromLanguageCode(
+			itemData.names,
+			this.primaryLanguageCode
+		);
+		secondaryLangName = Utils.findNameFromLanguageCode(
+			itemData.names,
+			this.secondaryLanguageCode
+		);
+
+		itemData.effect_entries.forEach((entry, i) => {
+			if (entry.language.name === this.primaryLanguageCode) {
+				primaryEntry.entry = entry.short_effect;
+			} else if (itemData !== undefined && i === itemData.effect_entries.length - 1) {
+				primaryEntry.entry = entry.short_effect;
+			}
+		});
+
+		if (game) {
+			const foundGame = Games.findEntry(game);
+			if (foundGame.version_group_name !== "all") {
+				let existsInGame = false;
+				let primaryLangText = "";
+				let secondaryLangText = "";
+				itemData.flavor_text_entries.forEach(entry => {
+					if (foundGame.version_group_name === entry.version_group.name) {
+						existsInGame = true;
+
+						if (entry.language.name === this.primaryLanguageCode) {
+							primaryLangText = entry.text;
+						} else if (entry.language.name === this.secondaryLanguageCode) {
+							secondaryLangText = entry.text;
+						}
+
+						const game = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
+						secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
+					}
+				});
+
+				if ((existsInGame && primaryLangText) || secondaryLangText) {
+					secondaryEntry.entry = primaryLangText ? primaryLangText : secondaryLangText;
+				} else if (existsInGame) {
+					secondaryEntry.entry = "No description found for the selected languages";
+				} else {
+					secondaryEntry.entry = "This item does not exist in this game";
+				}
+
+				if (itemData.machines.length > 0) {
+					const correctEntry = itemData.machines.find(
+						a => a.version_group.name === foundGame.version_group_name
+					);
+					if (correctEntry) {
+						const id = correctEntry.machine.url.split("/")[6];
+						const machineData = await this.data.getMachine(parseInt(id));
+						const moveId = machineData.move.url.split("/")[6];
+						const moveData = await this.data.getMove(parseInt(moveId));
+
+						secondaryEntry.entry = Utils.findNameFromLanguageCode(
+							moveData.names,
+							this.primaryLanguageCode
+						);
+						secondaryEntry.clickable.state = true;
+						secondaryEntry.clickable.url = `/move/${moveId}`;
+
+						primaryLangName += ` ${secondaryEntry.entry}`;
+						secondaryLangName = Utils.findNameFromLanguageCode(
+							moveData.names,
+							this.secondaryLanguageCode
+						);
+					} else {
+						secondaryEntry.entry = "This TM does not exist in the selected game.";
+					}
+				}
+			}
+		}
+
+		if (itemData.machines.length > 0) {
+			primaryEntry.entry = "This item can teach a Pokémon a move.";
+			if (!secondaryEntry.clickable.state) {
+				primaryEntry.entry += " Select a game to see which move this TM corresponds to.";
+			}
+		}
+
+		itemData.attributes.forEach(attribute => {
+			if (attribute.name === "countable") countable = true;
+			if (attribute.name === "consumable") consumable = true;
+			if (attribute.name === "usable-overworld") overworld = true;
+			if (attribute.name === "usable-in-battle") battle = true;
+			if (attribute.name === "holdable") holdable = true;
+			if (attribute.name === "holdable-passive") holdablePassive = true;
+			if (attribute.name === "holdable-active") holdableActive = true;
+			if (attribute.name === "underground") underground = true;
+		});
+
+		cost = itemData.cost;
+		itemSprite = itemData.sprites.default;
+
+		if (previousItemData) {
+			previousItemName = Utils.findNameFromLanguageCode(
+				previousItemData.names,
 				this.primaryLanguageCode
 			);
-			secondaryLangName = Utils.findNameFromLanguageCode(
-				itemData.names,
-				this.secondaryLanguageCode
+			previousItemSprite = previousItemData.sprites.default;
+		}
+
+		if (nextItemData) {
+			nextItemName = Utils.findNameFromLanguageCode(
+				nextItemData.names,
+				this.primaryLanguageCode
 			);
-
-			itemData.effect_entries.forEach((entry, i) => {
-				if (entry.language.name === this.primaryLanguageCode) {
-					primaryEntry.entry = entry.short_effect;
-				} else if (itemData !== undefined && i === itemData.effect_entries.length - 1) {
-					primaryEntry.entry = entry.short_effect;
-				}
-			});
-
-			if (game) {
-				const foundGame = Games.findEntry(game);
-				if (foundGame.version_group_name !== "all") {
-					let existsInGame = false;
-					let primaryLangText = "";
-					let secondaryLangText = "";
-					itemData.flavor_text_entries.forEach(entry => {
-						if (foundGame.version_group_name === entry.version_group.name) {
-							existsInGame = true;
-
-							if (entry.language.name === this.primaryLanguageCode) {
-								primaryLangText = entry.text;
-							} else if (entry.language.name === this.secondaryLanguageCode) {
-								secondaryLangText = entry.text;
-							}
-
-							const game = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
-							secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
-						}
-					});
-
-					if ((existsInGame && primaryLangText) || secondaryLangText) {
-						secondaryEntry.entry = primaryLangText ? primaryLangText : secondaryLangText;
-					} else if (existsInGame) {
-						secondaryEntry.entry = "No description found for the selected languages";
-					} else {
-						secondaryEntry.entry = "This item does not exist in this game";
-					}
-
-					if (itemData.machines.length > 0) {
-						const correctEntry = itemData.machines.find(
-							a => a.version_group.name === foundGame.version_group_name
-						);
-						if (correctEntry) {
-							const id = correctEntry.machine.url.split("/")[6];
-							const machineData = await this.data.getMachine(parseInt(id));
-							const moveId = machineData.move.url.split("/")[6];
-							const moveData = await this.data.getMove(parseInt(moveId));
-
-							secondaryEntry.entry = Utils.findNameFromLanguageCode(
-								moveData.names,
-								this.primaryLanguageCode
-							);
-							secondaryEntry.clickable.state = true;
-							secondaryEntry.clickable.url = `/move/${moveId}`;
-
-							primaryLangName += ` ${secondaryEntry.entry}`;
-							secondaryLangName = Utils.findNameFromLanguageCode(
-								moveData.names,
-								this.secondaryLanguageCode
-							);
-						} else {
-							secondaryEntry.entry = "This TM does not exist in the selected game.";
-						}
-					}
-				}
-			}
-
-			if (itemData.machines.length > 0) {
-				primaryEntry.entry = "This item can teach a Pokémon a move.";
-				if (!secondaryEntry.clickable.state) {
-					primaryEntry.entry +=
-						" Select a game to see which move this TM corresponds to.";
-				}
-			}
-
-			itemData.attributes.forEach(attribute => {
-				if (attribute.name === "countable") countable = true;
-				if (attribute.name === "consumable") consumable = true;
-				if (attribute.name === "usable-overworld") overworld = true;
-				if (attribute.name === "usable-in-battle") battle = true;
-				if (attribute.name === "holdable") holdable = true;
-				if (attribute.name === "holdable-passive") holdablePassive = true;
-				if (attribute.name === "holdable-active") holdableActive = true;
-				if (attribute.name === "underground") underground = true;
-			});
-
-			cost = itemData.cost;
-			itemSprite = itemData.sprites.default;
-		} catch (err) {
-			log.error(`Failed to get item ${id}`, err);
-		}
-
-		try {
-			if (id - 1 > 0) {
-				previousItemData = await this.data.getItem(id - 1);
-				previousItemName = Utils.findNameFromLanguageCode(
-					previousItemData.names,
-					this.primaryLanguageCode
-				);
-				previousItemSprite = previousItemData.sprites.default;
-			}
-		} catch (err) {
-			log.error(`Failed to get item ${id - 1}`, err);
-		}
-
-		try {
-			if (id + 1 <= appSettings.highestItemId) {
-				nextItemData = await this.data.getItem(id + 1);
-				nextItemName = Utils.findNameFromLanguageCode(
-					nextItemData.names,
-					this.primaryLanguageCode
-				);
-				nextItemSprite = nextItemData.sprites.default;
-			}
-		} catch (err) {
-			log.error(`Failed to get item ${id - 1}`, err);
+			nextItemSprite = nextItemData.sprites.default;
 		}
 
 		return {

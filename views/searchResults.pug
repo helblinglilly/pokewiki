@@ -31,7 +31,7 @@ block append body
 								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
 								alt=`${pokemon.primaryLang} sprite`
 							)
-							if pokemon.primaryLang === pokemon.secondaryLang
+							if pokemon.primaryLang === pokemon.secondaryLang || !pokemon.secondaryLang
 								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang }
 							else
 								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang } - #{ pokemon.secondaryLang }
@@ -48,7 +48,7 @@ block append body
 								style="height: 30px; width: 30px",
 								alt=`${item.primaryLang} sprite`
 							)
-							if item.primaryLang === item.secondaryLang
+							if item.primaryLang === item.secondaryLang || !item.secondaryLang
 								p.card-text #{ item.primaryLang }
 							else
 								p.card-text #{ item.primaryLang } - #{ item.secondaryLang }
@@ -80,7 +80,7 @@ block append body
 				a.keepQuery(href=`${ability.link}`)
 					.card.mb-3
 						.card-content.searchResult
-							if ability.primaryLang === ability.secondaryLang
+							if ability.primaryLang === ability.secondaryLang || !ability.secondaryLang
 								p.card-text #{ ability.primaryLang }
 							else
 								p.card-text #{ ability.primaryLang } - #{ ability.secondaryLang }

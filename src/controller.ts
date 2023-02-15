@@ -568,12 +568,28 @@ class Controller {
 			}
 		}
 
-		let primaryFlavorText = moveData.flavor_text_entries.filter(
-			a => a.language.name === this.primaryLanguageCode
-		)[0];
-		let secondaryFlavorText = moveData.flavor_text_entries.filter(
-			a => a.language.name === this.secondaryLanguageCode
-		)[0];
+		let primaryFlavorText = moveData.flavor_text_entries.filter(a => {
+			if (game) {
+				const gameEntry = Games.findEntry(game);
+				if (gameEntry.version_group_name === a.version_group.name) {
+					return a.language.name === this.primaryLanguageCode;
+				}
+				return false;
+			} else {
+				return a.language.name === this.primaryLanguageCode;
+			}
+		})[0];
+		let secondaryFlavorText = moveData.flavor_text_entries.filter(a => {
+			if (game) {
+				const gameEntry = Games.findEntry(game);
+				if (gameEntry.version_group_name === a.version_group.name) {
+					return a.language.name === this.secondaryLanguageCode;
+				}
+				return false;
+			} else {
+				return a.language.name === this.secondaryLanguageCode;
+			}
+		})[0];
 
 		const typeSprite = Types.filter(a => a.english_id === moveData.type.name)[0].sprite;
 		const type = typeSprite.split("/")[4].split(".")[0];
@@ -715,7 +731,7 @@ class Controller {
 			if (selectedId < changeGenerationId) {
 				generationChange.push({
 					text: `Behaviour after generation ${changeGame.generation}`,
-					altEntryEffect: primaryLangEffectEntry.short_effect
+					altEntryEffect: primaryLangEffectEntry
 						? primaryLangEffectEntry.short_effect
 						: secondaryLangEffectEntry.short_effect,
 				});
@@ -760,7 +776,9 @@ class Controller {
 			effectEntry: effectEntry,
 			flavorText: primaryFlavorText
 				? primaryFlavorText.flavor_text
-				: secondaryFlavorText.flavor_text,
+				: secondaryFlavorText
+				? secondaryFlavorText.flavor_text
+				: "No data",
 			introduced: ability.generation.name.split("-")[1],
 			generationChange: generationChange,
 			pokemon: pokemon,

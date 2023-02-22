@@ -78,7 +78,7 @@ export const handleServerError = (req: any, details: ErrorMessage, res: any) => 
 };
 
 app.get("/", (req, res, next) => {
-	res.render("./index", { ...appSettings });
+	Router.getRoot(req, res);
 });
 
 app.options("/*", (req, res) => {
@@ -101,6 +101,18 @@ app.options("/*", (req, res) => {
 });
 
 app.all("/", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
+app.get("/about", (req, res, next) => {
+	res.render("./about", {
+		...appSettings,
+	});
+});
+app.all("/about", (req, res) => {
 	res.status(405).render("error", {
 		error: "Method not allowed",
 		info: `${req.method} is not supported on this endpoint`,

@@ -5,6 +5,25 @@ import { ErrorMessage } from "./types";
 import app, { appSettings, handleServerError } from "../api/app";
 
 class Router {
+	static getRoot = async (req: ex.Request, res: ex.Response) => {
+		const controller = new Controller(
+			appSettings.primaryLanguageCode,
+			appSettings.secondaryLanguageCode
+		);
+
+		const pokemon = controller.getRandomPokemon();
+		const [move, ability] = await Promise.all([
+			controller.getRandomMove(),
+			controller.getRandomAbility(),
+		]);
+		res.render("./index", {
+			...appSettings,
+			pokemon: { ...pokemon },
+			move: { ...move },
+			ability: { ...ability },
+		});
+	};
+
 	static getSearch = async (req: ex.Request, res: ex.Response) => {
 		if (!req.query.term || typeof req.query.term !== "string") {
 			res.redirect("/");

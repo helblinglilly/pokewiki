@@ -1135,6 +1135,80 @@ class Controller {
 		return results;
 	};
 
+	getRandomPokemon = () => {
+		const date = new Date();
+		const days =
+			new Date(
+				date.getTime() - new Date(`${date.getFullYear()}-01-01`).getTime()
+			).valueOf() /
+			(1000 * 3600 * 24);
+
+		let id = (appSettings.highestPokedexId / 365) * days;
+		id = date.getMonth() % 2 === 0 ? Math.ceil(id) : Math.floor(days);
+
+		const data = this.data.findPokemonNameFromId(id);
+
+		return {
+			primaryLang: data?.primaryLang,
+			secondaryLang: data?.secondaryLang,
+			link: data?.link,
+			sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+			id: id,
+		};
+	};
+
+	getRandomMove = async () => {
+		const date = new Date();
+		const days =
+			new Date(
+				date.getTime() - new Date(`${date.getFullYear()}-01-01`).getTime()
+			).valueOf() /
+			(1000 * 3600 * 24);
+
+		let id = (appSettings.highestMoveId / 365) * days;
+		id = date.getMonth() % 2 === 0 ? Math.ceil(id) : Math.floor(days);
+
+		const data = await this.data.getMove(id);
+
+		return {
+			primaryLang: Utils.findNameFromLanguageCode(
+				data.names,
+				appSettings.primaryLanguageCode
+			),
+			secondaryLang: Utils.findNameFromLanguageCode(
+				data.names,
+				appSettings.secondaryLanguageCode
+			),
+			link: `/move/${id}`,
+		};
+	};
+
+	getRandomAbility = async () => {
+		const date = new Date();
+		const days =
+			new Date(
+				date.getTime() - new Date(`${date.getFullYear()}-01-01`).getTime()
+			).valueOf() /
+			(1000 * 3600 * 24);
+
+		let id = (appSettings.highestAbilityId / 365) * days;
+		id = date.getMonth() % 2 === 0 ? Math.ceil(id) : Math.floor(days);
+
+		const data = await this.data.getAbility(id);
+
+		return {
+			primaryLang: Utils.findNameFromLanguageCode(
+				data.names,
+				appSettings.primaryLanguageCode
+			),
+			secondaryLang: Utils.findNameFromLanguageCode(
+				data.names,
+				appSettings.secondaryLanguageCode
+			),
+			link: `/ability/${id}`,
+		};
+	};
+
 	processMoveset = (
 		moves: APIResponsePokemon["moves"],
 		versionGroup: VersionGroup

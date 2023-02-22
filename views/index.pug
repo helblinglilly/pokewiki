@@ -29,13 +29,55 @@ block append body
 			p Notice
 			button.delete(onclick="hideNotice();")
 		.message-body
-			p Generations 8 (BDSP + Legends Arceus) and 9 (Scarlet/Violet) are known to have incomplete datasets and may display inaccurate information. See the #[a(href="https://github.com/PokeAPI/pokeapi/issues?q=is%3Aissue+is%3Aopen+") PokéAPIs Github Page] for more info
+			p The underlying data may not always be accurate. Please see the "About" page for more details.
+
+	.columns
+		.column.is-flex
+			.card.primary(style="width: 100%")
+				.card-header-title
+					p Pokémon of the day
+				.card-content.pt-0(style="text-align: center")
+					a(href=`${pokemon.link}`)
+						.box.accented
+							img(src=`${pokemon.sprite}`)
+							p ##{ pokemon.id } #{ pokemon.primaryLang }
+							if pokemon.primaryLang !== pokemon.secondaryLang && pokemon.secondaryLang
+								p #{ pokemon.secondaryLang }
+		.column.is-flex
+			.card.primary(style="width: 100%")
+				.card.primary
+					.card-header-title
+						p Move of the day
+					.card-content.pt-0.accented(style="text-align: center")
+						a(href=`${move.link}`)
+							.box.accented
+								if move.primaryLang && !move.secondaryLang
+									p #{ move.primaryLang }
+								else if !move.primaryLang && move.secondaryLang
+									p #{ move.secondaryLang }
+								else if move.primaryLang !== move.secondaryLang
+									p #{ move.primaryLang } - #{ move.secondaryLang }
+				.card.primary
+					.card-header-title
+						p Ability of the day
+					.card-content.pt-0.accented(style="text-align: center")
+						a(href=`${ability.link}`)
+							.box.accented
+								if ability.primaryLang && !ability.secondaryLang
+									p #{ ability.primaryLang }
+								else if !ability.primaryLang && ability.secondaryLang
+									p #{ ability.secondaryLang }
+								else if ability.primaryLang !== ability.secondaryLang
+									p #{ ability.primaryLang } - #{ ability.secondaryLang }
+
 	.box
 		p.title.is-3 Changelog
 		.content
 			p.title.is-5 WIP
 			ul
 				li Display more search results
+				li Add "of the day" entries to homepage
+				li Add "About" page
 			p.title.is-5 11 February 2023
 			ul
 				li Implemented Move pages
@@ -43,16 +85,16 @@ block append body
 				li Tidied "Move" search results
 				li Backend support for multi language
 
-			p.title.is-5 09 February 2023
-			ul
-				li Added social media link previews
-				li Updated favicon
-				li Readjusted X / Y sprite sizing
-				li Synchronised when all gifs on a page will start playing.
-					ul
-						li Also fixed an issue where sprite descriptions weren't loading
 			p#extendChangelog Show more...
 			#oldChanges.hidden
+				p.title.is-5 09 February 2023
+				ul
+					li Added social media link previews
+					li Updated favicon
+					li Readjusted X / Y sprite sizing
+					li Synchronised when all gifs on a page will start playing.
+						ul
+							li Also fixed an issue where sprite descriptions weren't loading
 				p.title.is-5 04 February 2023
 				ul
 					li Implemented Ability pages

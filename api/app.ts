@@ -48,7 +48,7 @@ if (buildType === "Build") {
 export const appSettings = {
 	primaryLanguageCode: "en",
 	secondaryLanguageCode: "de",
-	maxSearchResults: 10,
+	maxSearchResults: 100,
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
 	highestPokedexId: 1008,

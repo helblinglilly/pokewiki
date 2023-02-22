@@ -11,6 +11,7 @@ block append head
 	meta(name="description", content=`Search results for ${searchTerm}`)
 	meta(property="og:description", content=`Search results for ${searchTerm}`)
 	meta(name="twitter:description", content=`Search results for ${searchTerm}`)
+	script(src="/static/js/extraPokemon.js")
 
 block append body
 	p.title.is-3 Results for "#{ searchTerm }"
@@ -23,64 +24,81 @@ block append body
 	if results.Pokemon.length !== 0
 		p.title.is-4 Pokémon
 		#PokemonResults.container
-			each pokemon in results.Pokemon
-				a.keepQuery(href=`${pokemon.link}`)
-					.card.mb-3
-						.card-content.searchResult(style="display: flex; align-items: center")
-							img.is-48x48.mr-1(
-								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-								alt=`${pokemon.primaryLang} sprite`
-							)
-							if pokemon.primaryLang === pokemon.secondaryLang || !pokemon.secondaryLang
-								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang }
-							else
-								p.card-text ##{ pokemon.id } #{ pokemon.primaryLang } - #{ pokemon.secondaryLang }
+			each pokemon, i in results.Pokemon
+				.extraPokemon(style=`${i >= 10 ? "display: none" : ""}`)
+					a.keepQuery(href=`${pokemon.link}`)
+						.card.mb-3
+							.card-content.searchResult(style="display: flex; align-items: center")
+								img.is-48x48.mr-1(
+									src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+									alt=`${pokemon.primaryLang} sprite`
+								)
+								if pokemon.primaryLang === pokemon.secondaryLang || !pokemon.secondaryLang
+									p.card-text ##{ pokemon.id } #{ pokemon.primaryLang }
+								else
+									p.card-text ##{ pokemon.id } #{ pokemon.primaryLang } - #{ pokemon.secondaryLang }
+			if results.Pokemon.length > 10
+				.tags.are-medium.mb-3
+					span#loadMorePokemon.tag.link.accented Load more...
 
 	if results.Items.length !== 0
 		p.title.is-4 Items
 		#ItemResults.container
-			each item in results.Items
-				a.keepQuery(href=`${item.link}`)
-					.card.mb-3
-						.card-content.searchResult(style="display: flex; align-items: center")
-							img.is-48x48.mr-1(
-								src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`,
-								style="height: 30px; width: 30px",
-								alt=`${item.primaryLang} sprite`
-							)
-							if item.primaryLang === item.secondaryLang || !item.secondaryLang
-								p.card-text #{ item.primaryLang }
-							else
-								p.card-text #{ item.primaryLang } - #{ item.secondaryLang }
+			each item, i in results.Items
+				.extraItems(style=`${i >= 10 ? "display: none" : ""}`)
+					a.keepQuery(href=`${item.link}`)
+						.card.mb-3
+							.card-content.searchResult(style="display: flex; align-items: center")
+								img.is-48x48.mr-1(
+									src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`,
+									style="height: 30px; width: 30px",
+									alt=`${item.primaryLang} sprite`
+								)
+								if item.primaryLang === item.secondaryLang || !item.secondaryLang
+									p.card-text #{ item.primaryLang }
+								else
+									p.card-text #{ item.primaryLang } - #{ item.secondaryLang }
+
+			if results.Items.length > 10
+				.tags.are-medium.mb-3
+					span#loadMoreItems.tag.link.accented Load more...
 
 	if results.Moves.length !== 0
 		p.title.is-4 Moves
 		#MoveResults.container
-			each move in results.Moves
-				a.keepQuery(href=`${move.link}`)
-					.card.mb-3
-						.card-content.searchResult
-							.container(style="display: inline-flex")
-								img.icon.pr-2.typeSprite(
-									src=`${move.type_sprite}`,
-									alt=`${move.type[0].toUpperCase() + move.type.slice(1)}`
-								)
-								p.card-text #{ move.primaryLang }
-							.container(style="display: flex")
-								img.icon.pr-2.typeSprite(
-									src=`${move.attack_type_sprite}`,
-									alt=`${move.attack_type_sprite.split("/")[4].split(".")[0]}`
-								)
-								p.card-text #{ move.secondaryLang }
+			each move, i in results.Moves
+				.extraMoves(style=`${i >= 10 ? "display: none" : ""}`)
+					a.keepQuery(href=`${move.link}`)
+						.card.mb-3
+							.card-content.searchResult
+								.container(style="display: inline-flex")
+									img.icon.pr-2.typeSprite(
+										src=`${move.type_sprite}`,
+										alt=`${move.type[0].toUpperCase() + move.type.slice(1)}`
+									)
+									p.card-text #{ move.primaryLang }
+								.container(style="display: flex")
+									img.icon.pr-2.typeSprite(
+										src=`${move.attack_type_sprite}`,
+										alt=`${move.attack_type_sprite.split("/")[4].split(".")[0]}`
+									)
+									p.card-text #{ move.secondaryLang }
+			if results.Moves.length > 10
+				.tags.are-medium.mb-3
+					span#loadMoreMoves.tag.link.accented Load more...
 
 	if results.Abilities.length !== 0
 		p.title.is-4 Abilities
 		#AbilityResults.container
-			each ability in results.Abilities
-				a.keepQuery(href=`${ability.link}`)
-					.card.mb-3
-						.card-content.searchResult
-							if ability.primaryLang === ability.secondaryLang || !ability.secondaryLang
-								p.card-text #{ ability.primaryLang }
-							else
-								p.card-text #{ ability.primaryLang } - #{ ability.secondaryLang }
+			each ability, i in results.Abilities
+				.extraAbilities(style=`${i >= 10 ? "display: none" : ""}`)
+					a.keepQuery(href=`${ability.link}`)
+						.card.mb-3
+							.card-content.searchResult
+								if ability.primaryLang === ability.secondaryLang || !ability.secondaryLang
+									p.card-text #{ ability.primaryLang }
+								else
+									p.card-text #{ ability.primaryLang } - #{ ability.secondaryLang }
+			if results.Abilities.length > 10
+				.tags.are-medium.mb-3
+					span#loadMoreAbilities.tag.link.accented Load more...

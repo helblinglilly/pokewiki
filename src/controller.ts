@@ -793,10 +793,10 @@ class Controller {
 		const abilityResults = abilities ? this.data.findAbilityFromName(searchTerm) : [];
 
 		return {
-			Pokemon: pkmnResults.slice(0, appSettings.maxSearchResults),
-			Items: itemResults.slice(0, appSettings.maxSearchResults),
-			Moves: moveResults.slice(0, appSettings.maxSearchResults),
-			Abilities: abilityResults.slice(0, appSettings.maxSearchResults),
+			Pokemon: pkmnResults,
+			Items: itemResults,
+			Moves: moveResults,
+			Abilities: abilityResults,
 		};
 	};
 

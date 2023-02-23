@@ -1136,16 +1136,9 @@ class Controller {
 	};
 
 	getRandomPokemon = () => {
-		const date = new Date();
-		const days =
-			new Date(
-				date.getTime() - new Date(`${date.getFullYear()}-01-01`).getTime()
-			).valueOf() /
-			(1000 * 3600 * 24);
-
-		let id = (appSettings.highestPokedexId / 365) * days;
-		id = date.getMonth() % 2 === 0 ? Math.ceil(id) : Math.floor(days);
-
+		const id = Utils.randomDailyNumber(appSettings.highestPokedexId)[
+			Utils.daysPassedInYear()
+		];
 		const data = this.data.findPokemonNameFromId(id);
 
 		return {
@@ -1158,16 +1151,9 @@ class Controller {
 	};
 
 	getRandomMove = async () => {
-		const date = new Date();
-		const days =
-			new Date(
-				date.getTime() - new Date(`${date.getFullYear()}-01-01`).getTime()
-			).valueOf() /
-			(1000 * 3600 * 24);
-
-		let id = (appSettings.highestMoveId / 365) * days;
-		id = date.getMonth() % 2 === 0 ? Math.ceil(id) : Math.floor(days);
-
+		const id = Utils.randomDailyNumber(appSettings.highestMoveId)[
+			Utils.daysPassedInYear()
+		];
 		const data = await this.data.getMove(id);
 
 		return {
@@ -1184,16 +1170,9 @@ class Controller {
 	};
 
 	getRandomAbility = async () => {
-		const date = new Date();
-		const days =
-			new Date(
-				date.getTime() - new Date(`${date.getFullYear()}-01-01`).getTime()
-			).valueOf() /
-			(1000 * 3600 * 24);
-
-		let id = (appSettings.highestAbilityId / 365) * days;
-		id = date.getMonth() % 2 === 0 ? Math.ceil(id) : Math.floor(days);
-
+		const id = Utils.randomDailyNumber(appSettings.highestAbilityId)[
+			Utils.daysPassedInYear()
+		];
 		const data = await this.data.getAbility(id);
 
 		return {

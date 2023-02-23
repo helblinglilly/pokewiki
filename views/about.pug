@@ -1,12 +1,15 @@
 extends ./header.pug
 
 block append body
-	div(style="display: flex; align-items: center")
-		img(
-			src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png",
-			alt="Question mark Unown"
-		)
-		p.title.is-3 About Pokécompanion
+	.columns(style="align-items: center")
+		.column.is-2(style="text-align: center")
+			img(
+				src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png",
+				alt="Question mark Unown"
+			)
+		.column
+			p.title.is-3 About Pokécompanion
+
 	hr
 
 	.content

@@ -70,13 +70,6 @@ export class Data {
 	searchResults = 10;
 	cacheDir = "./cache";
 	api = "https://pokeapi.co/api/v2";
-	primaryLangKey: string;
-	secondaryLangKey: string;
-
-	constructor(primLang: string, secLang?: string) {
-		this.primaryLangKey = primLang;
-		this.secondaryLangKey = secLang ? secLang : primLang;
-	}
 
 	getPokemon = async (id: number): Promise<APIResponsePokemon> => {
 		const cachedData = cache.pokemon.find(a => a.id === id);
@@ -254,8 +247,8 @@ export class Data {
 		let secondaryName = "";
 		result.names.forEach(b => {
 			for (const [key, value] of Object.entries(b)) {
-				if (key === this.primaryLangKey) primaryName = value;
-				else if (key === this.secondaryLangKey) secondaryName = value;
+				if (key === appSettings.secondaryLanguageCode) primaryName = value;
+				else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 			}
 		});
 
@@ -284,8 +277,8 @@ export class Data {
 			let secondaryName = "";
 			a.names.forEach(b => {
 				for (const [key, value] of Object.entries(b)) {
-					if (key === this.primaryLangKey) primaryName = value;
-					else if (key === this.secondaryLangKey) secondaryName = value;
+					if (key === appSettings.secondaryLanguageCode) primaryName = value;
+					else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 				}
 			});
 
@@ -324,8 +317,8 @@ export class Data {
 
 			a.names.forEach(b => {
 				for (const [key, value] of Object.entries(b)) {
-					if (key === this.primaryLangKey) primaryName = value;
-					else if (key === this.secondaryLangKey) secondaryName = value;
+					if (key === appSettings.secondaryLanguageCode) primaryName = value;
+					else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 				}
 			});
 			if (
@@ -363,8 +356,8 @@ export class Data {
 
 			a.names.forEach(b => {
 				for (const [key, value] of Object.entries(b)) {
-					if (key === this.primaryLangKey) primaryName = value;
-					else if (key === this.secondaryLangKey) secondaryName = value;
+					if (key === appSettings.secondaryLanguageCode) primaryName = value;
+					else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 				}
 			});
 
@@ -399,8 +392,8 @@ export class Data {
 
 			a.names.forEach(b => {
 				for (const [key, value] of Object.entries(b)) {
-					if (key === this.primaryLangKey) primaryName = value;
-					else if (key === this.secondaryLangKey) secondaryName = value;
+					if (key === appSettings.secondaryLanguageCode) primaryName = value;
+					else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 				}
 			});
 

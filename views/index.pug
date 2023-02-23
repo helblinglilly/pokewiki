@@ -51,7 +51,7 @@ block append body
 					.card-content.pt-0.accented(style="text-align: center")
 						a(href=`${move.link}`)
 							.box.accented
-								if move.primaryLang && !move.secondaryLang
+								if (move.primaryLang && !move.secondaryLang) || (move.primaryLang === move.secondaryLang)
 									p #{ move.primaryLang }
 								else if !move.primaryLang && move.secondaryLang
 									p #{ move.secondaryLang }
@@ -63,7 +63,7 @@ block append body
 					.card-content.pt-0.accented(style="text-align: center")
 						a(href=`${ability.link}`)
 							.box.accented
-								if ability.primaryLang && !ability.secondaryLang
+								if (ability.primaryLang && !ability.secondaryLang) || (ability.primaryLang === ability.secondaryLang)
 									p #{ ability.primaryLang }
 								else if !ability.primaryLang && ability.secondaryLang
 									p #{ ability.secondaryLang }
@@ -78,6 +78,7 @@ block append body
 				li Display more search results
 				li Add "of the day" entries to homepage
 				li Add "About" page
+				li Multi Language support
 			p.title.is-5 11 February 2023
 			ul
 				li Implemented Move pages

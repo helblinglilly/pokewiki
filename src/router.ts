@@ -6,10 +6,7 @@ import app, { appSettings, handleServerError } from "../api/app";
 
 class Router {
 	static getRoot = async (req: ex.Request, res: ex.Response) => {
-		const controller = new Controller(
-			appSettings.primaryLanguageCode,
-			appSettings.secondaryLanguageCode
-		);
+		const controller = new Controller();
 
 		const pokemon = controller.getRandomPokemon();
 		const [move, ability] = await Promise.all([
@@ -42,10 +39,7 @@ class Router {
 			showAbilities = true;
 		}
 
-		const controller = new Controller(
-			appSettings.primaryLanguageCode,
-			appSettings.secondaryLanguageCode
-		);
+		const controller = new Controller();
 		const searchResults = await controller.getSearchResults(
 			req.query.term,
 			showPokemon,
@@ -96,10 +90,7 @@ class Router {
 			}
 		}
 		try {
-			const controller = new Controller(
-				appSettings.primaryLanguageCode,
-				appSettings.secondaryLanguageCode
-			);
+			const controller = new Controller();
 			const details = await controller.getPokemonDetail(id, variety, game);
 			const options = { ...details };
 			res.render("./pokemon", { ...options, ...appSettings });
@@ -129,10 +120,7 @@ class Router {
 		if (typeof req.query.game === "string") game = req.query.game;
 
 		try {
-			const controller = new Controller(
-				appSettings.primaryLanguageCode,
-				appSettings.secondaryLanguageCode
-			);
+			const controller = new Controller();
 			const details = await controller.getMove(id, game);
 			const options = { ...details };
 			res.render("./move", { ...options, ...appSettings });
@@ -163,10 +151,7 @@ class Router {
 		if (typeof req.query.game === "string") game = req.query.game;
 
 		try {
-			const controller = new Controller(
-				appSettings.primaryLanguageCode,
-				appSettings.secondaryLanguageCode
-			);
+			const controller = new Controller();
 			const details = await controller.getItem(id, game);
 			const options = { ...details };
 			log.debug(
@@ -205,10 +190,7 @@ class Router {
 		if (typeof req.query.game === "string") game = req.query.game;
 
 		try {
-			const controller = new Controller(
-				appSettings.primaryLanguageCode,
-				appSettings.secondaryLanguageCode
-			);
+			const controller = new Controller();
 			const details = await controller.getAbility(id, game);
 			const options = { ...details };
 			res.render("./ability", { ...options, ...appSettings });

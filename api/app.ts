@@ -2,6 +2,7 @@ import express from "express";
 import Router from "../src/router";
 import { ErrorMessage } from "../src/types";
 import fs from "fs";
+import cookieParser from "cookie-parser";
 import log from "../src/log";
 
 export let port = 443;
@@ -16,6 +17,9 @@ if (process.env.NODE_ENV !== "production") {
 const app = express();
 
 app.set("view engine", "pug");
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const selfFileExtension = __filename.split(".")[__filename.split(".").length - 1];
 
@@ -46,8 +50,8 @@ if (buildType === "Build") {
 }
 
 export const appSettings = {
-	primaryLanguageCode: "en",
-	secondaryLanguageCode: "de",
+	primaryLanguageCode: "",
+	secondaryLanguageCode: "",
 	maxSearchResults: 100,
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
@@ -60,11 +64,8 @@ export const appSettings = {
 		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png",
 };
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.use((req, res, next) => {
-	log.info(`${req.ip} requesting ${req.url}`);
+	log.info(`${req.ip} requesting ${req.url} with cookies ${JSON.stringify(req.cookies)}`);
 	next();
 });
 
@@ -77,7 +78,17 @@ export const handleServerError = (req: any, details: ErrorMessage, res: any) => 
 	});
 };
 
+const setLanguage = (req: express.Request) => {
+	appSettings.primaryLanguageCode = req.cookies.primaryLanguage
+		? req.cookies.primaryLanguage
+		: "en";
+	appSettings.secondaryLanguageCode = req.cookies.secondaryLanguage
+		? req.cookies.secondaryLanguage
+		: "de";
+};
+
 app.get("/", (req, res, next) => {
+	setLanguage(req);
 	Router.getRoot(req, res);
 });
 
@@ -108,10 +119,12 @@ app.all("/", (req, res) => {
 });
 
 app.get("/about", (req, res, next) => {
+	setLanguage(req);
 	res.render("./about", {
 		...appSettings,
 	});
 });
+
 app.all("/about", (req, res) => {
 	res.status(405).render("error", {
 		error: "Method not allowed",
@@ -120,6 +133,7 @@ app.all("/about", (req, res) => {
 });
 
 app.get("/search", (req, res, next) => {
+	setLanguage(req);
 	try {
 		const start = new Date();
 		Router.getSearch(req, res);
@@ -136,6 +150,7 @@ app.all("/search", (req, res) => {
 });
 
 app.get("/pokemon/*", (req, res, next) => {
+	setLanguage(req);
 	try {
 		const start = new Date();
 		Router.getPokemon(req, res);
@@ -153,6 +168,7 @@ app.all("/pokemon/*", (req, res) => {
 });
 
 app.get("/item/*", (req, res, next) => {
+	setLanguage(req);
 	try {
 		const start = new Date();
 		Router.getItem(req, res);
@@ -169,6 +185,7 @@ app.all("/item/*", (req, res) => {
 });
 
 app.get("/move/*", (req, res, next) => {
+	setLanguage(req);
 	try {
 		const start = new Date();
 		Router.getMove(req, res);
@@ -185,6 +202,7 @@ app.all("/move/*", (req, res) => {
 });
 
 app.get("/ability/*", (req, res, next) => {
+	setLanguage(req);
 	try {
 		const start = new Date();
 		Router.getAbility(req, res);
@@ -202,6 +220,7 @@ app.all("/ability/*", (req, res) => {
 });
 
 app.all("/*", (req, res) => {
+	setLanguage(req);
 	res.status(404).render("error", {
 		error: "Page does not exist",
 		info: "The page you are trying to access does not exist.",

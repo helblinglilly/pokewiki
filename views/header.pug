@@ -126,6 +126,38 @@ body
 												checked
 											)
 											label.pr-4(for="showAbilities") Abilities
+								.box
+									p.title.is-5 Language
+									.columns
+										.column(style="width: 100%")
+											.select.mr-3(style="width: 100%")
+												select#primaryLanguageSelector(style="width: 100%")
+													option(value="") Primary Language
+													option(value="en") English
+													option(value="de") German
+													option(value="ja-Hrkt") Japanese
+													option(value="roomaji") Roomaji
+													option(value="zh-Hant") Chinese
+													option(value="ko") Korean
+													option(value="fr") French
+													option(value="es") Spanish
+													option(value="it") Italian
+													option(value="cs") Czech
+										.column(style="width: 100%")
+											.select(style="width: 100%")
+												select#secondaryLanguageSelector(style="width: 100%")
+													option(value="") Secondary Language
+													option(value="en") English
+													option(value="de") German
+													option(value="ja-Hrkt") Japanese
+													option(value="roomaji") Roomaji
+													option(value="zh-Hant") Chinese
+													option(value="ko") Korean
+													option(value="fr") French
+													option(value="es") Spanish
+													option(value="it") Italian
+													option(value="cs") Czech
+
 							footer.modal-card-foot
 								button.button.is-info(onclick="submitSearch();", type="button") Search
 								button.button(onclick="closeFilter();", type="button") Close

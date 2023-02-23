@@ -46,6 +46,22 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.getElementById("navbarMenu").classList.toggle("is-active");
 	});
 
+	const primaryLangSelector = document.getElementById("primaryLanguageSelector");
+	if (getCookie("primaryLanguage")) {
+		primaryLangSelector.value = getCookie("primaryLanguage");
+	}
+	primaryLangSelector.addEventListener("change", function () {
+		setCookie("primaryLanguage", this.value);
+	});
+
+	const secondaryLanguageSelector = document.getElementById("secondaryLanguageSelector");
+	if (getCookie("secondaryLanguage")) {
+		secondaryLanguageSelector.value = getCookie("secondaryLanguage");
+	}
+	secondaryLanguageSelector.addEventListener("change", function () {
+		setCookie("secondaryLanguage", this.value);
+	});
+
 	// Should keep a page history in session storage and use that instead
 	// When things we run out of history, hide the button
 	const backButton = document.getElementById("backLink");

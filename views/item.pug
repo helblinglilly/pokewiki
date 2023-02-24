@@ -51,10 +51,15 @@ block append body
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title.is-justify-content-space-between
-					if (primaryName === secondaryName)
+					if primaryName && !secondaryName
 						p #{ primaryName }
+					else if !primaryName && secondaryName
+						p #{ secondaryName }
+					else if primaryName === secondaryName
+						p p #{ primaryName }
 					else
 						p #{ primaryName } - #{ secondaryName }
+
 				.card-content
 					.columns.is-mobile
 						.column.has-text-centered.is-one-half
@@ -94,7 +99,7 @@ block append body
 
 		//- Attributes
 		.column.is-flex
-			.card.collapsible(style="width: 100%")
+			.card(style="width: 100%")
 				.card-header-title.is-justify-content-space-between
 					p Attributes
 				.card-content

@@ -11,6 +11,36 @@ export default class Utils {
 		return entry ? entry.name : fallback ? fallback : "";
 	};
 
+	static getNamesFromGeneric = (
+		iterable: { language: { name: string }; name: string }[]
+	) => {
+		let primaryName = this.findNameFromLanguageCode(
+			iterable,
+			appSettings.primaryLanguageCode
+		);
+		const secondaryName = this.findNameFromLanguageCode(
+			iterable,
+			appSettings.secondaryLanguageCode
+		);
+
+		if (
+			!primaryName &&
+			!secondaryName &&
+			![appSettings.primaryLanguageCode, appSettings.secondaryLanguageCode].includes("en")
+		) {
+			primaryName = this.findNameFromLanguageCode(iterable, "en");
+			if (!primaryName) primaryName = "No data";
+		}
+
+		return [primaryName, secondaryName];
+	};
+
+	static isEnglishSelected = (): boolean => {
+		return [appSettings.primaryLanguageCode, appSettings.secondaryLanguageCode].includes(
+			"en"
+		);
+	};
+
 	static getPokemonSprite = (
 		sprites: Sprites | SpriteForm,
 		spriteType: "full" | "form",

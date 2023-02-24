@@ -252,6 +252,14 @@ export class Data {
 			}
 		});
 
+		if (!primaryName && !secondaryName) {
+			result.names.forEach(b => {
+				for (const [key, value] of Object.entries(b)) {
+					if (key === "en") primaryName = value;
+				}
+			});
+		}
+
 		return {
 			primaryLang: primaryName,
 			secondaryLang: secondaryName,

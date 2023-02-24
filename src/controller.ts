@@ -36,18 +36,7 @@ class Controller {
 		const pokedexEntries: { game: string; entry: string }[] = [];
 
 		// Names
-		let primName = Utils.findNameFromLanguageCode(
-			speciesData.names,
-			appSettings.primaryLanguageCode
-		);
-		let secName = Utils.findNameFromLanguageCode(
-			speciesData.names,
-			appSettings.secondaryLanguageCode
-		);
-
-		if (!primName && !secName) {
-			primName = Utils.findNameFromLanguageCode(speciesData.names, "en");
-		}
+		let [primName, secName] = Utils.getNamesFromGeneric(speciesData.names);
 
 		let showcaseSprites = Utils.getPokemonSprite(
 			pokemonData.sprites,
@@ -59,18 +48,26 @@ class Controller {
 		// Abilities
 		const abilities = abilitiesData.map(entry => {
 			const pkmnAbility = pokemonData.abilities.find(a => a.ability.name === entry.name);
-			const name = Utils.findNameFromLanguageCode(
-				entry.names,
-				appSettings.primaryLanguageCode
-			);
+			const [primaryName, secondaryName] = Utils.getNamesFromGeneric(entry.names);
 			const isHidden = pkmnAbility && pkmnAbility.is_hidden ? true : false;
-			const effectEntry = entry.effect_entries.find(
+
+			let primaryEffectEntry = entry.effect_entries.find(
 				a => a.language.name === appSettings.primaryLanguageCode
 			);
+			const secondaryEffectEntry = entry.effect_entries.find(
+				a => a.language.name === appSettings.secondaryLanguageCode
+			);
+			if (!primaryEffectEntry && !secondaryEffectEntry) {
+				primaryEffectEntry = entry.effect_entries.find(a => a.language.name === "en");
+			}
 
 			return {
-				name: name ? name : entry.name,
-				effect: effectEntry ? effectEntry.short_effect : "Unknown",
+				name: primaryName ? primaryName : secondaryName ? secondaryName : entry.name,
+				effect: primaryEffectEntry
+					? primaryEffectEntry.short_effect
+					: secondaryEffectEntry
+					? secondaryEffectEntry.short_effect
+					: "No data",
 				isHidden: isHidden,
 				link: `/ability/${entry.id}`,
 			};
@@ -96,11 +93,7 @@ class Controller {
 		}[] = [];
 
 		formData.forEach(form => {
-			let name = Utils.findNameFromLanguageCode(
-				form.form_names,
-				appSettings.primaryLanguageCode
-			);
-			name = name ? name : primName;
+			let name = secName ? secName : primName;
 
 			if (speciesData.has_gender_differences) {
 				forms.push({
@@ -205,9 +198,27 @@ class Controller {
 							game: entry.version.name.replace(new RegExp("-", "g"), " "),
 							entry: entry.flavor_text,
 						});
+					} else if (entry.language.name === appSettings.secondaryLanguageCode) {
+						pokedexEntries.push({
+							game: entry.version.name.replace(new RegExp("-", "g"), " "),
+							entry: entry.flavor_text,
+						});
 					}
 				}
 			});
+
+			if (pokedexEntries.length === 0 && !Utils.isEnglishSelected()) {
+				speciesData.flavor_text_entries.forEach(entry => {
+					if (selectedGames.consistsOf.includes(entry.version.name)) {
+						if (entry.language.name === "en") {
+							pokedexEntries.push({
+								game: entry.version.name.replace(new RegExp("-", "g"), " "),
+								entry: entry.flavor_text,
+							});
+						}
+					}
+				});
+			}
 
 			if (selectedGames !== undefined) {
 				// Moves
@@ -482,10 +493,31 @@ class Controller {
 		]);
 		if (!itemData) return;
 
-		let primaryLangName = "";
-		let secondaryLangName = "";
+		let [primaryLangName, secondaryLangName] = Utils.getNamesFromGeneric(itemData.names);
+
 		let previousItemName = "";
+		let previousItemSprite = appSettings.placeholderImage;
+		let nextItemSprite = appSettings.placeholderImage;
+
+		if (previousItemData) {
+			const [primaryPrevItemName, secondaryPrevItemName] = Utils.getNamesFromGeneric(
+				previousItemData.names
+			);
+			previousItemName = primaryPrevItemName
+				? primaryPrevItemName
+				: secondaryPrevItemName;
+			previousItemSprite = previousItemData.sprites.default;
+		}
+
 		let nextItemName = "";
+		if (nextItemData) {
+			const [primaryNextItemName, secondaryNextItemName] = Utils.getNamesFromGeneric(
+				nextItemData.names
+			);
+			nextItemName = primaryNextItemName ? primaryNextItemName : secondaryNextItemName;
+			nextItemSprite = nextItemData.sprites.default;
+		}
+
 		let primaryEntry = {
 			game: "",
 			entry: "",
@@ -516,21 +548,6 @@ class Controller {
 		let cost = 0;
 
 		let itemSprite = appSettings.placeholderImage;
-		let previousItemSprite = appSettings.placeholderImage;
-		let nextItemSprite = appSettings.placeholderImage;
-
-		primaryLangName = Utils.findNameFromLanguageCode(
-			itemData.names,
-			appSettings.primaryLanguageCode
-		);
-		secondaryLangName = Utils.findNameFromLanguageCode(
-			itemData.names,
-			appSettings.secondaryLanguageCode
-		);
-
-		if (!primaryLangName && !secondaryLangName) {
-			primaryLangName = Utils.findNameFromLanguageCode(itemData.names, "en");
-		}
 
 		itemData.effect_entries.forEach((entry, i) => {
 			if (entry.language.name === appSettings.primaryLanguageCode) {
@@ -546,6 +563,7 @@ class Controller {
 				let existsInGame = false;
 				let primaryLangText = "";
 				let secondaryLangText = "";
+
 				itemData.flavor_text_entries.forEach(entry => {
 					if (foundGame.version_group_name === entry.version_group.name) {
 						existsInGame = true;
@@ -560,6 +578,18 @@ class Controller {
 						secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
 					}
 				});
+
+				if (!primaryLangText && !secondaryLangText && !Utils.isEnglishSelected()) {
+					itemData.flavor_text_entries.forEach(entry => {
+						if (foundGame.version_group_name === entry.version_group.name) {
+							if (entry.language.name === "en") {
+								primaryLangText = entry.text;
+							}
+							const game = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
+							secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
+						}
+					});
+				}
 
 				if ((existsInGame && primaryLangText) || secondaryLangText) {
 					secondaryEntry.entry = primaryLangText ? primaryLangText : secondaryLangText;
@@ -619,22 +649,6 @@ class Controller {
 		cost = itemData.cost;
 		itemSprite = itemData.sprites.default;
 
-		if (previousItemData) {
-			previousItemName = Utils.findNameFromLanguageCode(
-				previousItemData.names,
-				appSettings.primaryLanguageCode
-			);
-			previousItemSprite = previousItemData.sprites.default;
-		}
-
-		if (nextItemData) {
-			nextItemName = Utils.findNameFromLanguageCode(
-				nextItemData.names,
-				appSettings.primaryLanguageCode
-			);
-			nextItemSprite = nextItemData.sprites.default;
-		}
-
 		return {
 			id: id,
 			previousItemName: previousItemName,
@@ -668,18 +682,7 @@ class Controller {
 		});
 		const machineData = await Promise.all(machineDataPromises);
 
-		let primaryLang = Utils.findNameFromLanguageCode(
-			moveData.names,
-			appSettings.primaryLanguageCode
-		);
-		const secondaryLang = Utils.findNameFromLanguageCode(
-			moveData.names,
-			appSettings.secondaryLanguageCode
-		);
-
-		if (!primaryLang && !secondaryLang) {
-			primaryLang = Utils.findNameFromLanguageCode(moveData.names, "en");
-		}
+		const [primaryLang, secondaryLang] = Utils.getNamesFromGeneric(moveData.names);
 
 		let primaryLangEffect = moveData.effect_entries.filter(
 			a => a.language.name === appSettings.primaryLanguageCode
@@ -687,6 +690,7 @@ class Controller {
 		let secondaryLangEffect = moveData.effect_entries.filter(
 			a => a.language.name === appSettings.secondaryLanguageCode
 		)[0]?.short_effect;
+
 		if (primaryLangEffect) {
 			if (moveData.effect_chance) {
 				primaryLangEffect = primaryLangEffect.replace(
@@ -698,6 +702,18 @@ class Controller {
 		if (secondaryLangEffect) {
 			if (moveData.effect_chance) {
 				secondaryLangEffect = secondaryLangEffect.replace(
+					"$effect_chance",
+					moveData.effect_chance.toString()
+				);
+			}
+		}
+
+		if (!primaryLangEffect && !secondaryLangEffect && !Utils.isEnglishSelected()) {
+			primaryLangEffect = moveData.effect_entries.filter(a => a.language.name === "en")[0]
+				?.short_effect;
+
+			if (moveData.effect_chance) {
+				primaryLangEffect = primaryLangEffect.replace(
 					"$effect_chance",
 					moveData.effect_chance.toString()
 				);
@@ -726,6 +742,20 @@ class Controller {
 				return a.language.name === appSettings.secondaryLanguageCode;
 			}
 		})[0];
+
+		if (!primaryFlavorText && !secondaryFlavorText && !Utils.isEnglishSelected()) {
+			primaryFlavorText = moveData.flavor_text_entries.filter(a => {
+				if (game) {
+					const gameEntry = Games.findEntry(game);
+					if (gameEntry.version_group_name === a.version_group.name) {
+						return a.language.name === "en";
+					}
+					return false;
+				} else {
+					return a.language.name === "en";
+				}
+			})[0];
+		}
 
 		const typeSprite = Types.filter(a => a.english_id === moveData.type.name)[0].sprite;
 		const type = typeSprite.split("/")[4].split(".")[0];
@@ -797,10 +827,13 @@ class Controller {
 		moves: boolean,
 		abilities: boolean
 	): Promise<Collection> => {
+		let isNumber = !isNaN(parseInt(searchTerm));
+
 		const pkmnResults = pokemon ? this.data.findPokemonFromName(searchTerm) : [];
-		const itemResults = items ? this.data.findItemFromName(searchTerm) : [];
-		const moveResults = moves ? this.data.findMoveFromName(searchTerm) : [];
-		const abilityResults = abilities ? this.data.findAbilityFromName(searchTerm) : [];
+		const itemResults = items && !isNumber ? this.data.findItemFromName(searchTerm) : [];
+		const moveResults = moves && !isNumber ? this.data.findMoveFromName(searchTerm) : [];
+		const abilityResults =
+			abilities && !isNumber ? this.data.findAbilityFromName(searchTerm) : [];
 
 		return {
 			Pokemon: pkmnResults,
@@ -813,14 +846,7 @@ class Controller {
 	getAbility = async (id: number, game?: string) => {
 		const ability = await this.data.getAbility(id);
 
-		const primaryLang = Utils.findNameFromLanguageCode(
-			ability.names,
-			appSettings.primaryLanguageCode
-		);
-		const secondaryLang = Utils.findNameFromLanguageCode(
-			ability.names,
-			appSettings.secondaryLanguageCode
-		);
+		const [primaryLang, secondaryLang] = Utils.getNamesFromGeneric(ability.names);
 
 		let pokemon: PokemonName[] = [];
 		ability.pokemon.forEach(a => {
@@ -832,12 +858,18 @@ class Controller {
 			}
 		});
 
-		const primaryFlavorText = ability.flavor_text_entries.filter(
+		let primaryFlavorText = ability.flavor_text_entries.filter(
 			a => a.language.name === appSettings.primaryLanguageCode
 		)[0];
 		const secondaryFlavorText = ability.flavor_text_entries.filter(
 			a => a.language.name === appSettings.secondaryLanguageCode
 		)[0];
+
+		if (!primaryFlavorText && !secondaryFlavorText && !Utils.isEnglishSelected()) {
+			primaryFlavorText = ability.flavor_text_entries.filter(
+				a => a.language.name === "en"
+			)[0];
+		}
 
 		const foundGame = Games.findEntry(game ? game : "");
 		const gameParts = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
@@ -849,6 +881,15 @@ class Controller {
 		let secondaryLangEffectEntry = ability.effect_entries.filter(
 			a => a.language.name === appSettings.secondaryLanguageCode
 		)[0];
+		if (
+			!primaryLangEffectEntry &&
+			!secondaryLangEffectEntry &&
+			!Utils.isEnglishSelected()
+		) {
+			primaryLangEffectEntry = ability.effect_entries.filter(
+				a => a.language.name === "en"
+			)[0];
+		}
 
 		const generationChange: { text: string; altEntryEffect: string }[] = [];
 
@@ -864,13 +905,20 @@ class Controller {
 				else if (a.language.name === appSettings.secondaryLanguageCode)
 					secondary = a.effect;
 			});
+			if (!primary && !secondary && !Utils.isEnglishSelected()) {
+				change.effect_entries.forEach(a => {
+					if (a.language.name === "en") primary = a.effect;
+				});
+			}
 
 			if (selectedId < changeGenerationId) {
 				generationChange.push({
 					text: `Behaviour after generation ${changeGame.generation}`,
 					altEntryEffect: primaryLangEffectEntry
 						? primaryLangEffectEntry.short_effect
-						: secondaryLangEffectEntry.short_effect,
+						: secondaryLangEffectEntry
+						? secondaryLangEffectEntry.short_effect
+						: "No data",
 				});
 
 				// Use the old entry
@@ -880,6 +928,15 @@ class Controller {
 				secondaryLangEffectEntry = ability.effect_entries.filter(
 					a => a.language.name === appSettings.secondaryLanguageCode
 				)[0];
+				if (
+					!primaryLangEffectEntry &&
+					!secondaryLangEffectEntry &&
+					!Utils.isEnglishSelected()
+				) {
+					primaryLangEffectEntry = ability.effect_entries.filter(
+						a => a.language.name === "en"
+					)[0];
+				}
 			} else {
 				generationChange.push({
 					text: `Effect before generation ${changeGame.generation}:`,
@@ -1275,6 +1332,14 @@ class Controller {
 						else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 					}
 				});
+
+				if (!primaryName && !secondaryName && !Utils.isEnglishSelected()) {
+					moveDetail.names.forEach(b => {
+						for (const [key, value] of Object.entries(b)) {
+							if (key === "en") primaryName = value;
+						}
+					});
+				}
 
 				const completeMove = {
 					...moveDetail,

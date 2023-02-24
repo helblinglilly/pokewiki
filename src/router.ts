@@ -73,9 +73,6 @@ class Router {
 			return;
 		}
 
-		let game = "";
-		if (typeof req.query.game === "string") game = req.query.game;
-
 		let variety = 0;
 		if (typeof req.query.variety === "string") {
 			try {
@@ -91,7 +88,7 @@ class Router {
 		}
 		try {
 			const controller = new Controller();
-			const details = await controller.getPokemonDetail(id, variety, game);
+			const details = await controller.getPokemonDetail(id, variety, appSettings.game);
 			const options = { ...details };
 			res.render("./pokemon", { ...options, ...appSettings });
 		} catch (err: any) {
@@ -116,12 +113,9 @@ class Router {
 			return;
 		}
 
-		let game = "";
-		if (typeof req.query.game === "string") game = req.query.game;
-
 		try {
 			const controller = new Controller();
-			const details = await controller.getMove(id, game);
+			const details = await controller.getMove(id, appSettings.game);
 			const options = { ...details };
 			res.render("./move", { ...options, ...appSettings });
 		} catch (err: any) {
@@ -147,12 +141,9 @@ class Router {
 			return;
 		}
 
-		let game = "";
-		if (typeof req.query.game === "string") game = req.query.game;
-
 		try {
 			const controller = new Controller();
-			const details = await controller.getItem(id, game);
+			const details = await controller.getItem(id, appSettings.game);
 			const options = { ...details };
 			log.debug(
 				`Finished getting item ${id} in ${new Date().valueOf() - start.valueOf()}ms`
@@ -186,12 +177,9 @@ class Router {
 			return;
 		}
 
-		let game = "";
-		if (typeof req.query.game === "string") game = req.query.game;
-
 		try {
 			const controller = new Controller();
-			const details = await controller.getAbility(id, game);
+			const details = await controller.getAbility(id, appSettings.game);
 			const options = { ...details };
 			res.render("./ability", { ...options, ...appSettings });
 		} catch (err: any) {

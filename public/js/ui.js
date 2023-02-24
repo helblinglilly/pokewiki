@@ -62,6 +62,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		setCookie("secondaryLanguage", this.value);
 	});
 
+	const gameSelector = document.getElementById("gameSelector");
+	if (getCookie("game")) {
+		gameSelector.value = getCookie("game");
+	}
+	gameSelector.addEventListener("change", function () {
+		setCookie("game", this.value);
+	});
+
 	// Should keep a page history in session storage and use that instead
 	// When things we run out of history, hide the button
 	const backButton = document.getElementById("backLink");
@@ -111,10 +119,12 @@ const submitSearch = () => {
 			if (entry.includes("term")) {
 				currentSelection = entry.split("=")[1];
 				newSelection = document.getElementById("searchBar").value;
-			} else if (entry.includes("game")) {
-				currentGame = entry.split("=")[1];
-				selectedGame = document.getElementById("gameSelector").value;
-			} else if (entry.includes("pokemon")) {
+			}
+			// else if (entry.includes("game")) {
+			// 	currentGame = entry.split("=")[1];
+			// 	selectedGame = document.getElementById("gameSelector").value;
+			// }
+			else if (entry.includes("pokemon")) {
 				currentSelection = entry.split("=")[1] == "true" ? true : false;
 				newSelection = document.getElementById("showPokemon").checked;
 			} else if (entry.includes("items")) {
@@ -136,9 +146,9 @@ const submitSearch = () => {
 		}
 	}
 
-	if (document.getElementById("gameSelector").values !== "all") {
-		search.action = `${urlNoParams}`;
-	}
+	// if (document.getElementById("gameSelector").values !== "all") {
+	// 	search.action = `${urlNoParams}`;
+	// }
 	search.submit();
 };
 

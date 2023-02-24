@@ -52,6 +52,7 @@ if (buildType === "Build") {
 export const appSettings = {
 	primaryLanguageCode: "",
 	secondaryLanguageCode: "",
+	game: "all",
 	maxSearchResults: 100,
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
@@ -78,17 +79,18 @@ export const handleServerError = (req: any, details: ErrorMessage, res: any) => 
 	});
 };
 
-const setLanguage = (req: express.Request) => {
+const setCookies = (req: express.Request) => {
 	appSettings.primaryLanguageCode = req.cookies.primaryLanguage
 		? req.cookies.primaryLanguage
 		: "en";
 	appSettings.secondaryLanguageCode = req.cookies.secondaryLanguage
 		? req.cookies.secondaryLanguage
 		: "de";
+	appSettings.game = req.cookies.game ? req.cookies.game : "all";
 };
 
 app.get("/", (req, res, next) => {
-	setLanguage(req);
+	setCookies(req);
 	Router.getRoot(req, res);
 });
 
@@ -119,7 +121,7 @@ app.all("/", (req, res) => {
 });
 
 app.get("/about", (req, res, next) => {
-	setLanguage(req);
+	setCookies(req);
 	res.render("./about", {
 		...appSettings,
 	});
@@ -133,7 +135,7 @@ app.all("/about", (req, res) => {
 });
 
 app.get("/search", (req, res, next) => {
-	setLanguage(req);
+	setCookies(req);
 	try {
 		const start = new Date();
 		Router.getSearch(req, res);
@@ -150,7 +152,7 @@ app.all("/search", (req, res) => {
 });
 
 app.get("/pokemon/*", (req, res, next) => {
-	setLanguage(req);
+	setCookies(req);
 	try {
 		const start = new Date();
 		Router.getPokemon(req, res);
@@ -168,7 +170,7 @@ app.all("/pokemon/*", (req, res) => {
 });
 
 app.get("/item/*", (req, res, next) => {
-	setLanguage(req);
+	setCookies(req);
 	try {
 		const start = new Date();
 		Router.getItem(req, res);
@@ -185,7 +187,7 @@ app.all("/item/*", (req, res) => {
 });
 
 app.get("/move/*", (req, res, next) => {
-	setLanguage(req);
+	setCookies(req);
 	try {
 		const start = new Date();
 		Router.getMove(req, res);
@@ -202,7 +204,7 @@ app.all("/move/*", (req, res) => {
 });
 
 app.get("/ability/*", (req, res, next) => {
-	setLanguage(req);
+	setCookies(req);
 	try {
 		const start = new Date();
 		Router.getAbility(req, res);
@@ -220,7 +222,7 @@ app.all("/ability/*", (req, res) => {
 });
 
 app.all("/*", (req, res) => {
-	setLanguage(req);
+	setCookies(req);
 	res.status(404).render("error", {
 		error: "Page does not exist",
 		info: "The page you are trying to access does not exist.",

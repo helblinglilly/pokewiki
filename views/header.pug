@@ -53,6 +53,7 @@ body
 						alt="A Pokémon Bagpack in its closed state. Indicating that this Hamburger menu is closed"
 					)
 			#navbarMenu.navbar-menu
+				a.navbar-item(href="/about") About
 				.navbar-end
 					a#themeToggle.navbar-item Toggle Theme
 
@@ -76,8 +77,8 @@ body
 							.modal-card-body
 								.box
 									p.title.is-5 Select game
-									.select(form="search", name="game")
-										select#gameSelector(form="search", name="game")
+									.select
+										select#gameSelector
 											option(value="all") Generic
 											option(value="scarlet-violet") Scarlet / Violet
 											option(value="legends-arceus") Legends Areceus
@@ -125,6 +126,38 @@ body
 												checked
 											)
 											label.pr-4(for="showAbilities") Abilities
+								.box
+									p.title.is-5 Language
+									.columns
+										.column(style="width: 100%")
+											.select.mr-3(style="width: 100%")
+												select#primaryLanguageSelector(style="width: 100%")
+													option(value="") Primary
+													option(value="en") English
+													option(value="de") German
+													option(value="ja-Hrkt") Japanese
+													option(value="roomaji") Roomaji
+													option(value="zh-Hant") Chinese
+													option(value="ko") Korean
+													option(value="fr") French
+													option(value="es") Spanish
+													option(value="it") Italian
+													option(value="cs") Czech
+										.column(style="width: 100%")
+											.select(style="width: 100%")
+												select#secondaryLanguageSelector(style="width: 100%")
+													option(value="") Secondary
+													option(value="en") English
+													option(value="de") German
+													option(value="ja-Hrkt") Japanese
+													option(value="roomaji") Roomaji
+													option(value="zh-Hant") Chinese
+													option(value="ko") Korean
+													option(value="fr") French
+													option(value="es") Spanish
+													option(value="it") Italian
+													option(value="cs") Czech
+
 							footer.modal-card-foot
 								button.button.is-info(onclick="submitSearch();", type="button") Search
 								button.button(onclick="closeFilter();", type="button") Close

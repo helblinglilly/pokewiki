@@ -5,6 +5,22 @@ import { ErrorMessage } from "./types";
 import app, { appSettings, handleServerError } from "../api/app";
 
 class Router {
+	static getRoot = async (req: ex.Request, res: ex.Response) => {
+		const controller = new Controller();
+
+		const pokemon = controller.getRandomPokemon();
+		const [move, ability] = await Promise.all([
+			controller.getRandomMove(),
+			controller.getRandomAbility(),
+		]);
+		res.render("./index", {
+			...appSettings,
+			pokemon: { ...pokemon },
+			move: { ...move },
+			ability: { ...ability },
+		});
+	};
+
 	static getSearch = async (req: ex.Request, res: ex.Response) => {
 		if (!req.query.term || typeof req.query.term !== "string") {
 			res.redirect("/");
@@ -23,10 +39,7 @@ class Router {
 			showAbilities = true;
 		}
 
-		const controller = new Controller(
-			appSettings.primaryLanguageCode,
-			appSettings.secondaryLanguageCode
-		);
+		const controller = new Controller();
 		const searchResults = await controller.getSearchResults(
 			req.query.term,
 			showPokemon,
@@ -60,9 +73,6 @@ class Router {
 			return;
 		}
 
-		let game = "";
-		if (typeof req.query.game === "string") game = req.query.game;
-
 		let variety = 0;
 		if (typeof req.query.variety === "string") {
 			try {
@@ -77,11 +87,8 @@ class Router {
 			}
 		}
 		try {
-			const controller = new Controller(
-				appSettings.primaryLanguageCode,
-				appSettings.secondaryLanguageCode
-			);
-			const details = await controller.getPokemonDetail(id, variety, game);
+			const controller = new Controller();
+			const details = await controller.getPokemonDetail(id, variety, appSettings.game);
 			const options = { ...details };
 			res.render("./pokemon", { ...options, ...appSettings });
 		} catch (err: any) {
@@ -106,15 +113,9 @@ class Router {
 			return;
 		}
 
-		let game = "";
-		if (typeof req.query.game === "string") game = req.query.game;
-
 		try {
-			const controller = new Controller(
-				appSettings.primaryLanguageCode,
-				appSettings.secondaryLanguageCode
-			);
-			const details = await controller.getMove(id, game);
+			const controller = new Controller();
+			const details = await controller.getMove(id, appSettings.game);
 			const options = { ...details };
 			res.render("./move", { ...options, ...appSettings });
 		} catch (err: any) {
@@ -123,6 +124,7 @@ class Router {
 	};
 
 	static getItem = async (req: ex.Request, res: ex.Response) => {
+		const start = new Date();
 		let id = -1;
 		try {
 			id = parseInt(req.url.split("/")[2].split("?")[0]);
@@ -139,16 +141,13 @@ class Router {
 			return;
 		}
 
-		let game = "";
-		if (typeof req.query.game === "string") game = req.query.game;
-
 		try {
-			const controller = new Controller(
-				appSettings.primaryLanguageCode,
-				appSettings.secondaryLanguageCode
-			);
-			const details = await controller.getItem(id, game);
+			const controller = new Controller();
+			const details = await controller.getItem(id, appSettings.game);
 			const options = { ...details };
+			log.debug(
+				`Finished getting item ${id} in ${new Date().valueOf() - start.valueOf()}ms`
+			);
 			res.render("./item", { ...options, ...appSettings });
 		} catch (err: any) {
 			handleServerError(req, { error: "Internal Server Error", info: err }, res);
@@ -178,15 +177,9 @@ class Router {
 			return;
 		}
 
-		let game = "";
-		if (typeof req.query.game === "string") game = req.query.game;
-
 		try {
-			const controller = new Controller(
-				appSettings.primaryLanguageCode,
-				appSettings.secondaryLanguageCode
-			);
-			const details = await controller.getAbility(id, game);
+			const controller = new Controller();
+			const details = await controller.getAbility(id, appSettings.game);
 			const options = { ...details };
 			res.render("./ability", { ...options, ...appSettings });
 		} catch (err: any) {

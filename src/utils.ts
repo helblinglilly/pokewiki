@@ -11,6 +11,36 @@ export default class Utils {
 		return entry ? entry.name : fallback ? fallback : "";
 	};
 
+	static getNamesFromGeneric = (
+		iterable: { language: { name: string }; name: string }[]
+	) => {
+		let primaryName = this.findNameFromLanguageCode(
+			iterable,
+			appSettings.primaryLanguageCode
+		);
+		const secondaryName = this.findNameFromLanguageCode(
+			iterable,
+			appSettings.secondaryLanguageCode
+		);
+
+		if (
+			!primaryName &&
+			!secondaryName &&
+			![appSettings.primaryLanguageCode, appSettings.secondaryLanguageCode].includes("en")
+		) {
+			primaryName = this.findNameFromLanguageCode(iterable, "en");
+			if (!primaryName) primaryName = "No data";
+		}
+
+		return [primaryName, secondaryName];
+	};
+
+	static isEnglishSelected = (): boolean => {
+		return [appSettings.primaryLanguageCode, appSettings.secondaryLanguageCode].includes(
+			"en"
+		);
+	};
+
 	static getPokemonSprite = (
 		sprites: Sprites | SpriteForm,
 		spriteType: "full" | "form",
@@ -114,5 +144,42 @@ export default class Utils {
 			secondary: secondary ? secondary : appSettings.placeholderImage,
 			shiny: shiny ? shiny : appSettings.placeholderImage,
 		};
+	};
+
+	static daysPassedInYear = (): number => {
+		const date = new Date();
+		const days =
+			new Date(
+				date.getTime() - new Date(`${date.getFullYear()}-01-01`).getTime()
+			).valueOf() /
+			(1000 * 3600 * 24);
+		return Math.floor(days);
+	};
+
+	static randomDailyNumber = (maxNumber: number): number[] => {
+		const arr: number[] = [];
+		for (let i = 1; i <= maxNumber; i++) arr.push(i);
+
+		const randomNumbers: number[] = [];
+		for (let i = 0; i < maxNumber; i++) {
+			if (i % 2 === 0) randomNumbers.push(i);
+			else randomNumbers.unshift(i);
+		}
+
+		const shuffle = (arr: number[]): number[] => {
+			let currentIndex = arr.length,
+				randomIndex;
+
+			while (currentIndex != 0) {
+				randomIndex = Math.floor(randomNumbers[currentIndex]);
+				currentIndex--;
+
+				[arr[currentIndex], arr[randomIndex]] = [arr[randomIndex], arr[currentIndex]];
+			}
+
+			return arr;
+		};
+
+		return shuffle(arr);
 	};
 }

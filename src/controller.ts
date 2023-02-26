@@ -13,21 +13,16 @@ import {
 	Games,
 	VersionGroup,
 	GenericSprites,
-	APIResponseItem,
 	PokemonName,
 	APIResponseMachine,
 } from "./types";
 import { appSettings } from "../api/app";
 
 class Controller {
-	primaryLanguageCode: string;
-	secondaryLanguageCode: string;
 	data: Data;
 
-	constructor(primLang: string, secLang: string) {
-		this.primaryLanguageCode = primLang;
-		this.secondaryLanguageCode = secLang;
-		this.data = new Data(primLang, secLang);
+	constructor() {
+		this.data = new Data();
 	}
 
 	getPokemonDetail = async (id: number, varietyId: number, game?: string) => {
@@ -41,14 +36,7 @@ class Controller {
 		const pokedexEntries: { game: string; entry: string }[] = [];
 
 		// Names
-		let primName = Utils.findNameFromLanguageCode(
-			speciesData.names,
-			this.primaryLanguageCode
-		);
-		let secName = Utils.findNameFromLanguageCode(
-			speciesData.names,
-			this.secondaryLanguageCode
-		);
+		let [primName, secName] = Utils.getNamesFromGeneric(speciesData.names);
 
 		let showcaseSprites = Utils.getPokemonSprite(
 			pokemonData.sprites,
@@ -60,15 +48,26 @@ class Controller {
 		// Abilities
 		const abilities = abilitiesData.map(entry => {
 			const pkmnAbility = pokemonData.abilities.find(a => a.ability.name === entry.name);
-			const name = Utils.findNameFromLanguageCode(entry.names, this.primaryLanguageCode);
+			const [primaryName, secondaryName] = Utils.getNamesFromGeneric(entry.names);
 			const isHidden = pkmnAbility && pkmnAbility.is_hidden ? true : false;
-			const effectEntry = entry.effect_entries.find(
-				a => a.language.name === this.primaryLanguageCode
+
+			let primaryEffectEntry = entry.effect_entries.find(
+				a => a.language.name === appSettings.primaryLanguageCode
 			);
+			const secondaryEffectEntry = entry.effect_entries.find(
+				a => a.language.name === appSettings.secondaryLanguageCode
+			);
+			if (!primaryEffectEntry && !secondaryEffectEntry) {
+				primaryEffectEntry = entry.effect_entries.find(a => a.language.name === "en");
+			}
 
 			return {
-				name: name ? name : entry.name,
-				effect: effectEntry ? effectEntry.short_effect : "Unknown",
+				name: primaryName ? primaryName : secondaryName ? secondaryName : entry.name,
+				effect: primaryEffectEntry
+					? primaryEffectEntry.short_effect
+					: secondaryEffectEntry
+					? secondaryEffectEntry.short_effect
+					: "No data",
 				isHidden: isHidden,
 				link: `/ability/${entry.id}`,
 			};
@@ -94,11 +93,7 @@ class Controller {
 		}[] = [];
 
 		formData.forEach(form => {
-			let name = Utils.findNameFromLanguageCode(
-				form.form_names,
-				this.primaryLanguageCode
-			);
-			name = name ? name : primName;
+			let name = secName ? secName : primName;
 
 			if (speciesData.has_gender_differences) {
 				forms.push({
@@ -198,7 +193,12 @@ class Controller {
 			// Pokédex entries
 			speciesData.flavor_text_entries.forEach(entry => {
 				if (selectedGames.consistsOf.includes(entry.version.name)) {
-					if (entry.language.name === this.primaryLanguageCode) {
+					if (entry.language.name === appSettings.primaryLanguageCode) {
+						pokedexEntries.push({
+							game: entry.version.name.replace(new RegExp("-", "g"), " "),
+							entry: entry.flavor_text,
+						});
+					} else if (entry.language.name === appSettings.secondaryLanguageCode) {
 						pokedexEntries.push({
 							game: entry.version.name.replace(new RegExp("-", "g"), " "),
 							entry: entry.flavor_text,
@@ -206,6 +206,19 @@ class Controller {
 					}
 				}
 			});
+
+			if (pokedexEntries.length === 0 && !Utils.isEnglishSelected()) {
+				speciesData.flavor_text_entries.forEach(entry => {
+					if (selectedGames.consistsOf.includes(entry.version.name)) {
+						if (entry.language.name === "en") {
+							pokedexEntries.push({
+								game: entry.version.name.replace(new RegExp("-", "g"), " "),
+								entry: entry.flavor_text,
+							});
+						}
+					}
+				});
+			}
 
 			if (selectedGames !== undefined) {
 				// Moves
@@ -314,7 +327,133 @@ class Controller {
 			});
 		}
 
-		let growthRate = "Unknown";
+		if (id === 922 || id === 923) {
+			// Pawmo to Pamamo
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/922`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/922.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level up after 1000 steps in Let's Go mode",
+					},
+				],
+				targetURL: `/pokemon/923`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/923.png`,
+			});
+		}
+
+		if (id === 924 || id === 925) {
+			// Tandemaus
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/924`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/924.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level 25 - Free spot in party",
+					},
+				],
+				targetURL: `/pokemon/925`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/925.png`,
+			});
+		}
+
+		if (id === 946 || id === 947) {
+			// Bramblin to Brambleghast
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/946`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/946.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level up after 1000 steps in Let's Go mode",
+					},
+				],
+				targetURL: `/pokemon/947`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/947.png`,
+			});
+		}
+
+		if (id === 963 || id === 964) {
+			// Finizen to Palafin
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/963`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/963.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level 38 + Level up in multiplayer session",
+					},
+				],
+				targetURL: `/pokemon/964`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/964.png`,
+			});
+		}
+
+		if (id === 57 || id === 979) {
+			// Primeape to Annihilape
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/57`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/57.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level 35, Use Rage Fist 20x in a row - No Pokécentre",
+					},
+				],
+				targetURL: `/pokemon/979`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/979.png`,
+			});
+		}
+
+		if (id === 625 || id === 983) {
+			// Bisharp to Kingambit
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/625`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/625.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "First in Party, Find 3x other Bisharp that travel with Pawinards",
+					},
+				],
+				targetURL: `/pokemon/983`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/983.png`,
+			});
+		}
+
+		if (id === 999 || id === 1000) {
+			// Gimmighoul into Gholdengo
+			evolutions.pop();
+			evolutions.push({
+				sourceURL: `/pokemon/999`,
+				sourceSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/999.png`,
+				trigger: "other",
+				requirements: [
+					{
+						type: "other",
+						info: "Level up with 999 Gimmighoul Coins in possession",
+					},
+				],
+				targetURL: `/pokemon/1000`,
+				targetSprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1000.png`,
+			});
+		}
+
+		let growthRate = "No Data";
 		if (speciesData.growth_rate) {
 			growthRate =
 				speciesData.growth_rate.name[0].toUpperCase() +
@@ -347,14 +486,38 @@ class Controller {
 	};
 
 	getItem = async (id: number, game?: string) => {
-		let itemData: APIResponseItem | undefined = undefined;
-		let previousItemData: APIResponseItem | undefined = undefined;
-		let nextItemData: APIResponseItem | undefined = undefined;
+		const [itemData, previousItemData, nextItemData] = await Promise.all([
+			this.data.getItem(id),
+			this.data.getItem(id - 1),
+			this.data.getItem(id + 1),
+		]);
+		if (!itemData) return;
 
-		let primaryLangName = "";
-		let secondaryLangName = "";
+		let [primaryLangName, secondaryLangName] = Utils.getNamesFromGeneric(itemData.names);
+
 		let previousItemName = "";
+		let previousItemSprite = appSettings.placeholderImage;
+		let nextItemSprite = appSettings.placeholderImage;
+
+		if (previousItemData) {
+			const [primaryPrevItemName, secondaryPrevItemName] = Utils.getNamesFromGeneric(
+				previousItemData.names
+			);
+			previousItemName = primaryPrevItemName
+				? primaryPrevItemName
+				: secondaryPrevItemName;
+			previousItemSprite = previousItemData.sprites.default;
+		}
+
 		let nextItemName = "";
+		if (nextItemData) {
+			const [primaryNextItemName, secondaryNextItemName] = Utils.getNamesFromGeneric(
+				nextItemData.names
+			);
+			nextItemName = primaryNextItemName ? primaryNextItemName : secondaryNextItemName;
+			nextItemSprite = nextItemData.sprites.default;
+		}
+
 		let primaryEntry = {
 			game: "",
 			entry: "",
@@ -385,136 +548,106 @@ class Controller {
 		let cost = 0;
 
 		let itemSprite = appSettings.placeholderImage;
-		let previousItemSprite = appSettings.placeholderImage;
-		let nextItemSprite = appSettings.placeholderImage;
 
-		try {
-			itemData = await this.data.getItem(id);
-			primaryLangName = Utils.findNameFromLanguageCode(
-				itemData.names,
-				this.primaryLanguageCode
-			);
-			secondaryLangName = Utils.findNameFromLanguageCode(
-				itemData.names,
-				this.secondaryLanguageCode
-			);
+		itemData.effect_entries.forEach((entry, i) => {
+			if (entry.language.name === appSettings.primaryLanguageCode) {
+				primaryEntry.entry = entry.short_effect;
+			} else if (itemData !== undefined && i === itemData.effect_entries.length - 1) {
+				primaryEntry.entry = entry.short_effect;
+			}
+		});
 
-			itemData.effect_entries.forEach((entry, i) => {
-				if (entry.language.name === this.primaryLanguageCode) {
-					primaryEntry.entry = entry.short_effect;
-				} else if (itemData !== undefined && i === itemData.effect_entries.length - 1) {
-					primaryEntry.entry = entry.short_effect;
-				}
-			});
+		if (game) {
+			const foundGame = Games.findEntry(game);
+			if (foundGame.version_group_name !== "all") {
+				let existsInGame = false;
+				let primaryLangText = "";
+				let secondaryLangText = "";
 
-			if (game) {
-				const foundGame = Games.findEntry(game);
-				if (foundGame.version_group_name !== "all") {
-					let existsInGame = false;
-					let primaryLangText = "";
-					let secondaryLangText = "";
+				itemData.flavor_text_entries.forEach(entry => {
+					if (foundGame.version_group_name === entry.version_group.name) {
+						existsInGame = true;
+
+						if (entry.language.name === appSettings.primaryLanguageCode) {
+							primaryLangText = entry.text;
+						} else if (entry.language.name === appSettings.secondaryLanguageCode) {
+							secondaryLangText = entry.text;
+						}
+
+						const game = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
+						secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
+					}
+				});
+
+				if (!primaryLangText && !secondaryLangText && !Utils.isEnglishSelected()) {
 					itemData.flavor_text_entries.forEach(entry => {
 						if (foundGame.version_group_name === entry.version_group.name) {
-							existsInGame = true;
-
-							if (entry.language.name === this.primaryLanguageCode) {
+							if (entry.language.name === "en") {
 								primaryLangText = entry.text;
-							} else if (entry.language.name === this.secondaryLanguageCode) {
-								secondaryLangText = entry.text;
 							}
-
 							const game = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
 							secondaryEntry.game = game.join(" / ").replace(/-/g, " ");
 						}
 					});
+				}
 
-					if ((existsInGame && primaryLangText) || secondaryLangText) {
-						secondaryEntry.entry = primaryLangText ? primaryLangText : secondaryLangText;
-					} else if (existsInGame) {
-						secondaryEntry.entry = "No description found for the selected languages";
-					} else {
-						secondaryEntry.entry = "This item does not exist in this game";
-					}
+				if ((existsInGame && primaryLangText) || secondaryLangText) {
+					secondaryEntry.entry = primaryLangText ? primaryLangText : secondaryLangText;
+				} else if (existsInGame) {
+					secondaryEntry.entry = "No description found for the selected languages";
+				} else {
+					secondaryEntry.entry = "This item does not exist in this game";
+				}
 
-					if (itemData.machines.length > 0) {
-						const correctEntry = itemData.machines.find(
-							a => a.version_group.name === foundGame.version_group_name
+				if (itemData.machines.length > 0) {
+					const correctEntry = itemData.machines.find(
+						a => a.version_group.name === foundGame.version_group_name
+					);
+					if (correctEntry) {
+						const id = correctEntry.machine.url.split("/")[6];
+						const machineData = await this.data.getMachine(parseInt(id));
+						const moveId = machineData.move.url.split("/")[6];
+						const moveData = await this.data.getMove(parseInt(moveId));
+
+						secondaryEntry.entry = Utils.findNameFromLanguageCode(
+							moveData.names,
+							appSettings.primaryLanguageCode
 						);
-						if (correctEntry) {
-							const id = correctEntry.machine.url.split("/")[6];
-							const machineData = await this.data.getMachine(parseInt(id));
-							const moveId = machineData.move.url.split("/")[6];
-							const moveData = await this.data.getMove(parseInt(moveId));
+						secondaryEntry.clickable.state = true;
+						secondaryEntry.clickable.url = `/move/${moveId}`;
 
-							secondaryEntry.entry = Utils.findNameFromLanguageCode(
-								moveData.names,
-								this.primaryLanguageCode
-							);
-							secondaryEntry.clickable.state = true;
-							secondaryEntry.clickable.url = `/move/${moveId}`;
-
-							primaryLangName += ` ${secondaryEntry.entry}`;
-							secondaryLangName = Utils.findNameFromLanguageCode(
-								moveData.names,
-								this.secondaryLanguageCode
-							);
-						} else {
-							secondaryEntry.entry = "This TM does not exist in the selected game.";
-						}
+						primaryLangName += ` ${secondaryEntry.entry}`;
+						secondaryLangName = Utils.findNameFromLanguageCode(
+							moveData.names,
+							appSettings.secondaryLanguageCode
+						);
+					} else {
+						secondaryEntry.entry = "This TM does not exist in the selected game.";
 					}
 				}
 			}
-
-			if (itemData.machines.length > 0) {
-				primaryEntry.entry = "This item can teach a Pokémon a move.";
-				if (!secondaryEntry.clickable.state) {
-					primaryEntry.entry +=
-						" Select a game to see which move this TM corresponds to.";
-				}
-			}
-
-			itemData.attributes.forEach(attribute => {
-				if (attribute.name === "countable") countable = true;
-				if (attribute.name === "consumable") consumable = true;
-				if (attribute.name === "usable-overworld") overworld = true;
-				if (attribute.name === "usable-in-battle") battle = true;
-				if (attribute.name === "holdable") holdable = true;
-				if (attribute.name === "holdable-passive") holdablePassive = true;
-				if (attribute.name === "holdable-active") holdableActive = true;
-				if (attribute.name === "underground") underground = true;
-			});
-
-			cost = itemData.cost;
-			itemSprite = itemData.sprites.default;
-		} catch (err) {
-			log.error(`Failed to get item ${id}`, err);
 		}
 
-		try {
-			if (id - 1 > 0) {
-				previousItemData = await this.data.getItem(id - 1);
-				previousItemName = Utils.findNameFromLanguageCode(
-					previousItemData.names,
-					this.primaryLanguageCode
-				);
-				previousItemSprite = previousItemData.sprites.default;
+		if (itemData.machines.length > 0) {
+			primaryEntry.entry = "This item can teach a Pokémon a move.";
+			if (!secondaryEntry.clickable.state) {
+				primaryEntry.entry += " Select a game to see which move this TM corresponds to.";
 			}
-		} catch (err) {
-			log.error(`Failed to get item ${id - 1}`, err);
 		}
 
-		try {
-			if (id + 1 <= appSettings.highestItemId) {
-				nextItemData = await this.data.getItem(id + 1);
-				nextItemName = Utils.findNameFromLanguageCode(
-					nextItemData.names,
-					this.primaryLanguageCode
-				);
-				nextItemSprite = nextItemData.sprites.default;
-			}
-		} catch (err) {
-			log.error(`Failed to get item ${id - 1}`, err);
-		}
+		itemData.attributes.forEach(attribute => {
+			if (attribute.name === "countable") countable = true;
+			if (attribute.name === "consumable") consumable = true;
+			if (attribute.name === "usable-overworld") overworld = true;
+			if (attribute.name === "usable-in-battle") battle = true;
+			if (attribute.name === "holdable") holdable = true;
+			if (attribute.name === "holdable-passive") holdablePassive = true;
+			if (attribute.name === "holdable-active") holdableActive = true;
+			if (attribute.name === "underground") underground = true;
+		});
+
+		cost = itemData.cost;
+		itemSprite = itemData.sprites.default;
 
 		return {
 			id: id,
@@ -549,21 +682,15 @@ class Controller {
 		});
 		const machineData = await Promise.all(machineDataPromises);
 
-		const primaryLang = Utils.findNameFromLanguageCode(
-			moveData.names,
-			this.primaryLanguageCode
-		);
-		const secondaryLang = Utils.findNameFromLanguageCode(
-			moveData.names,
-			this.secondaryLanguageCode
-		);
+		const [primaryLang, secondaryLang] = Utils.getNamesFromGeneric(moveData.names);
 
 		let primaryLangEffect = moveData.effect_entries.filter(
-			a => a.language.name === this.primaryLanguageCode
+			a => a.language.name === appSettings.primaryLanguageCode
 		)[0]?.short_effect;
 		let secondaryLangEffect = moveData.effect_entries.filter(
-			a => a.language.name === this.secondaryLanguageCode
+			a => a.language.name === appSettings.secondaryLanguageCode
 		)[0]?.short_effect;
+
 		if (primaryLangEffect) {
 			if (moveData.effect_chance) {
 				primaryLangEffect = primaryLangEffect.replace(
@@ -581,12 +708,54 @@ class Controller {
 			}
 		}
 
-		let primaryFlavorText = moveData.flavor_text_entries.filter(
-			a => a.language.name === this.primaryLanguageCode
-		)[0];
-		let secondaryFlavorText = moveData.flavor_text_entries.filter(
-			a => a.language.name === this.secondaryLanguageCode
-		)[0];
+		if (!primaryLangEffect && !secondaryLangEffect && !Utils.isEnglishSelected()) {
+			primaryLangEffect = moveData.effect_entries.filter(a => a.language.name === "en")[0]
+				?.short_effect;
+
+			if (moveData.effect_chance) {
+				primaryLangEffect = primaryLangEffect.replace(
+					"$effect_chance",
+					moveData.effect_chance.toString()
+				);
+			}
+		}
+
+		let primaryFlavorText = moveData.flavor_text_entries.filter(a => {
+			if (game) {
+				const gameEntry = Games.findEntry(game);
+				if (gameEntry.version_group_name === a.version_group.name) {
+					return a.language.name === appSettings.primaryLanguageCode;
+				}
+				return false;
+			} else {
+				return a.language.name === appSettings.primaryLanguageCode;
+			}
+		})[0];
+		let secondaryFlavorText = moveData.flavor_text_entries.filter(a => {
+			if (game) {
+				const gameEntry = Games.findEntry(game);
+				if (gameEntry.version_group_name === a.version_group.name) {
+					return a.language.name === appSettings.secondaryLanguageCode;
+				}
+				return false;
+			} else {
+				return a.language.name === appSettings.secondaryLanguageCode;
+			}
+		})[0];
+
+		if (!primaryFlavorText && !secondaryFlavorText && !Utils.isEnglishSelected()) {
+			primaryFlavorText = moveData.flavor_text_entries.filter(a => {
+				if (game) {
+					const gameEntry = Games.findEntry(game);
+					if (gameEntry.version_group_name === a.version_group.name) {
+						return a.language.name === "en";
+					}
+					return false;
+				} else {
+					return a.language.name === "en";
+				}
+			})[0];
+		}
 
 		const typeSprite = Types.filter(a => a.english_id === moveData.type.name)[0].sprite;
 		const type = typeSprite.split("/")[4].split(".")[0];
@@ -630,10 +799,16 @@ class Controller {
 			damageClassSprite: damageClassSprite,
 			type: type[0].toUpperCase() + type.slice(1),
 			typeSprite: typeSprite,
-			effectEntry: primaryLangEffect ? primaryLangEffect : secondaryLangEffect,
+			effectEntry: primaryLangEffect
+				? primaryLangEffect
+				: secondaryLangEffect
+				? secondaryLangEffect
+				: "No Data",
 			flavorEntry: primaryFlavorText
 				? primaryFlavorText.flavor_text
-				: secondaryFlavorText.flavor_text,
+				: secondaryFlavorText
+				? secondaryFlavorText.flavor_text
+				: "No data",
 			secondaryLangEffect: secondaryLangEffect,
 			accuracy: moveData.accuracy ? moveData.accuracy : "-",
 			power: moveData.power ? moveData.power : "-",
@@ -652,30 +827,26 @@ class Controller {
 		moves: boolean,
 		abilities: boolean
 	): Promise<Collection> => {
+		let isNumber = !isNaN(parseInt(searchTerm));
+
 		const pkmnResults = pokemon ? this.data.findPokemonFromName(searchTerm) : [];
-		const itemResults = items ? this.data.findItemFromName(searchTerm) : [];
-		const moveResults = moves ? this.data.findMoveFromName(searchTerm) : [];
-		const abilityResults = abilities ? this.data.findAbilityFromName(searchTerm) : [];
+		const itemResults = items && !isNumber ? this.data.findItemFromName(searchTerm) : [];
+		const moveResults = moves && !isNumber ? this.data.findMoveFromName(searchTerm) : [];
+		const abilityResults =
+			abilities && !isNumber ? this.data.findAbilityFromName(searchTerm) : [];
 
 		return {
-			Pokemon: pkmnResults.slice(0, appSettings.maxSearchResults),
-			Items: itemResults.slice(0, appSettings.maxSearchResults),
-			Moves: moveResults.slice(0, appSettings.maxSearchResults),
-			Abilities: abilityResults.slice(0, appSettings.maxSearchResults),
+			Pokemon: pkmnResults,
+			Items: itemResults,
+			Moves: moveResults,
+			Abilities: abilityResults,
 		};
 	};
 
 	getAbility = async (id: number, game?: string) => {
 		const ability = await this.data.getAbility(id);
 
-		const primaryLang = Utils.findNameFromLanguageCode(
-			ability.names,
-			this.primaryLanguageCode
-		);
-		const secondaryLang = Utils.findNameFromLanguageCode(
-			ability.names,
-			this.secondaryLanguageCode
-		);
+		const [primaryLang, secondaryLang] = Utils.getNamesFromGeneric(ability.names);
 
 		let pokemon: PokemonName[] = [];
 		ability.pokemon.forEach(a => {
@@ -687,23 +858,38 @@ class Controller {
 			}
 		});
 
-		const primaryFlavorText = ability.flavor_text_entries.filter(
-			a => a.language.name === this.primaryLanguageCode
+		let primaryFlavorText = ability.flavor_text_entries.filter(
+			a => a.language.name === appSettings.primaryLanguageCode
 		)[0];
 		const secondaryFlavorText = ability.flavor_text_entries.filter(
-			a => a.language.name === this.secondaryLanguageCode
+			a => a.language.name === appSettings.secondaryLanguageCode
 		)[0];
+
+		if (!primaryFlavorText && !secondaryFlavorText && !Utils.isEnglishSelected()) {
+			primaryFlavorText = ability.flavor_text_entries.filter(
+				a => a.language.name === "en"
+			)[0];
+		}
 
 		const foundGame = Games.findEntry(game ? game : "");
 		const gameParts = foundGame.consistsOf.map(a => a[0].toUpperCase() + a.slice(1));
 		const gameString = gameParts.join(" / ").replace(/-/g, " ");
 
 		let primaryLangEffectEntry = ability.effect_entries.filter(
-			a => a.language.name === this.primaryLanguageCode
+			a => a.language.name === appSettings.primaryLanguageCode
 		)[0];
 		let secondaryLangEffectEntry = ability.effect_entries.filter(
-			a => a.language.name === this.secondaryLanguageCode
+			a => a.language.name === appSettings.secondaryLanguageCode
 		)[0];
+		if (
+			!primaryLangEffectEntry &&
+			!secondaryLangEffectEntry &&
+			!Utils.isEnglishSelected()
+		) {
+			primaryLangEffectEntry = ability.effect_entries.filter(
+				a => a.language.name === "en"
+			)[0];
+		}
 
 		const generationChange: { text: string; altEntryEffect: string }[] = [];
 
@@ -715,25 +901,42 @@ class Controller {
 			let primary = "";
 			let secondary = "";
 			change.effect_entries.forEach(a => {
-				if (a.language.name === this.primaryLanguageCode) primary = a.effect;
-				else if (a.language.name === this.secondaryLanguageCode) secondary = a.effect;
+				if (a.language.name === appSettings.primaryLanguageCode) primary = a.effect;
+				else if (a.language.name === appSettings.secondaryLanguageCode)
+					secondary = a.effect;
 			});
+			if (!primary && !secondary && !Utils.isEnglishSelected()) {
+				change.effect_entries.forEach(a => {
+					if (a.language.name === "en") primary = a.effect;
+				});
+			}
 
 			if (selectedId < changeGenerationId) {
 				generationChange.push({
 					text: `Behaviour after generation ${changeGame.generation}`,
-					altEntryEffect: primaryLangEffectEntry.short_effect
+					altEntryEffect: primaryLangEffectEntry
 						? primaryLangEffectEntry.short_effect
-						: secondaryLangEffectEntry.short_effect,
+						: secondaryLangEffectEntry
+						? secondaryLangEffectEntry.short_effect
+						: "No data",
 				});
 
 				// Use the old entry
 				primaryLangEffectEntry = change.effect_entries.filter(a => {
-					a.language.name === this.primaryLanguageCode;
+					a.language.name === appSettings.primaryLanguageCode;
 				})[0];
 				secondaryLangEffectEntry = ability.effect_entries.filter(
-					a => a.language.name === this.secondaryLanguageCode
+					a => a.language.name === appSettings.secondaryLanguageCode
 				)[0];
+				if (
+					!primaryLangEffectEntry &&
+					!secondaryLangEffectEntry &&
+					!Utils.isEnglishSelected()
+				) {
+					primaryLangEffectEntry = ability.effect_entries.filter(
+						a => a.language.name === "en"
+					)[0];
+				}
 			} else {
 				generationChange.push({
 					text: `Effect before generation ${changeGame.generation}:`,
@@ -749,7 +952,7 @@ class Controller {
 		if (selectedId >= 0 && selectedId < abilitySelectedId && primaryLangEffectEntry) {
 			primaryLangEffectEntry = {
 				effect: primaryLangEffectEntry.effect,
-				language: { name: this.primaryLanguageCode },
+				language: { name: appSettings.primaryLanguageCode },
 				short_effect: "This ability did not exist in this game yet",
 			};
 		}
@@ -767,7 +970,9 @@ class Controller {
 			effectEntry: effectEntry,
 			flavorText: primaryFlavorText
 				? primaryFlavorText.flavor_text
-				: secondaryFlavorText.flavor_text,
+				: secondaryFlavorText
+				? secondaryFlavorText.flavor_text
+				: "No data",
 			introduced: ability.generation.name.split("-")[1],
 			generationChange: generationChange,
 			pokemon: pokemon,
@@ -998,6 +1203,75 @@ class Controller {
 		return results;
 	};
 
+	getRandomPokemon = () => {
+		const id = Utils.randomDailyNumber(appSettings.highestPokedexId)[
+			Utils.daysPassedInYear()
+		];
+		const data = this.data.findPokemonNameFromId(id);
+
+		return {
+			primaryLang: data?.primaryLang,
+			secondaryLang: data?.secondaryLang,
+			link: data?.link,
+			sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+			id: id,
+		};
+	};
+
+	getRandomMove = async () => {
+		const id = Utils.randomDailyNumber(appSettings.highestMoveId)[
+			Utils.daysPassedInYear()
+		];
+		const data = await this.data.getMove(id);
+
+		let primaryName = Utils.findNameFromLanguageCode(
+			data.names,
+			appSettings.primaryLanguageCode
+		);
+		let secondaryName = Utils.findNameFromLanguageCode(
+			data.names,
+			appSettings.secondaryLanguageCode
+		);
+
+		if (primaryName.length === 0 && secondaryName.length === 0) {
+			primaryName = Utils.findNameFromLanguageCode(data.names, "en");
+		}
+
+		log.debug(`Random move name ${primaryName} ${secondaryName}`);
+
+		return {
+			primaryLang: primaryName,
+			secondaryLang: secondaryName,
+			link: `/move/${id}`,
+		};
+	};
+
+	getRandomAbility = async () => {
+		const id = Utils.randomDailyNumber(appSettings.highestAbilityId)[
+			Utils.daysPassedInYear()
+		];
+		const data = await this.data.getAbility(id);
+
+		let primaryName = Utils.findNameFromLanguageCode(
+			data.names,
+			appSettings.primaryLanguageCode
+		);
+		let secondaryName = Utils.findNameFromLanguageCode(
+			data.names,
+			appSettings.secondaryLanguageCode
+		);
+
+		if (primaryName.length === 0 && secondaryName.length === 0) {
+			primaryName = Utils.findNameFromLanguageCode(data.names, "en");
+		}
+
+		return {
+			primaryLang: primaryName,
+			secondaryLang: secondaryName,
+			link: `/ability/${id}`,
+		};
+	};
+
 	processMoveset = (
 		moves: APIResponsePokemon["moves"],
 		versionGroup: VersionGroup
@@ -1054,10 +1328,18 @@ class Controller {
 				let secondaryName = "";
 				moveDetail.names.forEach(b => {
 					for (const [key, value] of Object.entries(b)) {
-						if (key === this.primaryLanguageCode) primaryName = value;
-						else if (key === this.secondaryLanguageCode) secondaryName = value;
+						if (key === appSettings.primaryLanguageCode) primaryName = value;
+						else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 					}
 				});
+
+				if (!primaryName && !secondaryName && !Utils.isEnglishSelected()) {
+					moveDetail.names.forEach(b => {
+						for (const [key, value] of Object.entries(b)) {
+							if (key === "en") primaryName = value;
+						}
+					});
+				}
 
 				const completeMove = {
 					...moveDetail,

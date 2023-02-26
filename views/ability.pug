@@ -16,14 +16,17 @@ block append head
 		name="twitter:description",
 		content=`Ability: ${primaryLanguage ? primaryLanguage : secondaryLanguage} on the Pokécompanion`
 	)
+	script(src="/static/js/extraPokemon.js")
 
 block append body
 	.columns
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title
-					if primaryLanguage !== secondaryLanguage
+					if primaryLanguage !== secondaryLanguage && secondaryLanguage
 						p #{ primaryLanguage } - #{ secondaryLanguage }
+					else if secondaryLanguage && !primaryLanguage
+						p #{ secondaryLanguage }
 					else
 						p #{ primaryLanguage }
 				.card-content(style="width: 100%")
@@ -48,14 +51,20 @@ block append body
 				.card-header-title
 					p Pokémon that can have this ability
 				.card-content.m-3
-					each pkmn in pokemon
-						a.keepQuery(href=`${pkmn.link}`)
-							.box.accented.mb-4.searchResult(style="display: flex; align-items: center")
-								img.is-48x48.mr-1(
-									src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmn.id}.png`,
-									alt=`Sprite for Pokémon: ${pkmn.primaryLang}`
-								)
-								if pkmn.primaryLang === pkmn.secondaryLang
-									p.card-text ##{ pkmn.id } #{ pkmn.primaryLang }
-								else
-									p.card-text ##{ pkmn.id } #{ pkmn.primaryLang } - #{ pkmn.secondaryLang }
+					each pkmn, i in pokemon
+						.extraPokemon(style=`${i > 10 ? "display: none" : ""}`)
+							a.keepQuery(href=`${pkmn.link}`)
+								.box.accented.mb-4.searchResult(style="display: flex; align-items: center")
+									img.is-48x48.mr-1(
+										src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmn.id}.png`,
+										alt=`Sprite for Pokémon: ${pkmn.primaryLang}`
+									)
+									if pkmn.primaryLang !== pkmn.secondaryLang && pkmn.secondaryLang
+										p.card-text ##{ pkmn.id } #{ pkmn.primaryLang } - #{ pkmn.secondaryLang }
+									else if pkmn.secondaryLang && !pkmn.primaryLang
+										p.card-text ##{ pkmn.id } #{ pkmn.secondaryLang }
+									else
+										p.card-text ##{ pkmn.id } #{ pkmn.primaryLang }
+					if pokemon.length > 10
+						.tags.are-medium
+							span#loadMorePokemon.tag.link See more...

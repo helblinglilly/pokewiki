@@ -2,6 +2,7 @@ import express from "express";
 import Router from "../src/router";
 import { ErrorMessage } from "../src/types";
 import fs from "fs";
+import cookieParser from "cookie-parser";
 import log from "../src/log";
 
 export let port = 443;
@@ -16,6 +17,9 @@ if (process.env.NODE_ENV !== "production") {
 const app = express();
 
 app.set("view engine", "pug");
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const selfFileExtension = __filename.split(".")[__filename.split(".").length - 1];
 
@@ -46,13 +50,14 @@ if (buildType === "Build") {
 }
 
 export const appSettings = {
-	primaryLanguageCode: "en",
-	secondaryLanguageCode: "de",
-	maxSearchResults: 10,
+	primaryLanguageCode: "",
+	secondaryLanguageCode: "",
+	game: "all",
+	maxSearchResults: 100,
 	buildDetails: [buildType, buildInfo].join(" - "),
 	buildDate: buildInfo,
 	highestPokedexId: 1008,
-	highestItemId: 1658,
+	highestItemId: 2050,
 	highestMoveId: 918,
 	highestAbilityId: 298,
 	extraAbilityRange: [10001, 10060],
@@ -60,11 +65,8 @@ export const appSettings = {
 		"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png",
 };
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.use((req, res, next) => {
-	log.info(`${req.ip} requesting ${req.url}`);
+	log.info(`${req.ip} requesting ${req.url} with cookies ${JSON.stringify(req.cookies)}`);
 	next();
 });
 
@@ -77,8 +79,19 @@ export const handleServerError = (req: any, details: ErrorMessage, res: any) => 
 	});
 };
 
+const setCookies = (req: express.Request) => {
+	appSettings.primaryLanguageCode = req.cookies.primaryLanguage
+		? req.cookies.primaryLanguage
+		: "en";
+	appSettings.secondaryLanguageCode = req.cookies.secondaryLanguage
+		? req.cookies.secondaryLanguage
+		: "de";
+	appSettings.game = req.cookies.game ? req.cookies.game : "all";
+};
+
 app.get("/", (req, res, next) => {
-	res.render("./index", { ...appSettings });
+	setCookies(req);
+	Router.getRoot(req, res);
 });
 
 app.options("/*", (req, res) => {
@@ -107,9 +120,26 @@ app.all("/", (req, res) => {
 	});
 });
 
+app.get("/about", (req, res, next) => {
+	setCookies(req);
+	res.render("./about", {
+		...appSettings,
+	});
+});
+
+app.all("/about", (req, res) => {
+	res.status(405).render("error", {
+		error: "Method not allowed",
+		info: `${req.method} is not supported on this endpoint`,
+	});
+});
+
 app.get("/search", (req, res, next) => {
+	setCookies(req);
 	try {
+		const start = new Date();
 		Router.getSearch(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Search`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -122,8 +152,11 @@ app.all("/search", (req, res) => {
 });
 
 app.get("/pokemon/*", (req, res, next) => {
+	setCookies(req);
 	try {
+		const start = new Date();
 		Router.getPokemon(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Pokemon`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -137,8 +170,11 @@ app.all("/pokemon/*", (req, res) => {
 });
 
 app.get("/item/*", (req, res, next) => {
+	setCookies(req);
 	try {
+		const start = new Date();
 		Router.getItem(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Item`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -151,8 +187,11 @@ app.all("/item/*", (req, res) => {
 });
 
 app.get("/move/*", (req, res, next) => {
+	setCookies(req);
 	try {
+		const start = new Date();
 		Router.getMove(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Move`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -165,8 +204,11 @@ app.all("/move/*", (req, res) => {
 });
 
 app.get("/ability/*", (req, res, next) => {
+	setCookies(req);
 	try {
+		const start = new Date();
 		Router.getAbility(req, res);
+		log.info(`Performance ${new Date().valueOf() - start.valueOf()}ms: Ability`);
 	} catch (err: any) {
 		handleServerError(req, { error: "Internal Server Error", info: err }, res);
 	}
@@ -180,6 +222,7 @@ app.all("/ability/*", (req, res) => {
 });
 
 app.all("/*", (req, res) => {
+	setCookies(req);
 	res.status(404).render("error", {
 		error: "Page does not exist",
 		info: "The page you are trying to access does not exist.",

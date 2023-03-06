@@ -54,6 +54,7 @@ block append body
 
 	//- Sprites and Evolutions
 	.columns
+		//- Sprites
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title.is-justify-content-space-between
@@ -100,6 +101,7 @@ block append body
 											alt=`Alternative ${primaryName} sprite`
 										)
 									p#secondarySupportText.is-italic
+		//- Evolutions
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
@@ -216,12 +218,13 @@ block append body
 										src=`${evolution.targetSprite}`,
 										alt="This evolution line's target Pokémon"
 									)
-	//- Defensive and Offensive
+	//- Type weaknesses and Abilities
 	.columns
+		//- Type weaknesses
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
-					p Defensive
+					p Type weaknesses
 				.card-content
 					.columns
 						.column.is-flex
@@ -246,27 +249,7 @@ block append body
 													p.has-text-weight-bold x#{ values.multiplier }
 												else
 													p x#{ values.multiplier }
-		.column.is-flex
-			.card.collapsible(style="width: 100%")
-				.card-header-title
-					p Offensive
-				.card-content
-					p Placeholder
-
-	//- Abilities and Base Stats
-	.columns
-		.column.is-flex
-			.card.collapsible(style="width: 100%")
-				.card-header-title
-					p Abilities
-				.card-content
-					each ability in abilities
-						.box.accented.link
-							a.keepQuery.invisible(href=`${ability.link}`)
-								p.has-text-weight-bold #{ ability.name }
-								if ability.isHidden
-									p.is-italic Hidden
-								p #{ ability.effect }
+		//- Base stats
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
@@ -347,8 +330,22 @@ block append body
 									td 70.85
 									td
 
-	//- Pokedex and Other info
+	//- Abilities and Pokedex
 	.columns
+		//- Abilities
+		.column.is-flex
+			.card.collapsible(style="width: 100%")
+				.card-header-title
+					p Abilities
+				.card-content
+					each ability in abilities
+						.box.accented.link
+							a.keepQuery.invisible(href=`${ability.link}`)
+								p.has-text-weight-bold #{ ability.name }
+								if ability.isHidden
+									p.is-italic Hidden
+								p #{ ability.effect }
+		//- Pokedex
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
@@ -366,6 +363,9 @@ block append body
 								p.pb-2 #{ entry.entry }
 					else
 						p Select a game where this Pokémon is featured to see its Pokédex entry.
+
+	//- Other info
+	.columns
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title

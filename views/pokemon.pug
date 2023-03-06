@@ -228,7 +228,7 @@ block append body
 				.card-content
 					.columns
 						.column.is-flex
-							.box.accented(style="width: 100%")
+							.box.accented.nohover(style="width: 100%")
 								p.has-text-weight-bold.pb-2 Resists
 									each values in defensiveTyping
 										if values.multiplier < 1
@@ -239,7 +239,7 @@ block append body
 												else
 													p x#{ values.multiplier }
 						.column.is-flex
-							.box.accented(style="width: 100%")
+							.box.accented.nohover(style="width: 100%")
 								p.has-text-weight-bold.pb-2 Weak against
 									each values in defensiveTyping
 										if values.multiplier > 1

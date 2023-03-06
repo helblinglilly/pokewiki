@@ -1237,8 +1237,6 @@ class Controller {
 			primaryName = Utils.findNameFromLanguageCode(data.names, "en");
 		}
 
-		log.debug(`Random move name ${primaryName} ${secondaryName}`);
-
 		return {
 			primaryLang: primaryName,
 			secondaryLang: secondaryName,

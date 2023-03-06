@@ -247,7 +247,7 @@ export class Data {
 		let secondaryName = "";
 		result.names.forEach(b => {
 			for (const [key, value] of Object.entries(b)) {
-				if (key === appSettings.secondaryLanguageCode) primaryName = value;
+				if (key === appSettings.primaryLanguageCode) primaryName = value;
 				else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 			}
 		});
@@ -285,7 +285,7 @@ export class Data {
 			let secondaryName = "";
 			a.names.forEach(b => {
 				for (const [key, value] of Object.entries(b)) {
-					if (key === appSettings.secondaryLanguageCode) primaryName = value;
+					if (key === appSettings.primaryLanguageCode) primaryName = value;
 					else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 				}
 			});
@@ -325,7 +325,7 @@ export class Data {
 
 			a.names.forEach(b => {
 				for (const [key, value] of Object.entries(b)) {
-					if (key === appSettings.secondaryLanguageCode) primaryName = value;
+					if (key === appSettings.primaryLanguageCode) primaryName = value;
 					else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 				}
 			});
@@ -364,7 +364,7 @@ export class Data {
 
 			a.names.forEach(b => {
 				for (const [key, value] of Object.entries(b)) {
-					if (key === appSettings.secondaryLanguageCode) primaryName = value;
+					if (key === appSettings.primaryLanguageCode) primaryName = value;
 					else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 				}
 			});
@@ -400,7 +400,7 @@ export class Data {
 
 			a.names.forEach(b => {
 				for (const [key, value] of Object.entries(b)) {
-					if (key === appSettings.secondaryLanguageCode) primaryName = value;
+					if (key === appSettings.primaryLanguageCode) primaryName = value;
 					else if (key === appSettings.secondaryLanguageCode) secondaryName = value;
 				}
 			});

@@ -232,12 +232,13 @@ block append body
 								p.has-text-weight-bold.pb-2 Resists
 									each values in defensiveTyping
 										if values.multiplier < 1
-											.pb-1(style="display: inline-flex")
-												img.pr-2(src=`${values.sprite}`)
-												if values.multiplier < 0.5
-													p.has-text-weight-bold x#{ values.multiplier }
-												else
-													p x#{ values.multiplier }
+											div
+												.pb-1(style="display: inline-flex")
+													img.pr-2(src=`${values.sprite}`)
+													if values.multiplier < 0.5
+														p.has-text-weight-bold x#{ values.multiplier }
+													else
+														p x#{ values.multiplier }
 						.column.is-flex
 							.box.accented.nohover(style="width: 100%")
 								p.has-text-weight-bold.pb-2 Weak against

@@ -216,6 +216,42 @@ block append body
 										src=`${evolution.targetSprite}`,
 										alt="This evolution line's target Pokémon"
 									)
+	//- Defensive and Offensive
+	.columns
+		.column.is-flex
+			.card.collapsible(style="width: 100%")
+				.card-header-title
+					p Defensive
+				.card-content
+					.columns
+						.column.is-flex
+							.box.accented(style="width: 100%")
+								p.has-text-weight-bold.pb-2 Resists
+									each values in defensiveTyping
+										if values.multiplier < 1
+											.pb-1(style="display: inline-flex")
+												img.pr-2(src=`${values.sprite}`)
+												if values.multiplier < 0.5
+													p.has-text-weight-bold x#{ values.multiplier }
+												else
+													p x#{ values.multiplier }
+						.column.is-flex
+							.box.accented(style="width: 100%")
+								p.has-text-weight-bold.pb-2 Weak against
+									each values in defensiveTyping
+										if values.multiplier > 1
+											.pb-1(style="display: inline-flex")
+												img.pr-2(src=`${values.sprite}`)
+												if values.multiplier > 2
+													p.has-text-weight-bold x#{ values.multiplier }
+												else
+													p x#{ values.multiplier }
+		.column.is-flex
+			.card.collapsible(style="width: 100%")
+				.card-header-title
+					p Offensive
+				.card-content
+					p Placeholder
 
 	//- Abilities and Base Stats
 	.columns

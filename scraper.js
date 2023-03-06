@@ -229,6 +229,68 @@ const addTypeSprites = () => {
 	fs.writeFileSync("moves.json", JSON.stringify(moves), "utf8");
 };
 
+const types = async () => {
+	const startFrom = 1;
+	const upTo = 18;
+
+	const results = [];
+
+	for (let i = startFrom; i <= upTo; i++) {
+		let response;
+		try {
+			response = await axios.get(`https://pokeapi.co/api/v2/type/${i}`, {
+				headers: { "Accept-Encoding": "gzip,deflate,compress" },
+			});
+			console.log(i);
+		} catch (err) {
+			console.log(i, "failed", err.response.status);
+			continue;
+		}
+
+		const mapDamageRelations = damageRelations => {
+			const doubleDamageTaken = damageRelations.double_damage_from.map(
+				entry => entry.name
+			);
+			const doubleDamageTo = damageRelations.double_damage_to.map(entry => entry.name);
+			const halfDamageFrom = damageRelations.half_damage_from.map(entry => entry.name);
+			const halfDamageTo = damageRelations.half_damage_to.map(entry => entry.name);
+			const immunities = damageRelations.no_damage_from.map(entry => entry.name);
+			const noEffectTo = damageRelations.no_damage_to.map(entry => entry.name);
+
+			return {
+				doubleDamageTaken: doubleDamageTaken,
+				halfDamageTo: halfDamageTo,
+
+				doubleDamageTo: doubleDamageTo,
+				halfDamageFrom: halfDamageFrom,
+
+				immunities: immunities,
+				noEffectTo: noEffectTo,
+			};
+		};
+
+		const pastRelations = [];
+		response.data.past_damage_relations.forEach(entry => {
+			pastRelations.push({
+				generation: entry.generation.name.split("-")[1],
+				...mapDamageRelations(entry.damage_relations),
+			});
+		});
+
+		results.push({
+			id: i,
+			name: response.data.name,
+			sprite: `/static/assets/types/${response.data.name}.webp`,
+			generation: response.data.generation.name.split("-")[1],
+
+			currentRelations: { ...mapDamageRelations(response.data.damage_relations) },
+			pastRelations: pastRelations,
+		});
+		await new Promise(r => setTimeout(r, 500));
+	}
+	fs.writeFileSync("types.json", JSON.stringify(results), "utf8");
+};
+
 const generateSocialPreviews = () => {
 	const template = fs.readFileSync("./misc/assets/social_preview.svg", "utf-8");
 	const outputLocation = "./public/previews/";
@@ -247,9 +309,11 @@ const generateSocialPreviews = () => {
 	});
 };
 
-// generateSocialPreviews();
-// fixMoves();
 // pokemon();
 // abilities();
+// moves();
+// items();
+types();
+// fixMoves();
 // addTypeSprites();
-moves();
+// generateSocialPreviews();

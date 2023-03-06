@@ -1,5 +1,6 @@
 import { appSettings } from "../api/app";
-import { Sprites, Games, SpriteForm, GenericSprites } from "./types";
+import { Sprites, Games, SpriteForm, GenericSprites, PokemonType } from "./types";
+import Types from "./data/types.json";
 
 export default class Utils {
 	static findNameFromLanguageCode = (
@@ -144,6 +145,101 @@ export default class Utils {
 			secondary: secondary ? secondary : appSettings.placeholderImage,
 			shiny: shiny ? shiny : appSettings.placeholderImage,
 		};
+	};
+
+	static getTypeRelations = (
+		pkmnTypes: { name: string }[],
+		selectedGeneration?: string
+	) => {
+		let types = JSON.parse(JSON.stringify(Types)) as PokemonType[];
+
+		const multipliers: {
+			[x: string]: {
+				multiplier: number;
+				sprite: string;
+			};
+		} = {};
+
+		types.forEach(type => {
+			multipliers[type.name] = {
+				multiplier: 1,
+				sprite: `/static/assets/types/${type.name}.webp`,
+			};
+		});
+
+		if (selectedGeneration) {
+			const nonExistentTypes: string[] = [];
+			const selectedGenerationIndex = Games.generationOrder.indexOf(selectedGeneration);
+
+			types
+				.filter(
+					currentType =>
+						Games.generationOrder.indexOf(currentType.generation) >
+						selectedGenerationIndex
+				)
+				.forEach(a => nonExistentTypes.push(a.name));
+
+			types.forEach(typeRelation => {
+				let currentEntry = typeRelation.currentRelations;
+				let currentGenerationEntryIndex = Games.generationOrder.indexOf(
+					typeRelation.generation
+				);
+
+				typeRelation.pastRelations.forEach(pastRelation => {
+					const pastRelationGenerationIndex = Games.generationOrder.indexOf(
+						pastRelation.generation
+					);
+
+					if (
+						pastRelationGenerationIndex <= selectedGenerationIndex &&
+						pastRelationGenerationIndex >= currentGenerationEntryIndex
+					) {
+						currentEntry = pastRelation;
+						currentGenerationEntryIndex = pastRelationGenerationIndex;
+					}
+				});
+
+				// Remove any entries of types that didn't exist yet
+				currentEntry.doubleDamageTaken = currentEntry.doubleDamageTaken.filter(
+					type => !nonExistentTypes.includes(type)
+				);
+				currentEntry.halfDamageTo = currentEntry.halfDamageTo.filter(
+					type => !nonExistentTypes.includes(type)
+				);
+				currentEntry.doubleDamageTo = currentEntry.doubleDamageTo.filter(
+					type => !nonExistentTypes.includes(type)
+				);
+				currentEntry.halfDamageFrom = currentEntry.halfDamageFrom.filter(
+					type => !nonExistentTypes.includes(type)
+				);
+				currentEntry.immunities = currentEntry.immunities.filter(
+					type => !nonExistentTypes.includes(type)
+				);
+				currentEntry.noEffectTo = currentEntry.noEffectTo.filter(
+					type => !nonExistentTypes.includes(type)
+				);
+
+				typeRelation.currentRelations = currentEntry;
+			});
+		}
+
+		types = types.filter(a => pkmnTypes.some(pkmnType => pkmnType.name === a.name));
+
+		types.forEach(type => {
+			type.currentRelations.doubleDamageTaken.forEach(doubleDmgTakeType => {
+				multipliers[doubleDmgTakeType].multiplier *= 2;
+			});
+			type.currentRelations.halfDamageFrom.forEach(halfDmgTaken => {
+				multipliers[halfDmgTaken].multiplier *= 0.5;
+			});
+			type.currentRelations.immunities.forEach(immunity => {
+				multipliers[immunity].multiplier *= 0;
+			});
+		});
+
+		return Object.entries(multipliers)
+			.map(([name, obj]) => ({ name, ...obj }))
+			.sort((a, b) => (a.multiplier > b.multiplier ? 1 : -1));
 	};
 
 	static daysPassedInYear = (): number => {

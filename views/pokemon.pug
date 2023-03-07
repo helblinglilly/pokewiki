@@ -63,7 +63,7 @@ block append body
 					else if !primaryName && secondaryName
 						p #{ secondaryName }
 					else if primaryName === secondaryName
-						p p #{ primaryName }
+						p #{ primaryName }
 					else
 						p #{ primaryName } - #{ secondaryName }
 
@@ -244,12 +244,13 @@ block append body
 								p.has-text-weight-bold.pb-2 Weak against
 									each values in defensiveTyping
 										if values.multiplier > 1
-											.pb-1(style="display: inline-flex")
-												img.pr-2(src=`${values.sprite}`)
-												if values.multiplier > 2
-													p.has-text-weight-bold x#{ values.multiplier }
-												else
-													p x#{ values.multiplier }
+											div
+												.pb-1(style="display: inline-flex")
+													img.pr-2(src=`${values.sprite}`)
+													if values.multiplier > 2
+														p.has-text-weight-bold x#{ values.multiplier }
+													else
+														p x#{ values.multiplier }
 		//- Base stats
 		.column.is-flex
 			.card.collapsible(style="width: 100%")

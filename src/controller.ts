@@ -93,7 +93,7 @@ class Controller {
 		}[] = [];
 
 		formData.forEach(form => {
-			let name = secName ? secName : primName;
+			let name = primName ? primName : secName ? secName : "";
 
 			if (speciesData.has_gender_differences) {
 				forms.push({

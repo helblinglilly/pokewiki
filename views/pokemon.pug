@@ -363,6 +363,8 @@ block append body
 							.box.accented.noHover
 								p.is-capitalized.has-text-weight-bold #{ entry.game }
 								p.pb-2 #{ entry.entry }
+					else if pokedex.length === 0 && game != "all"
+						p No data
 					else
 						p Select a game where this Pokémon is featured to see its Pokédex entry.
 

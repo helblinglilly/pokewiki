@@ -290,10 +290,13 @@ export class Data {
 				}
 			});
 
+			const zeroPad = (num: number | string, places: number) =>
+				String(num).padStart(places, "0");
+
 			if (
 				primaryName.match(regex) ||
 				secondaryName.match(regex) ||
-				a.id.toString() === name
+				zeroPad(a.id, 20) === zeroPad(name, 20)
 			)
 				results.push({
 					primaryLang: primaryName,

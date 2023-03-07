@@ -54,6 +54,7 @@ block append body
 
 	//- Sprites and Evolutions
 	.columns
+		//- Sprites
 		.column.is-flex
 			.card(style="width: 100%")
 				.card-header-title.is-justify-content-space-between
@@ -62,7 +63,7 @@ block append body
 					else if !primaryName && secondaryName
 						p #{ secondaryName }
 					else if primaryName === secondaryName
-						p p #{ primaryName }
+						p #{ primaryName }
 					else
 						p #{ primaryName } - #{ secondaryName }
 
@@ -100,6 +101,7 @@ block append body
 											alt=`Alternative ${primaryName} sprite`
 										)
 									p#secondarySupportText.is-italic
+		//- Evolutions
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
@@ -216,21 +218,40 @@ block append body
 										src=`${evolution.targetSprite}`,
 										alt="This evolution line's target Pokémon"
 									)
-
-	//- Abilities and Base Stats
+	//- Type weaknesses and Abilities
 	.columns
+		//- Type weaknesses
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
-					p Abilities
+					p Type weaknesses
 				.card-content
-					each ability in abilities
-						.box.accented.link
-							a.keepQuery.invisible(href=`${ability.link}`)
-								p.has-text-weight-bold #{ ability.name }
-								if ability.isHidden
-									p.is-italic Hidden
-								p #{ ability.effect }
+					.columns
+						.column.is-flex
+							.box.accented.nohover(style="width: 100%")
+								p.has-text-weight-bold.pb-2 Resists
+									each values in defensiveTyping
+										if values.multiplier < 1
+											div
+												.pb-1(style="display: inline-flex")
+													img.pr-2(src=`${values.sprite}`)
+													if values.multiplier < 0.5
+														p.has-text-weight-bold x#{ values.multiplier }
+													else
+														p x#{ values.multiplier }
+						.column.is-flex
+							.box.accented.nohover(style="width: 100%")
+								p.has-text-weight-bold.pb-2 Weak against
+									each values in defensiveTyping
+										if values.multiplier > 1
+											div
+												.pb-1(style="display: inline-flex")
+													img.pr-2(src=`${values.sprite}`)
+													if values.multiplier > 2
+														p.has-text-weight-bold x#{ values.multiplier }
+													else
+														p x#{ values.multiplier }
+		//- Base stats
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
@@ -311,8 +332,22 @@ block append body
 									td 70.85
 									td
 
-	//- Pokedex and Other info
+	//- Abilities and Pokedex
 	.columns
+		//- Abilities
+		.column.is-flex
+			.card.collapsible(style="width: 100%")
+				.card-header-title
+					p Abilities
+				.card-content
+					each ability in abilities
+						.box.accented.link
+							a.keepQuery.invisible(href=`${ability.link}`)
+								p.has-text-weight-bold #{ ability.name }
+								if ability.isHidden
+									p.is-italic Hidden
+								p #{ ability.effect }
+		//- Pokedex
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
@@ -328,8 +363,13 @@ block append body
 							.box.accented.noHover
 								p.is-capitalized.has-text-weight-bold #{ entry.game }
 								p.pb-2 #{ entry.entry }
+					else if pokedex.length === 0 && game != "all"
+						p No data
 					else
 						p Select a game where this Pokémon is featured to see its Pokédex entry.
+
+	//- Other info
+	.columns
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title

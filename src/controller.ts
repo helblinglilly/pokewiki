@@ -76,11 +76,11 @@ class Controller {
 		// Types
 		let types: { name: string; sprite: string }[] = [];
 		pokemonData.types.forEach(pokeType => {
-			const lookupType = Types.find(a => a.english_id === pokeType.type.name);
+			const lookupType = Types.find(a => a.name === pokeType.type.name);
 			types.push({
-				name: lookupType ? lookupType.english : "?",
+				name: lookupType ? lookupType.name : "?",
 				sprite: lookupType
-					? this.data.typeSprite(lookupType.english_id)
+					? this.data.typeSprite(lookupType.name)
 					: appSettings.placeholderImage,
 			});
 		});
@@ -93,7 +93,7 @@ class Controller {
 		}[] = [];
 
 		formData.forEach(form => {
-			let name = secName ? secName : primName;
+			let name = primName ? primName : secName ? secName : "";
 
 			if (speciesData.has_gender_differences) {
 				forms.push({
@@ -238,10 +238,10 @@ class Controller {
 					if (selectedGenIndex <= pastGenIndex) {
 						Types.forEach(allType => {
 							pastEntry.types.forEach(oldType => {
-								if (allType.english_id === oldType.type.name) {
+								if (allType.name === oldType.type.name) {
 									oldTypes.push({
-										name: allType.english_id,
-										sprite: this.data.typeSprite(allType.english_id),
+										name: allType.name,
+										sprite: this.data.typeSprite(allType.name),
 									});
 								}
 							});
@@ -254,6 +254,9 @@ class Controller {
 				}
 			}
 		}
+
+		// Type relations
+		const defensiveTyping = Utils.getTypeRelations(types, selectedGames?.generation);
 
 		// Evolution
 		let evolutions: Evolution[] = [];
@@ -468,6 +471,7 @@ class Controller {
 			sprites: showcaseSprites,
 			forms: forms,
 			types: types,
+			defensiveTyping: defensiveTyping,
 			selectedGames: selectedGames,
 			pokedex: pokedexEntries,
 			weight: parseFloat(
@@ -757,7 +761,7 @@ class Controller {
 			})[0];
 		}
 
-		const typeSprite = Types.filter(a => a.english_id === moveData.type.name)[0].sprite;
+		const typeSprite = Types.filter(a => a.name === moveData.type.name)[0].sprite;
 		const type = typeSprite.split("/")[4].split(".")[0];
 
 		let damageClassSprite = "";

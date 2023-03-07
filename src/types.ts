@@ -134,6 +134,23 @@ export class Games {
 	};
 }
 
+export interface PokemonType {
+	id: number;
+	name: string;
+	sprite: string;
+	generation: string;
+	currentRelations: TypeRelation;
+	pastRelations: TypeRelation[];
+}
+interface TypeRelation {
+	generation: string;
+	doubleDamageTaken: string[];
+	halfDamageTo: string[];
+	doubleDamageTo: string[];
+	halfDamageFrom: string[];
+	immunities: string[];
+	noEffectTo: string[];
+}
 export interface VersionGroup {
 	version_group_name: string;
 	consistsOf: string[];

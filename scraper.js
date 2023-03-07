@@ -2,6 +2,7 @@ const axios = require("axios");
 const fs = require("fs");
 
 const pokemon = async () => {
+	console.log("Scraping data for Pokémon...");
 	const startFrom = 1;
 	const upTo = 1008;
 
@@ -32,10 +33,11 @@ const pokemon = async () => {
 		});
 		await new Promise(r => setTimeout(r, 500));
 	}
-	fs.writeFileSync("newPokemon.json", JSON.stringify(results), "utf8");
+	fs.writeFileSync("./src/data/pokemon.json", JSON.stringify(results), "utf8");
 };
 
 const items = async () => {
+	console.log("Scraping data for Items...");
 	const startFrom = 1;
 	const upTo = 2050;
 
@@ -68,60 +70,12 @@ const items = async () => {
 		});
 		await new Promise(r => setTimeout(r, 500));
 	}
-	fs.writeFileSync("newItems1.json", JSON.stringify(results), "utf8");
+	fs.writeFileSync("./src/data/items.json", JSON.stringify(results), "utf8");
 	fs.writeFileSync("itemFailures.json", JSON.stringify(failures), "utf-8");
 };
 
-const findBrokenItems = maxItem => {
-	let file = fs.readFileSync("./public/pokedata/items.json", "utf-8");
-	file = JSON.parse(file);
-	const fails = [];
-
-	let i = 1;
-	while (i <= maxItem) {
-		const found = file.find(entry => entry.id === i);
-		if (!found) fails.push(i);
-		i++;
-	}
-
-	fs.writeFileSync("brokenItems.json", JSON.stringify(fails), "utf-8");
-	return fails;
-};
-
-const fixBrokenItems = async arr => {
-	const failures = [];
-	const results = [];
-	for (let i = 0; i < arr.length; i++) {
-		let response;
-		try {
-			response = await axios.get(`https://pokeapi.co/api/v2/item/${arr[i]}`, {
-				headers: { "Accept-Encoding": "gzip,deflate,compress" },
-			});
-			console.log(arr[i]);
-		} catch (err) {
-			console.log(arr[i], "failed", err.response.status);
-			failures.push(arr[i]);
-			continue;
-		}
-
-		const names = [];
-		response.data.names.forEach(entry => {
-			const languageCode = entry.language.name;
-			const name = entry.name;
-			names.push({ [languageCode]: name });
-		});
-
-		results.push({
-			names: names,
-			id: arr[i],
-		});
-		await new Promise(r => setTimeout(r, 500));
-	}
-	fs.writeFileSync("fixedItems.json", JSON.stringify(results), "utf8");
-	fs.writeFileSync("brokenItems.json", JSON.stringify(failures), "utf-8");
-};
-
 const moves = async () => {
+	console.log("Scraping data for Moves...");
 	const startFrom = 1;
 	const upTo = 918;
 
@@ -155,29 +109,11 @@ const moves = async () => {
 		});
 		await new Promise(r => setTimeout(r, 500));
 	}
-	fs.writeFileSync("newMoves.json", JSON.stringify(results), "utf8");
-};
-
-const fixMoves = () => {
-	const moves = JSON.parse(fs.readFileSync("./public/pokedata/moves.json"));
-	const fixed = moves.map(a => {
-		let sprite =
-			"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png";
-
-		if (a.attack_type === "physical") sprite = "/static/assets/attack-types/physical.png";
-		if (a.attack_type === "special") sprite = "/static/assets/attack-types/special.png";
-		if (a.attack_type === "status") sprite = "/static/assets/attack-types/status.png";
-		return {
-			...a,
-			link: `/move/${a.id}`,
-			attack_type_sprite: sprite,
-		};
-	});
-
-	fs.writeFileSync("fixedMoves.json", JSON.stringify(fixed), "utf-8");
+	fs.writeFileSync("./src/data/moves.json", JSON.stringify(results), "utf8");
 };
 
 const abilities = async () => {
+	console.log("Scraping data for Abilities...");
 	const startFrom = 10012;
 	const upTo = 10060;
 
@@ -208,28 +144,11 @@ const abilities = async () => {
 		});
 		await new Promise(r => setTimeout(r, 500));
 	}
-	fs.writeFileSync("newAbilities.json", JSON.stringify(results), "utf8");
-};
-
-const addTypeSprites = () => {
-	const types = JSON.parse(fs.readFileSync("./public/pokedata/types.json"));
-	let moves = JSON.parse(fs.readFileSync("./public/pokedata/moves.json"));
-
-	moves = moves.map(move => {
-		let rightType;
-		types.forEach(type => {
-			if (type.english_id === move.type) {
-				rightType = type;
-			}
-		});
-		move.type_sprite = rightType.sprite;
-		return move;
-	});
-
-	fs.writeFileSync("moves.json", JSON.stringify(moves), "utf8");
+	fs.writeFileSync("./src/data/abilities.json", JSON.stringify(results), "utf8");
 };
 
 const types = async () => {
+	console.log("Scraping data for Types...");
 	const startFrom = 1;
 	const upTo = 18;
 
@@ -288,10 +207,11 @@ const types = async () => {
 		});
 		await new Promise(r => setTimeout(r, 500));
 	}
-	fs.writeFileSync("types.json", JSON.stringify(results), "utf8");
+	fs.writeFileSync("./src/data/types.json", JSON.stringify(results), "utf8");
 };
 
 const generateSocialPreviews = () => {
+	console.log("Generating social previews. This might take a long time...");
 	const template = fs.readFileSync("./misc/assets/social_preview.svg", "utf-8");
 	const outputLocation = "./public/previews/";
 
@@ -309,11 +229,22 @@ const generateSocialPreviews = () => {
 	});
 };
 
-// pokemon();
-// abilities();
-// moves();
-// items();
-types();
-// fixMoves();
-// addTypeSprites();
-// generateSocialPreviews();
+if (process.argv.includes("pokemon")) pokemon();
+
+if (process.argv.includes("ability")) abilities();
+
+if (process.argv.includes("move")) moves();
+
+if (process.argv.includes("item")) items();
+
+if (process.argv.includes("type")) types();
+
+if (process.argv.includes("social")) generateSocialPreviews();
+
+if (process.argv.includes("all")) {
+	pokemon();
+	abilities();
+	moves();
+	items();
+	types();
+}

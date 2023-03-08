@@ -273,5 +273,17 @@ const addQueryrefToAllLinks = () => {
 				aLinks[i].href = aLinks[i].href + removeVarieties();
 			};
 		}
+		if (!aLinks[i].classList.contains("shiny")) {
+			aLinks[i].onclick = () => {
+				aLinks[i].href = aLinks[i].href.replace(/\?shiny=true*/g, "");
+			};
+		} else if (
+			aLinks[i].classList.contains("shiny") &&
+			!aLinks[i].href.includes("?shiny=true")
+		) {
+			aLinks[i].onclick = () => {
+				aLinks[i].href = aLinks[i].href += "?shiny=true";
+			};
+		}
 	}
 };

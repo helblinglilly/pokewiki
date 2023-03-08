@@ -25,7 +25,12 @@ class Controller {
 		this.data = new Data();
 	}
 
-	getPokemonDetail = async (id: number, varietyId: number, game?: string) => {
+	getPokemonDetail = async (
+		id: number,
+		varietyId: number,
+		isShiny: boolean,
+		game?: string
+	) => {
 		const apidata = await this.data.pokemonData(id, varietyId);
 		const pokemonData = apidata.pokemon;
 		const speciesData = apidata.species;
@@ -42,6 +47,7 @@ class Controller {
 			pokemonData.sprites,
 			"full",
 			"default",
+			isShiny,
 			game
 		);
 
@@ -98,7 +104,13 @@ class Controller {
 			if (speciesData.has_gender_differences) {
 				forms.push({
 					name: name + " ♀",
-					sprites: Utils.getPokemonSprite(form.sprites, "form", "alternative", game),
+					sprites: Utils.getPokemonSprite(
+						form.sprites,
+						"form",
+						"alternative",
+						false,
+						game
+					),
 					url: `/pokemon/${id}`,
 				});
 				name += " ♂";
@@ -106,7 +118,7 @@ class Controller {
 
 			forms.push({
 				name: name,
-				sprites: Utils.getPokemonSprite(form.sprites, "form", "default", game),
+				sprites: Utils.getPokemonSprite(form.sprites, "form", "default", false, game),
 				url: `/pokemon/${id}`,
 			});
 		});
@@ -123,13 +135,25 @@ class Controller {
 			if (variety.id !== id && varietyId !== variety.id) {
 				forms.push({
 					name: name,
-					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
+					sprites: Utils.getPokemonSprite(
+						variety.sprites,
+						"form",
+						"default",
+						false,
+						game
+					),
 					url: `/pokemon/${id}?variety=${variety.id}`,
 				});
 			} else if (variety.id === id && varietyId !== 0) {
 				forms.push({
 					name: name,
-					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
+					sprites: Utils.getPokemonSprite(
+						variety.sprites,
+						"form",
+						"default",
+						false,
+						game
+					),
 					url: `/pokemon/${id}`,
 				});
 			}

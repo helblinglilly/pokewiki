@@ -87,8 +87,14 @@ class Router {
 			}
 		}
 		try {
+			const isShiny = req.query.shiny ? true : false;
 			const controller = new Controller();
-			const details = await controller.getPokemonDetail(id, variety, appSettings.game);
+			const details = await controller.getPokemonDetail(
+				id,
+				variety,
+				isShiny,
+				appSettings.game
+			);
 			const options = { ...details };
 			res.render("./pokemon", { ...options, ...appSettings });
 		} catch (err: any) {

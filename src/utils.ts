@@ -46,6 +46,7 @@ export default class Utils {
 		sprites: Sprites | SpriteForm,
 		spriteType: "full" | "form",
 		variation: "default" | "alternative",
+		isShiny: boolean,
 		game: string = ""
 	): GenericSprites => {
 		if (spriteType === "full") sprites = sprites as Sprites;
@@ -53,7 +54,9 @@ export default class Utils {
 			sprites = sprites as SpriteForm;
 			if (variation === "default")
 				return {
-					primary: sprites.front_default
+					primary: isShiny
+						? sprites.front_shiny
+						: sprites.front_default
 						? sprites.front_default
 						: appSettings.placeholderImage,
 					secondary: appSettings.placeholderImage,
@@ -84,6 +87,11 @@ export default class Utils {
 				primary = sprites.versions["generation-ii"].gold.front_transparent;
 				secondary = sprites.versions["generation-ii"].gold.front_transparent;
 				shiny = sprites.versions["generation-ii"].gold.front_shiny;
+
+				if (isShiny) {
+					primary = sprites.versions["generation-ii"].gold.front_shiny;
+					secondary = sprites.versions["generation-ii"].gold.back_shiny;
+				}
 			}
 		} else if (
 			gameDetails.generation === "iii" &&
@@ -98,11 +106,24 @@ export default class Utils {
 			primary = sprites.versions[`generation-iv`][`${game}`].front_default;
 			secondary = sprites.versions[`generation-iv`][`${game}`].front_female;
 			shiny = sprites.versions[`generation-iv`][`${game}`].front_shiny;
+
+			if (isShiny) {
+				primary = sprites.versions[`generation-iv`][`${game}`].front_shiny;
+				secondary = sprites.versions[`generation-iv`][`${game}`].front_shiny_female;
+			}
+
 			if (!secondary) secondary = shiny;
 		} else if (gameDetails.generation === "v") {
 			primary = sprites.versions[`generation-v`][`black-white`].animated.front_default;
 			secondary = sprites.versions[`generation-v`][`black-white`].animated.front_female;
 			shiny = sprites.versions[`generation-v`][`black-white`].animated.front_shiny;
+
+			if (isShiny) {
+				primary = sprites.versions[`generation-v`][`black-white`].animated.front_shiny;
+				secondary =
+					sprites.versions[`generation-v`][`black-white`].animated.front_shiny_female;
+			}
+
 			if (!secondary) secondary = shiny;
 		} else if (
 			gameDetails.generation === "vi" &&
@@ -111,28 +132,38 @@ export default class Utils {
 			primary = sprites.versions[`generation-vi`][`${game}`].front_default;
 			secondary = sprites.versions[`generation-vi`][`${game}`].front_female;
 			shiny = sprites.versions[`generation-vi`][`${game}`].front_shiny;
+
+			if (isShiny) {
+				primary = sprites.versions[`generation-vi`][`${game}`].front_shiny;
+				secondary = sprites.versions[`generation-vi`][`${game}`].front_shiny_female;
+			}
+
 			if (!secondary) secondary = shiny;
 		} else if (gameDetails.generation === "vii") {
 			primary = sprites.versions[`generation-vii`][`ultra-sun-ultra-moon`].front_default;
 			secondary = sprites.versions[`generation-vii`][`ultra-sun-ultra-moon`].front_female;
 			shiny = sprites.versions[`generation-vii`][`ultra-sun-ultra-moon`].front_shiny;
+
+			if (isShiny) {
+				primary = sprites.versions[`generation-vii`][`ultra-sun-ultra-moon`].front_shiny;
+				secondary =
+					sprites.versions[`generation-vii`][`ultra-sun-ultra-moon`].front_shiny_female;
+			}
+
 			if (!secondary) secondary = shiny;
 		} else {
 			/*
         Okay, Gen 7 sprites might look awful, and I'm keeping that for consistency, but Icons is where I draw the line
         Better off to wait until actual sprites have come out (if that'll ever happen)
-
-        
-        else if (gameDetails.generation === "viii") {
-			primary = sprites.versions[`generation-viii`][`icons`].front_default;
-			secondary = sprites.versions[`generation-viii`][`icons`].front_female;
-			shiny = sprites.versions[`generation-viii`][`icons`].front_default;
-			if (!secondary) secondary = shiny;
-		} 
         */
 			primary = sprites.front_default;
 			secondary = sprites.back_default ? sprites.back_default : sprites.front_shiny;
 			shiny = sprites.front_shiny;
+
+			if (isShiny) {
+				primary = sprites.front_shiny;
+				secondary = sprites.back_shiny;
+			}
 		}
 
 		if (!primary) primary = sprites.front_default;

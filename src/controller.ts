@@ -215,33 +215,48 @@ class Controller {
 
 		if (selectedGames.version_group_name !== "all") {
 			// Pokédex entries
-			speciesData.flavor_text_entries.forEach(entry => {
-				if (selectedGames.consistsOf.includes(entry.version.name)) {
-					if (entry.language.name === appSettings.primaryLanguageCode) {
-						pokedexEntries.push({
-							game: entry.version.name.replace(new RegExp("-", "g"), " "),
-							entry: entry.flavor_text,
-						});
-					} else if (entry.language.name === appSettings.secondaryLanguageCode) {
-						pokedexEntries.push({
-							game: entry.version.name.replace(new RegExp("-", "g"), " "),
-							entry: entry.flavor_text,
-						});
-					}
-				}
-			});
+			speciesData.flavor_text_entries
+				.filter(
+					entry =>
+						selectedGames.consistsOf.includes(entry.version.name) &&
+						[appSettings.primaryLanguageCode, appSettings.secondaryLanguageCode].includes(
+							entry.language.name
+						)
+				)
+				.forEach(entry => {
+					const existingEntry = pokedexEntries.find(a => a.entry === entry.flavor_text);
+					const gameName = entry.version.name.replace(new RegExp("-", "g"), " ");
 
-			if (pokedexEntries.length === 0 && !Utils.isEnglishSelected()) {
-				speciesData.flavor_text_entries.forEach(entry => {
-					if (selectedGames.consistsOf.includes(entry.version.name)) {
-						if (entry.language.name === "en") {
-							pokedexEntries.push({
-								game: entry.version.name.replace(new RegExp("-", "g"), " "),
-								entry: entry.flavor_text,
-							});
-						}
+					if (!existingEntry) {
+						pokedexEntries.push({
+							game: gameName,
+							entry: entry.flavor_text,
+						});
+					} else {
+						existingEntry.game += ` / ${gameName}`;
 					}
 				});
+
+			if (pokedexEntries.length === 0 && !Utils.isEnglishSelected()) {
+				speciesData.flavor_text_entries
+					.filter(
+						entry =>
+							selectedGames.consistsOf.includes(entry.version.name) &&
+							entry.language.name === "en"
+					)
+					.forEach(entry => {
+						const existingEntry = pokedexEntries.find(a => a.entry === entry.flavor_text);
+						const gameName = entry.version.name.replace(new RegExp("-", "g"), " ");
+
+						if (!existingEntry) {
+							pokedexEntries.push({
+								game: gameName,
+								entry: entry.flavor_text,
+							});
+						} else {
+							existingEntry.game += ` / ${gameName}`;
+						}
+					});
 			}
 
 			if (selectedGames !== undefined) {

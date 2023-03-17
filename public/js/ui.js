@@ -102,54 +102,57 @@ const hideNotice = () => {
 };
 
 const submitSearch = () => {
-	const host = window.location.protocol + "//" + window.location.host;
-	const urlNoParams = document.URL.split(host)[1].split("?")[0];
-	const queryParams = document.URL.split(host)[1].split("?")[1];
+	let returnToSearch = false;
 
-	if (queryParams) {
-		const params = queryParams.split("&");
-		const changedParams = [];
-
-		let currentGame;
-		let selectedGame;
-		params.forEach(entry => {
-			let currentSelection;
-			let newSelection;
-
-			if (entry.includes("term")) {
-				currentSelection = entry.split("=")[1];
-				newSelection = document.getElementById("searchBar").value;
-			}
-			// else if (entry.includes("game")) {
-			// 	currentGame = entry.split("=")[1];
-			// 	selectedGame = document.getElementById("gameSelector").value;
-			// }
-			else if (entry.includes("pokemon")) {
-				currentSelection = entry.split("=")[1] == "true" ? true : false;
-				newSelection = document.getElementById("showPokemon").checked;
-			} else if (entry.includes("items")) {
-				currentSelection = entry.split("=")[1] == "true" ? true : false;
-				newSelection = document.getElementById("showItems").checked;
-			} else if (entry.includes("moves")) {
-				currentSelection = entry.split("=")[1] == "true" ? true : false;
-				newSelection = document.getElementById("showMoves").checked;
-			} else if (entry.includes("abilities")) {
-				currentSelection = entry.split("=")[1] == "true" ? true : false;
-				newSelection = document.getElementById("showAbilities").checked;
-			}
-			changedParams.push(currentSelection == newSelection);
-		});
-		if (!changedParams.includes(false)) {
-			const search = document.getElementById("search");
-			// If all you changed is the Game, then stay on the current page
-			search.action = `${urlNoParams}`;
-		}
+	// Search term
+	const existingSearchTerm = getItem("searchTerm");
+	const newSearchTerm = document.getElementById("searchBar").value;
+	if (newSearchTerm !== existingSearchTerm && newSearchTerm.length > 0) {
+		setItem("searchTerm", newSearchTerm);
+		returnToSearch = true;
 	}
 
-	// if (document.getElementById("gameSelector").values !== "all") {
-	// 	search.action = `${urlNoParams}`;
-	// }
-	search.submit();
+	// Pokemon
+	const existingPokemonSelection = getItem("searchPkmn");
+	const newPkmnSelection = document.getElementById("showPokemon").checked.toString();
+	if (newPkmnSelection !== existingPokemonSelection && newSearchTerm.length > 0) {
+		setItem("searchPkmn", newPkmnSelection);
+		returnToSearch = true;
+	}
+
+	// Items
+	const existingItemSelection = getItem("searchItem");
+	const newItemSelection = document.getElementById("showItems").checked.toString();
+	if (newItemSelection !== existingItemSelection && newSearchTerm.length > 0) {
+		setItem("searchItem", newItemSelection);
+		returnToSearch = true;
+	}
+
+	// Moves
+	const existingMoveSelection = getItem("searchMove");
+	const newMoveSelection = document.getElementById("showMoves").checked.toString();
+	if (newMoveSelection !== existingMoveSelection && newSearchTerm.length > 0) {
+		setItem("searchMove", newMoveSelection);
+		returnToSearch = true;
+	}
+
+	// Abilities
+	const existingAbilitySelection = getItem("searchAbility");
+	const newAbilitySelection = document.getElementById("showAbilities").checked.toString();
+	if (newAbilitySelection !== existingAbilitySelection && newSearchTerm.length > 0) {
+		setItem("searchAbility", newAbilitySelection);
+		returnToSearch = true;
+	}
+
+	const search = document.getElementById("search");
+
+	if (returnToSearch) {
+		search.action = "/search";
+		search.submit();
+	} else {
+		// Can reload because other elements are in cookies
+		location.reload();
+	}
 };
 
 const isMobile = new RegExp("Android|Mobile|iPhone|iOS").test(navigator.userAgent);
@@ -184,29 +187,29 @@ const populateSearchFilters = () => {
 	typeSelections.push(params.get("moves"));
 	typeSelections.push(params.get("abilities"));
 
+	setItem("searchTerm", params.get("term"));
+	setItem("searchPkmn", "true");
+	setItem("searchItem", "true");
+	setItem("searchMove", "true");
+	setItem("searchAbilities", "true");
+
 	// Only de-select entries if they're not ALL (un)selected
 	if (!typeSelections.every(item => item === typeSelections[0])) {
 		if (!params.get("pokemon")) {
 			document.getElementById("showPokemon").removeAttribute("checked");
+			setItem("searchPkmn", "false");
 		}
 		if (!params.get("items")) {
 			document.getElementById("showItems").removeAttribute("checked");
+			setItem("searchItem", "false");
 		}
 		if (!params.get("moves")) {
 			document.getElementById("showMoves").removeAttribute("checked");
+			setItem("searchMove", "false");
 		}
 		if (!params.get("abilities")) {
 			document.getElementById("showAbilities").removeAttribute("checked");
-		}
-	}
-
-	if (params.get("game")) {
-		const select = document.getElementById("gameSelector");
-		// Select the option from the dropdown with the corresponding value
-		for (let i = 0; i < select.options.length; i++) {
-			if (select.options[i].value === params.get("game")) {
-				select.options[i].selected = true;
-			}
+			setItem("searchAbilities", "false");
 		}
 	}
 
@@ -271,6 +274,18 @@ const addQueryrefToAllLinks = () => {
 		if (aLinks[i].classList.contains("keepQuery")) {
 			aLinks[i].onclick = () => {
 				aLinks[i].href = aLinks[i].href + removeVarieties();
+			};
+		}
+		if (!aLinks[i].classList.contains("shiny")) {
+			aLinks[i].onclick = () => {
+				aLinks[i].href = aLinks[i].href.replace(/\?shiny=true*/g, "");
+			};
+		} else if (
+			aLinks[i].classList.contains("shiny") &&
+			!aLinks[i].href.includes("?shiny=true")
+		) {
+			aLinks[i].onclick = () => {
+				aLinks[i].href = aLinks[i].href += "?shiny=true";
 			};
 		}
 	}

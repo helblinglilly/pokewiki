@@ -218,13 +218,13 @@ block append body
 										src=`${evolution.targetSprite}`,
 										alt="This evolution line's target Pokémon"
 									)
-	//- Type weaknesses and Abilities
+	//- Type matchups and Abilities
 	.columns
-		//- Type weaknesses
+		//- Type matchups
 		.column.is-flex
 			.card.collapsible(style="width: 100%")
 				.card-header-title
-					p Type weaknesses
+					p Type matchups
 				.card-content
 					.columns
 						.column.is-flex
@@ -399,7 +399,7 @@ block append body
 										alt=`Primary sprite for ${form.name}`
 									)
 									p(style="margin-top: 15px") #{ form.name }
-							a.keepQuery.invisible.column(href=`${form.url}`, style="width: 50%")
+							a.keepQuery.invisible.column.shiny(href=`${form.url}`, style="width: 50%")
 								.box.accented(style="text-align: center; height: 100%")
 									img.image.formPrimary(
 										src=`${form.sprites.shiny}`,

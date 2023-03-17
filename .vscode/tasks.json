@@ -8,6 +8,48 @@
 			"problemMatcher": [],
 			"label": "npm: build",
 			"detail": "(rm -fr ./dist || true) && npx tsc"
+		},
+		{
+			"label": "scrape: all data",
+			"type": "shell",
+			"command": "node",
+			"args": ["scraper", "all"],
+			"problemMatcher": []
+		},
+		{
+			"label": "scrape: pokemon",
+			"type": "shell",
+			"command": "node",
+			"args": ["scraper", "pokemon"],
+			"problemMatcher": []
+		},
+		{
+			"label": "scrape: abilities",
+			"type": "shell",
+			"command": "node",
+			"args": ["scraper", "ability"],
+			"problemMatcher": []
+		},
+		{
+			"label": "scrape: moves",
+			"type": "shell",
+			"command": "node",
+			"args": ["scraper", "move"],
+			"problemMatcher": []
+		},
+		{
+			"label": "scrape: items",
+			"type": "shell",
+			"command": "node",
+			"args": ["scraper", "item"],
+			"problemMatcher": []
+		},
+		{
+			"label": "scrape: types",
+			"type": "shell",
+			"command": "node",
+			"args": ["scraper", "type"],
+			"problemMatcher": []
 		}
 	]
 }

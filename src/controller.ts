@@ -25,7 +25,12 @@ class Controller {
 		this.data = new Data();
 	}
 
-	getPokemonDetail = async (id: number, varietyId: number, game?: string) => {
+	getPokemonDetail = async (
+		id: number,
+		varietyId: number,
+		isShiny: boolean,
+		game?: string
+	) => {
 		const apidata = await this.data.pokemonData(id, varietyId);
 		const pokemonData = apidata.pokemon;
 		const speciesData = apidata.species;
@@ -42,6 +47,7 @@ class Controller {
 			pokemonData.sprites,
 			"full",
 			"default",
+			isShiny,
 			game
 		);
 
@@ -98,7 +104,13 @@ class Controller {
 			if (speciesData.has_gender_differences) {
 				forms.push({
 					name: name + " ♀",
-					sprites: Utils.getPokemonSprite(form.sprites, "form", "alternative", game),
+					sprites: Utils.getPokemonSprite(
+						form.sprites,
+						"form",
+						"alternative",
+						false,
+						game
+					),
 					url: `/pokemon/${id}`,
 				});
 				name += " ♂";
@@ -106,7 +118,7 @@ class Controller {
 
 			forms.push({
 				name: name,
-				sprites: Utils.getPokemonSprite(form.sprites, "form", "default", game),
+				sprites: Utils.getPokemonSprite(form.sprites, "form", "default", false, game),
 				url: `/pokemon/${id}`,
 			});
 		});
@@ -123,13 +135,25 @@ class Controller {
 			if (variety.id !== id && varietyId !== variety.id) {
 				forms.push({
 					name: name,
-					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
+					sprites: Utils.getPokemonSprite(
+						variety.sprites,
+						"form",
+						"default",
+						false,
+						game
+					),
 					url: `/pokemon/${id}?variety=${variety.id}`,
 				});
 			} else if (variety.id === id && varietyId !== 0) {
 				forms.push({
 					name: name,
-					sprites: Utils.getPokemonSprite(variety.sprites, "form", "default", game),
+					sprites: Utils.getPokemonSprite(
+						variety.sprites,
+						"form",
+						"default",
+						false,
+						game
+					),
 					url: `/pokemon/${id}`,
 				});
 			}
@@ -191,33 +215,48 @@ class Controller {
 
 		if (selectedGames.version_group_name !== "all") {
 			// Pokédex entries
-			speciesData.flavor_text_entries.forEach(entry => {
-				if (selectedGames.consistsOf.includes(entry.version.name)) {
-					if (entry.language.name === appSettings.primaryLanguageCode) {
-						pokedexEntries.push({
-							game: entry.version.name.replace(new RegExp("-", "g"), " "),
-							entry: entry.flavor_text,
-						});
-					} else if (entry.language.name === appSettings.secondaryLanguageCode) {
-						pokedexEntries.push({
-							game: entry.version.name.replace(new RegExp("-", "g"), " "),
-							entry: entry.flavor_text,
-						});
-					}
-				}
-			});
+			speciesData.flavor_text_entries
+				.filter(
+					entry =>
+						selectedGames.consistsOf.includes(entry.version.name) &&
+						[appSettings.primaryLanguageCode, appSettings.secondaryLanguageCode].includes(
+							entry.language.name
+						)
+				)
+				.forEach(entry => {
+					const existingEntry = pokedexEntries.find(a => a.entry === entry.flavor_text);
+					const gameName = entry.version.name.replace(new RegExp("-", "g"), " ");
 
-			if (pokedexEntries.length === 0 && !Utils.isEnglishSelected()) {
-				speciesData.flavor_text_entries.forEach(entry => {
-					if (selectedGames.consistsOf.includes(entry.version.name)) {
-						if (entry.language.name === "en") {
-							pokedexEntries.push({
-								game: entry.version.name.replace(new RegExp("-", "g"), " "),
-								entry: entry.flavor_text,
-							});
-						}
+					if (!existingEntry) {
+						pokedexEntries.push({
+							game: gameName,
+							entry: entry.flavor_text,
+						});
+					} else {
+						existingEntry.game += ` / ${gameName}`;
 					}
 				});
+
+			if (pokedexEntries.length === 0 && !Utils.isEnglishSelected()) {
+				speciesData.flavor_text_entries
+					.filter(
+						entry =>
+							selectedGames.consistsOf.includes(entry.version.name) &&
+							entry.language.name === "en"
+					)
+					.forEach(entry => {
+						const existingEntry = pokedexEntries.find(a => a.entry === entry.flavor_text);
+						const gameName = entry.version.name.replace(new RegExp("-", "g"), " ");
+
+						if (!existingEntry) {
+							pokedexEntries.push({
+								game: gameName,
+								entry: entry.flavor_text,
+							});
+						} else {
+							existingEntry.game += ` / ${gameName}`;
+						}
+					});
 			}
 
 			if (selectedGames !== undefined) {

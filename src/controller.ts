@@ -1,4 +1,3 @@
-import log from "./log";
 import Moves from "./data/moves.json";
 import Types from "./data/types.json";
 import Utils from "./utils";
@@ -1265,52 +1264,69 @@ class Controller {
 		const id = Utils.randomDailyNumber(appSettings.highestMoveId)[
 			Utils.daysPassedInYear()
 		];
-		const data = await this.data.getMove(id);
-
-		let primaryName = Utils.findNameFromLanguageCode(
-			data.names,
-			appSettings.primaryLanguageCode
-		);
-		let secondaryName = Utils.findNameFromLanguageCode(
-			data.names,
-			appSettings.secondaryLanguageCode
-		);
-
-		if (primaryName.length === 0 && secondaryName.length === 0) {
-			primaryName = Utils.findNameFromLanguageCode(data.names, "en");
+		try {
+			const data = await this.data.getMove(id);
+	
+			let primaryName = Utils.findNameFromLanguageCode(
+				data.names,
+				appSettings.primaryLanguageCode
+			);
+			let secondaryName = Utils.findNameFromLanguageCode(
+				data.names,
+				appSettings.secondaryLanguageCode
+			);
+	
+			if (primaryName.length === 0 && secondaryName.length === 0) {
+				primaryName = Utils.findNameFromLanguageCode(data.names, "en");
+			}
+	
+			return {
+				primaryLang: primaryName,
+				secondaryLang: secondaryName,
+				link: `/move/${id}`,
+			};
+		} catch(err){
+			return {
+				primaryLang: 'Something went wrong',
+				secondaryLang: '',
+				link: `/move/1`,
+			};
 		}
-
-		return {
-			primaryLang: primaryName,
-			secondaryLang: secondaryName,
-			link: `/move/${id}`,
-		};
 	};
 
 	getRandomAbility = async () => {
 		const id = Utils.randomDailyNumber(appSettings.highestAbilityId)[
 			Utils.daysPassedInYear()
 		];
-		const data = await this.data.getAbility(id);
+		try {
+			const data = await this.data.getAbility(id);
+	
+			let primaryName = Utils.findNameFromLanguageCode(
+				data.names,
+				appSettings.primaryLanguageCode
+			);
+			let secondaryName = Utils.findNameFromLanguageCode(
+				data.names,
+				appSettings.secondaryLanguageCode
+			);
+	
+			if (primaryName.length === 0 && secondaryName.length === 0) {
+				primaryName = Utils.findNameFromLanguageCode(data.names, "en");
+			}
 
-		let primaryName = Utils.findNameFromLanguageCode(
-			data.names,
-			appSettings.primaryLanguageCode
-		);
-		let secondaryName = Utils.findNameFromLanguageCode(
-			data.names,
-			appSettings.secondaryLanguageCode
-		);
-
-		if (primaryName.length === 0 && secondaryName.length === 0) {
-			primaryName = Utils.findNameFromLanguageCode(data.names, "en");
+			return {
+				primaryLang: primaryName,
+				secondaryLang: secondaryName,
+				link: `/ability/${id}`,
+			};
 		}
-
-		return {
-			primaryLang: primaryName,
-			secondaryLang: secondaryName,
-			link: `/ability/${id}`,
-		};
+		catch(err){
+			return {
+				primaryLang: 'Something went wrong',
+				secondaryLang: '',
+				link: `/ability/1`,
+			};
+		}
 	};
 
 	processMoveset = (
